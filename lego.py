@@ -23,6 +23,8 @@ from termcolor import colored, cprint
 from sympy.logic.boolalg import to_dnf
 import numpy as np
 from collections import namedtuple
+from networkx.drawing.nx_agraph import graphviz_layout
+import subprocess
 
 print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
 
@@ -34,13 +36,13 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 def get_task_specification():
     hierarchy = []
     # ------------------------ task 1 -------------------------
-    # level_one = dict()
-    # level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
-    # hierarchy.append(level_one)
+    level_one = dict()
+    level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
+    hierarchy.append(level_one)
 
-    # level_two = dict()
-    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    # hierarchy.append(level_two)
+    level_two = dict()
+    level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    hierarchy.append(level_two)
     # ------------------------ task 2 -------------------------
     # level_one = dict()
     # level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
@@ -51,14 +53,14 @@ def get_task_specification():
     # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
     # hierarchy.append(level_two)
     # ------------------------ task 3 -------------------------
-    level_one = dict()
-    level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
-    hierarchy.append(level_one)
+    # level_one = dict()
+    # level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
+    # hierarchy.append(level_one)
 
-    level_two = dict()
-    level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0)) && <> l6_1_1_0 && <> !l6_1_1_0 U l3_1_1_0"
-    hierarchy.append(level_two)
+    # level_two = dict()
+    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0)) && <> l6_1_1_0 && <> !l6_1_1_0 U l3_1_1_0"
+    # hierarchy.append(level_two)
     return hierarchy
 
 def get_ordered_subtasks(task):
@@ -417,13 +419,43 @@ def print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
             format(pre.parent, pre.element, pre_element2edge[pre.element], pre_buchi_graph.edges[pre_element2edge[pre.element]]['label'],
                    suc.parent, suc.element, suc_element2edge[suc.element], suc_buchi_graph.edges[suc_element2edge[suc.element]]['label']))
         
-def generate_global_poset_graph(primitive_subtasks_with_identifier, primitive_subtasks_partial_order):
+def generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order):
     task_network = nx.DiGraph(type='TaskNetwork')
-    task_network.add_nodes_from(primitive_subtasks_with_identifier)
-    task_network.add_edges_from(primitive_subtasks_partial_order)
+    for task in primitive_subtasks_with_identifier:
+        buchi_graph  = task_hierarchy[task.parent].buchi_graph
+        edge = task_hierarchy[task.parent].element2edge[task.element]
+        label = buchi_graph.edges[edge]['label']
+        task_network.add_node((task.parent, task.element), label=label)
+    
+    for pair in primitive_subtasks_partial_order:
+        task_network.add_edge((pair[0].parent, pair[0].element), (pair[1].parent, pair[1].element))
+
     reduced_task_network = nx.transitive_reduction(task_network)
-    print(list(task_network.edges()))
-    print(list(reduced_task_network.edges()))
+    reduced_task_network.add_nodes_from(task_network.nodes(data=True))
+    reduced_task_network.add_edges_from((u, v, task_network.edges[u, v]) for u, v in reduced_task_network.edges)
+    return reduced_task_network
+
+def vis_poset_graph(reduced_task_network):
+    labels = nx.get_node_attributes(reduced_task_network, 'label') 
+    pos_nodes = nx.spring_layout(reduced_task_network)
+    pos_attrs = {}
+    for node, coords in pos_nodes.items():
+        pos_attrs[node] = (coords[0], coords[1] + 0.08)
+    
+    # write dot file to use with graphviz
+    # run "dot -Tpng test.dot >test.png"
+    nx.nx_agraph.write_dot(reduced_task_network,'task_network.dot')
+    # Run a Linux command
+    command = "dot -Tpng task_network.dot >task_network.png"
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    # same layout using matplotlib with no labels
+    # plt.title('draw_networkx')
+    # pos=graphviz_layout(reduced_task_network, prog='dot')
+    # nx.draw(reduced_task_network, pos=pos_nodes, with_labels=True, node_color='lightblue', edge_color='gray', font_weight='bold')
+    # nx.draw_networkx_labels(reduced_task_network, pos=pos_attrs, labels=labels)
+    # Save the plot as an image
+    # plt.tight_layout()
+    # plt.savefig('nx_test.png', bbox_inches='tight')
 
 def main():
     task_specification = get_task_specification()
@@ -432,8 +464,9 @@ def main():
     primitive_subtasks_with_identifier, primitive_subtasks_partial_order = produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks)
     print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
     print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
-    generate_global_poset_graph(primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
-
+    reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
+    vis_poset_graph(reduced_task_network)
+    
 if __builtins__:
     main()
 
