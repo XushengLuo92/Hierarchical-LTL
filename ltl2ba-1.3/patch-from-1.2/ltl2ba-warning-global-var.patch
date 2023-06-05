@@ -1,0 +1,349 @@
+--- alternating.c.orig	2018-05-12 08:58:43.000000000 -0600
++++ alternating.c	2018-06-09 12:17:16.771123787 -0600
+@@ -146,7 +146,6 @@ int get_sym_id(char *s) /* finds the id
+ ATrans *boolean(Node *p) /* computes the transitions to boolean nodes -> next & init */
+ {
+   ATrans *t1, *t2, *lft, *rgt, *result = (ATrans *)0;
+-  int id;
+   switch(p->ntyp) {
+   case TRUE:
+     result = emalloc_atrans();
+@@ -433,7 +432,7 @@ void mk_alternating(Node *p) /* generate
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
+-    fprintf(tl_out, "\nBuilding and simplification of the alternating automaton: %ld.%06is",
++    fprintf(tl_out, "\nBuilding and simplification of the alternating automaton: %ld.%06lis",
+ 		t_diff.tv_sec, t_diff.tv_usec);
+     fprintf(tl_out, "\n%i states, %i transitions\n", astate_count, atrans_count);
+   }
+--- buchi.c.orig	2018-05-12 17:10:09.000000000 +0200
++++ buchi.c	2020-06-09 12:07:49.000000000 +0200
+@@ -38,14 +38,14 @@
+ extern struct timeval t_diff;
+ extern int tl_verbose, tl_stats, tl_simp_diff, tl_simp_fly, tl_simp_scc,
+   init_size, *final;
+-extern void put_uform(void);
+ 
+ extern int gstate_id;
+ 
+ extern FILE *tl_out;	
+ BState *bstack, *bstates, *bremoved;
+-BScc *scc_stack;
+-int accept, bstate_count = 0, btrans_count = 0, rank;
++static BScc *scc_stack;
++int accept, bstate_count = 0, btrans_count = 0;
++static int rank;
+ 
+ /********************************************************************\
+ |*        Simplification of the generalized Buchi automaton         *|
+@@ -112,7 +112,7 @@
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
+-    fprintf(tl_out, "\nSimplification of the Buchi automaton - transitions: %ld.%06is",
++    fprintf(tl_out, "\nSimplification of the Buchi automaton - transitions: %ld.%06lis",
+ 		t_diff.tv_sec, t_diff.tv_usec);
+     fprintf(tl_out, "\n%i transitions removed\n", changed);
+ 
+@@ -131,7 +131,6 @@
+ {             /* redirects transitions before removing a state from the automaton */
+   BState *s;
+   BTrans *t;
+-  int i;
+   for (s = bstates->nxt; s != bstates; s = s->nxt)
+     for (t = s->trans->nxt; t != s->trans; t = t->nxt)
+       if (t->to == to) { /* transition to a state with no transitions */
+@@ -278,7 +277,7 @@
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
+-    fprintf(tl_out, "\nSimplification of the Buchi automaton - states: %ld.%06is",
++    fprintf(tl_out, "\nSimplification of the Buchi automaton - states: %ld.%06lis",
+ 		t_diff.tv_sec, t_diff.tv_usec);
+     fprintf(tl_out, "\n%i states removed\n", changed);
+   }
+@@ -518,7 +517,7 @@
+ void print_spin_buchi() {
+   BTrans *t;
+   BState *s;
+-  int accept_all = 0, init_count = 0;
++  int accept_all = 0;
+   if(bstates->nxt == bstates) { /* empty automaton */
+     fprintf(tl_out, "never {    /* ");
+     put_uform();
+@@ -673,7 +672,7 @@
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
+-    fprintf(tl_out, "\nBuilding the Buchi automaton : %ld.%06is",
++    fprintf(tl_out, "\nBuilding the Buchi automaton : %ld.%06lis",
+ 		t_diff.tv_sec, t_diff.tv_usec);
+     fprintf(tl_out, "\n%i states, %i transitions\n", bstate_count, btrans_count);
+   }
+--- cache.c.orig	2018-05-12 08:25:40.000000000 -0600
++++ cache.c	2018-06-09 12:07:29.747462121 -0600
+@@ -43,7 +43,6 @@ static Cache	*stored = (Cache *) 0;
+ static unsigned long	Caches, CacheHits;
+ 
+ static int	ismatch(Node *, Node *);
+-extern void fatal(char *, char *);
+ int	sameform(Node *, Node *);
+ 
+ void
+@@ -215,7 +214,7 @@ sameform(Node *a, Node *b)
+ 	case FALSE:
+ 		return 1;
+ 	case PREDICATE:
+-		if (!a->sym || !b->sym) fatal("sameform...", (char *) 0);
++		if (!a->sym || !b->sym) fatal("sameform...");
+ 		return !strcmp(a->sym->name, b->sym->name);
+ 
+ 	case NOT:
+@@ -237,7 +236,7 @@ sameform(Node *a, Node *b)
+ 
+ 	default:
+ 		printf("type: %d\n", a->ntyp);
+-		fatal("cannot happen, sameform", (char *) 0);
++		fatal("cannot happen, sameform");
+ 	}
+ 
+ 	return 0;
+@@ -339,6 +338,6 @@ anywhere(int tok, Node *srch, Node *in)
+ 	case  OR:	return any_lor(srch, in);
+ 	case   0:	return any_term(srch, in);
+ 	}
+-	fatal("cannot happen, anywhere", (char *) 0);
++	fatal("cannot happen, anywhere");
+ 	return 0;
+ }
+--- generalized.c.orig	2018-05-12 16:59:31.000000000 +0200
++++ generalized.c	2020-06-09 12:07:49.000000000 +0200
+@@ -42,9 +42,10 @@
+ extern char **sym_table;
+ 
+ GState *gstack, *gremoved, *gstates, **init;
+-GScc *scc_stack;
++static GScc *scc_stack;
+ int init_size = 0, gstate_id = 1, gstate_count = 0, gtrans_count = 0;
+-int *fin, *final, rank, scc_id, scc_size, *bad_scc;
++int *fin, *final, scc_id, scc_size, *bad_scc;
++static int rank;
+ 
+ void print_generalized();
+ 
+@@ -151,7 +152,7 @@
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
+-    fprintf(tl_out, "\nSimplification of the generalized Buchi automaton - transitions: %ld.%06is",
++    fprintf(tl_out, "\nSimplification of the generalized Buchi automaton - transitions: %ld.%06lis",
+ 		t_diff.tv_sec, t_diff.tv_usec);
+     fprintf(tl_out, "\n%i transitions removed\n", changed);
+   }
+@@ -244,7 +245,7 @@
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
+-    fprintf(tl_out, "\nSimplification of the generalized Buchi automaton - states: %ld.%06is",
++    fprintf(tl_out, "\nSimplification of the generalized Buchi automaton - states: %ld.%06lis",
+ 		t_diff.tv_sec, t_diff.tv_usec);
+     fprintf(tl_out, "\n%i states removed\n", changed);
+   }
+@@ -389,8 +390,7 @@
+ void make_gtrans(GState *s) { /* creates all the transitions from a state */
+   int i, *list, state_trans = 0, trans_exist = 1;
+   GState *s1;
+-  GTrans *t;
+-  ATrans *t1, *free;
++  ATrans *t1;
+   AProd *prod = (AProd *)tl_emalloc(sizeof(AProd)); /* initialization */
+   prod->nxt = prod;
+   prod->prv = prod;
+@@ -570,7 +570,6 @@
+ { /* generates a generalized Buchi automaton from the alternating automaton */
+   ATrans *t;
+   GState *s;
+-  int i;
+ 
+   if(tl_stats) getrusage(RUSAGE_SELF, &tr_debut);
+ 
+@@ -618,7 +617,7 @@
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
+-    fprintf(tl_out, "\nBuilding the generalized Buchi automaton : %ld.%06is",
++    fprintf(tl_out, "\nBuilding the generalized Buchi automaton : %ld.%06lis",
+ 		t_diff.tv_sec, t_diff.tv_usec);
+     fprintf(tl_out, "\n%i states, %i transitions\n", gstate_count, gtrans_count);
+   }
+--- ltl2ba.h.orig	2007-08-04 02:08:02.000000000 -0600
++++ ltl2ba.h	2020-01-22 14:06:05.009029510 -0700
+@@ -186,9 +186,8 @@ void	a_stats(void);
+ void	addtrans(Graph *, char *, Node *, char *);
+ void	cache_stats(void);
+ void	dump(Node *);
+-void	exit(int);
+-void	Fatal(char *, char *);
+-void	fatal(char *, char *);
++void	Fatal(const char *);
++void	fatal(const char *);
+ void	fsm_print(void);
+ void	releasenode(int, Node *);
+ void	tfree(void *);
+@@ -227,6 +226,8 @@ int  *list_set(int *, int);
+ 
+ int timeval_subtract (struct timeval *, struct timeval *, struct timeval *);
+ 
++void put_uform(void);
++
+ #define ZN	(Node *)0
+ #define ZS	(Symbol *)0
+ #define Nhash	255    	
+@@ -244,5 +245,5 @@ typedef Node	*Nodeptr;
+ #define Explain(x)	{ if (tl_verbose) tl_explain(x); }
+ 
+ #define Assert(x, y)	{ if (!(x)) { tl_explain(y); \
+-			  Fatal(": assertion failed\n",(char *)0); } }
++			  Fatal(": assertion failed\n"); } }
+ #define min(x,y)        ((x<y)?x:y)
+--- main.c.orig	2018-05-12 09:30:17.000000000 -0600
++++ main.c	2018-06-09 13:25:57.184520344 -0600
+@@ -30,6 +30,7 @@
+ /* Some of the code in this file was taken from the Spin software         */
+ /* Written by Gerard J. Holzmann, Bell Laboratories, U.S.A.               */
+ 
++#include <unistd.h>
+ #include "ltl2ba.h"
+ 
+ FILE	*tl_out;
+@@ -52,9 +53,9 @@ static char     **add_ltl  = (char **)0;
+ static char     out1[64];
+ 
+ static void	tl_endstats(void);
+-static void	non_fatal(char *, char *);
++static void	non_fatal(const char *);
+ 
+-void
++static void
+ alldone(int estatus)
+ {
+         if (strlen(out1) > 0)
+@@ -84,7 +85,7 @@ emalloc(int n)
+ {       char *tmp;
+ 
+         if (!(tmp = (char *) malloc(n)))
+-                fatal("not enough memory", (char *)0);
++                fatal("not enough memory");
+         memset(tmp, 0, n);
+         return tmp;
+ }
+@@ -110,7 +111,7 @@ tl_UnGetchar(void)
+ 	if (cnt > 0) cnt--;
+ }
+ 
+-void
++static void
+ usage(void)
+ {
+         printf("usage: ltl2ba [-flag] -f 'formula'\n");
+@@ -193,18 +194,20 @@ main(int argc, char *argv[])
+                 *ltl_file = (char *) formula;
+         }
+         if (argc > 1)
+-        {       char cmd[128], out2[64];
++        {       char out2[64];
+                 strcpy(out1, "_tmp1_");
+                 strcpy(out2, "_tmp2_");
+                 tl_out = cpyfile(argv[1], out2);
+-                tl_main(2, add_ltl);  
++                i = tl_main(2, add_ltl);  
+                 fclose(tl_out);
+         } else 
+ 	{
+                 if (argc > 0)
+-                        exit(tl_main(2, add_ltl));
+-		usage();
++                        i = tl_main(2, add_ltl);
++		else
++			usage();
+ 	}
++	return i;
+ }
+ 
+ /* Subtract the `struct timeval' values X and Y, storing the result X-Y in RESULT.
+@@ -229,7 +232,7 @@ struct timeval *result, *x, *y;
+ 
+ static void
+ tl_endstats(void)
+-{	extern int Stack_mx;
++{	/*extern int Stack_mx;*/
+ 	printf("\ntotal memory used: %9ld\n", All_Mem);
+ 	/*printf("largest stack sze: %9d\n", Stack_mx);*/
+ 	/*cache_stats();*/
+@@ -311,15 +314,12 @@ tl_explain(int n)
+ }
+ 
+ static void
+-non_fatal(char *s1, char *s2)
++non_fatal(const char *s1)
+ {	extern int tl_yychar;
+ 	int i;
+ 
+ 	printf("ltl2ba: ");
+-	if (s2)
+-		printf(s1, s2);
+-	else
+-		printf("%s", s1);
++	fputs(s1, stdout);
+ 	if (tl_yychar != -1 && tl_yychar != 0)
+ 	{	printf(", saw '");
+ 		tl_explain(tl_yychar);
+@@ -336,20 +336,20 @@ non_fatal(char *s1, char *s2)
+ void
+ tl_yyerror(char *s1)
+ {
+-	Fatal(s1, (char *) 0);
++	Fatal(s1);
+ }
+ 
+ void
+-Fatal(char *s1, char *s2)
++Fatal(const char *s1)
+ {
+-  non_fatal(s1, s2);
++  non_fatal(s1);
+   alldone(1);
+ }
+ 
+ void
+-fatal(char *s1, char *s2)
++fatal(const char *s1)
+ {
+-        non_fatal(s1, s2);
++        non_fatal(s1);
+         alldone(1);
+ }
+ 
+--- mem.c.orig	2007-08-03 23:45:50.000000000 -0600
++++ mem.c	2018-06-09 12:12:33.010770723 -0600
+@@ -115,7 +115,7 @@ tfree(void *v)
+ 
+ 	--m;
+ 	if ((m->size&0xFF000000) != A_USER)
+-		Fatal("releasing a free block", (char *)0);
++		Fatal("releasing a free block");
+ 
+ 	u = (m->size &= 0xFFFFFF);
+ 	if (u >= A_LARGE)
+--- rewrt.c.orig	2018-05-12 08:25:05.000000000 -0600
++++ rewrt.c	2018-06-09 12:12:47.010738805 -0600
+@@ -318,7 +318,7 @@ out:
+ #endif
+ 	if (!can)
+ 	{	if (!dflt)
+-			fatal("cannot happen, Canonical", (char *) 0);
++			fatal("cannot happen, Canonical");
+ 		return dflt;
+ 	}
+ 

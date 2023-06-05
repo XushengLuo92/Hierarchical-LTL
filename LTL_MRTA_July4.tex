@@ -1,0 +1,1159 @@
+\documentclass[journal]{IEEEtran}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{asmp}[thm]{Assumption}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{problem}{Problem}
+\newtheorem{exmp}{Example}
+%\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+%\theoremstyle{remark}
+\newtheorem{rem}[thm]{Remark}
+%\numberwithin{equation}{section}
+% MATH -----------------------------------------------------------
+\newcounter{mycounter}
+\newenvironment{noindlist}
+ {\begin{list}{\arabic{mycounter})~~}{\usecounter{mycounter} \labelsep=0em \labelwidth=0em \leftmargin=0em \itemindent=0em}}
+ {\end{list}}
+\newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\Real}{\mathbb R}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\To}{\longrightarrow}
+\newcommand{\BX}{\mathbf{B}(X)}
+\newcommand{\A}{\mathcal{A}}
+\newcommand\T{\rule{0pt}{2.9ex}}
+\newcommand\B{\rule[-1.4ex]{0pt}{0pt}}
+\newcommand{\ltl}{ {\it LTL}$_{-\bigcirc}$ }
+\renewcommand{\topfraction}{0.98}
+\renewcommand{\textfraction}{0.01}
+\renewcommand{\floatpagefraction}{0.97}
+\newcommand{\clause}[1]{\llbracket \ccalC^{#1} \rrbracket}
+\newcommand{\cp}[2]{\ccalC_{#1}^{#2}}
+\newcommand{\lk}[2]{\ell_{#1}^{(#2)}}
+\newcommand{\auto}[1]{\ccalA_{\text{#1}}}
+\newcommand{\autop}{\ccalA_{\phi}}
+\makeatletter
+\renewcommand*{\@opargbegintheorem}[3]{\trivlist
+  \item[\hskip \labelsep{\it\quad  #1\ #2:}] {\it(#3)}\ }
+\makeatother
+\newcommand{\ag}[2]{\langle#1,#2\rangle}
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins
+\usepackage{stmaryrd}
+% The following packages can be found on http:\\www.ctan.org
+\usepackage{graphicx} % for pdf, bitmapped graphics files
+%% \graphicspath{{figures/}}
+\usepackage{bbm}
+\usepackage{bm}
+\makeatletter
+   \let\NAT@parse\undefined
+   \makeatother
+\usepackage[final]{hyperref}
+\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{cite}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage[noend,ruled,linesnumbered,resetcount]{algorithm2e}
+\SetKwComment{Comment}{$\triangleright$\ } {}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{subfigure}
+\usepackage{color}
+\usepackage{mysymbol}
+\usepackage{url}
+\usepackage{ltlfonts}
+%\usepackage{caption}
+%\usepackage[skip=0.5\baselineskip]{caption}
+\usepackage{tabularx,ragged2e,booktabs}
+\usepackage[normalem]{ulem}
+%\usepackage{hyperref}
+\usepackage[utf8x]{inputenc}
+%\usepackage{hyperref}
+\usepackage{multirow}
+\renewcommand{\ttdefault}{pcr} % selects Courier font
+\renewcommand{\ap}[3]{\mathcal{\pi}_{{#1},{#2}}^{#3}}
+\newcommand{\aap}[4]{\mathcal{\pi}_{{#1},{#2}}^{#3,#4}}
+\newcommand{\Qb}{\mathcal{Q}_{B}}
+\newcommand{\qb}{q_{{B}}}
+\newcommand{\vect}[1]{\boldsymbol{\mathbf{#1}}}
+\newcommand{\wf}{\mathcal{W}_{\text{free}}}
+\newcommand{\w}{\mathcal{W}}
+\newcommand{\te}[1]{\mathcal{#1}_T}
+\newcommand{\x}[1]{\vect{x}^{\text{#1}}}
+\newcommand{\q}[2]{{q}_{#1}^{\text{#2}}}
+\newcommand{\pn}{\ccalQ_P^{\text{near}}}
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\newcommand{\wn}{\mathcal{W}^{N}}
+\newcommand{\state}[1]{(\vect{x}^{#1}, q_B^{#1})}
+\newcommand{\statex}[1]{\vect{x}^{#1}}
+\newcommand{\stateb}[1]{q_B^{#1}}
+\newcommand{\pre}{\text{pre}}
+\newcommand{\suf}{\text{suf}}
+\newcommand{\ball}[1]{B_{n,!#1}}
+\newcommand{\llabel}[1]{L(\vect{x}^{#1})}
+\newcommand{\node}[1]{V_{n}^{\text{#1}}}
+\newcommand{\colorblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\colorred}[1]{\textcolor{red}{#1}}
+\newcommand{\ba}{\texttt{int}(\mathcal{B}_{\delta(\vect{x}^0)}(\vect{x}^0))}
+\newcommand{\baa}{\mathcal{B}_{\delta(\vect{x}^0)}(\vect{x}^0)}
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand{\rrts}{pRRT$^* $}
+\newcommand{\rrt}{pRRT}
+\newcommand{\grrt}{\ccalG^{\text{TL-RRT}}}
+\newcommand{\xx}{\overline{\bbx_{i}\bbx_{i}'}}
+\newcommand{\domanda}[1]{\subsubsection*{#1}}
+\usepackage[hang,flushmargin]{footmisc}
+\makeatletter
+\newcommand{\algorithmfootnote}[2][\footnotesize]{%
+  \let\old@algocf@finish\@algocf@finish% Store algorithm finish macro
+  \def\@algocf@finish{\old@algocf@finish% Update finish macro to insert "footnote"
+    \leavevmode\rlap{\begin{minipage}{\linewidth}
+    #1#2
+    \end{minipage}}%
+  }%
+}
+\makeatother
+
+\makeatletter
+\newcommand{\pushright}[1]{\ifmeasuring@#1\else\omit\hfill$\displaystyle#1$\fi\ignorespaces}
+\newcommand{\pushleft}[1]{\ifmeasuring@#1\else\omit$\displaystyle#1$\hfill\fi\ignorespaces}
+\makeatother
+
+\newenvironment{cexmp}
+{\addtocounter{exmp}{-1}\begin{exmp}}
+  {\end{exmp}}
+
+
+  \makeatletter
+  \setbox0\hbox{$\xdef\scriptratio{\strip@pt\dimexpr
+    \numexpr(\sf@size*65536)/\f@size sp}$}
+\newcommand{\scriptveryshortarrow}[1][3pt]{{%
+    \hbox{\rule[\scriptratio\dimexpr\fontdimen22\textfont2-.2pt\relax]
+               {\scriptratio\dimexpr#1\relax}{\scriptratio\dimexpr.4pt\relax}}%
+   \mkern-4mu\hbox{\let\f@size\sf@size\usefont{U}{lasy}{m}{n}\symbol{41}}}}
+
+\makeatother
+
+%% \setlength{\textfloatsep}{1\baselineskip plus 0.2\baselineskip minus 0.2\baselineskip}
+%% \setlength{\belowdisplayskip}{3pt}
+%% \setlength{\abovedisplayskip}{-3pt}
+%% \setlength{\abovedisplayshortskip}{-3pt}
+%% \setlength{\belowdisplayshortskip}{3pt}
+\setlength{\tabcolsep}{5pt}
+\begin{document}
+
+\author{Xusheng Luo and Michael~M.~Zavlanos
+\thanks{Xusheng Luo and Michael M. Zavlanos are with the Department of Mechanical Engineering and Materials Science, Duke University, Durham, NC 27708, USA. $\left\{\text{xusheng.luo, michael.zavlanos}\right\}$@duke.edu.}
+}
+
+%\title{\LARGE \bf Temporal Logic Task Allocation in Multi-Robot Systems}
+\title{\LARGE \bf Temporal Logic Task Allocation in Multi-Robot Systems}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+\thispagestyle{plain}
+\pagestyle{plain}
+\begin{abstract}
+  In this paper we consider the problem of optimally allocating tasks, expressed as a global Linear Temporal Logic (LTL) specification, to teams of mobile robots. Each robot is capable of one task and each task may require multiple robots. \blue{Our goal is to design a set of collision-free paths that are capable of executing the assigned tasks.
+    To obtain a scalable solution to this complex assignment problem, we propose an approximate method that first synthesizes a high-level plan  that exploits the structure of a relaxed version of the Nondeterministic Buchi Automaton (NBA) that captures the LTL specification and then convert the plan into executable paths by tackling a sequence of generalized multi-robot path planning instances. Specifically, we first prune the NBA and relax it by removing all negative atomic propositions in the NBA. Then, we decompose the relaxed NBA into simpler subgraphs. The sequences of edges in these subgraphs give rise to sequences of subtasks that the robots need to accomplish in order to satisfy the relaxed NBA. We capture these temporal relations between subtasks using partial orders and formulate a Mixed Integer Linear Problem (MILP) to allocate subtasks to robots that are subject to these partial order constraints. Next, after obtaining a high-level plan, we return back to the original NBA so as to satisfy the global LTL task. The relaxation is corrected and the high-level plan is implemented to take the collision into account, both of which are achieved by solving a sequence of generalized multi-robot path planning. Finally, we provide theoretic analysis on the correctness of the results and present numerical simulations that show our method can generate plans with lower cost, much faster than existing methods.}
+\end{abstract}
+\section{Introduction}
+Control synthesis for robots under Linear Temporal Logic (LTL) tasks has received considerable attention recently~\cite{smith2011optimal,chen2012formal,kantaros2015intermittent,vasile2013sampling,kantaros2017sampling,kantaros2018sampling,kantaros2018text,kantaros2018temporal,kantaros2018distributedOpt,wolff2014optimization,shoukry2017linear}. If optimality is not required, then model checking theory~\cite{baier2008principles} can be used to find feasible paths~\cite{smith2011optimal,chen2012formal,kantaros2015intermittent}. On the other hand, if optimality is of interest, optimal control synthesis methods can be used to find optimal robot plans that either draw from sampling-based planning methods in robotics~\cite{vasile2013sampling,kantaros2017sampling,kantaros2018sampling,kantaros2018text,kantaros2018temporal,kantaros2018distributedOpt}, or formulate the LTL planning problem as an optimization problem~\cite{wolff2014optimization,shoukry2017linear} using existing solvers.
+
+In this paper, we consider global LTL tasks that require robots of different types to visit different locations in space. The specific robot to visit a location is immaterial as long as it is a robot of the desired type. Satisfaction of such LTL tasks requires the solution of Multi-Robot Task Allocation (MRTA) problems, that also respect temporal constraints between tasks. Such problems can not be solved using existing model checkers or control synthesis methods as those discussed above. MRTA problems for simple point-to-point navigation tasks have been long studied in the robotics literature~\cite{korsah2013comprehensive,nunes2017taxonomy,gini2017multi}. A popular approach to solve these problems is using market-based methods~\cite{zavlanos2007distributed,zavlanos2008distributed,zavlanos2008dynamic,michael2008distributed}, although Mixed Integer Linear Programming (MILP) formulations have also been proposed~\cite{gombolay2013fast} due to the similarity of the MRTA problem with the vehicle routing problem~\cite{bredstrom2008combined}. In this paper, we propose a new MILP formulation of the LTL-MRTA  problem. The tasks that are assigned to the robots are extracted from the Nondeterministic Buchi Automaton (NBA) and satisfy a partial order relation capturing the temporal constraints imposed by the LTL.
+
+To the best of our knowledge, the most relevant temporal logic task allocation methods are presented in \cite{schillinger2018decomposition,schillinger2018simultaneous,faruq2018simultaneous,sahin2017provably,sahin2017synchronous,sahin2019multi,sahin2019multirobot,karaman2011linear}. Specifically, the methods in~\cite{schillinger2018decomposition,schillinger2018simultaneous,faruq2018simultaneous} automatically decompose the LTL formula into independent tasks that can be fulfilled by different robots. However, these methods can not address cooperative tasks that require the collaboration of several robots. To overcome this limitation,~\cite{sahin2017provably,sahin2017synchronous,sahin2019multi,sahin2019multirobot} employ the counting linear temporal logic (cLTL+/cLTL) to capture constraints on the number of robots that must be present at different regions. All \cite{sahin2017provably,sahin2017synchronous,sahin2019multi,sahin2019multirobot} propose  an Integer Linear Programming (ILP) formulation inspired by Bounded Model Checking techniques~\cite{biere2006linear}. However, these methods only focus on feasibility of the resulting paths. Furthermore, cLTL+/cLTL cannot specify such tasks where two different regions need to be visited by the same set of robots sequentially, as demonstrated in Section~\ref{sec:sim}. Similarly,~\cite{karaman2011linear} generalizes the vehicle routing problem  using a mission specification and formulates an MILP to provide an optimal plan. However, all vehicles are homogeneous.
+
+\section{Preliminaries}\label{sec:preliminaries}
+\subsection{Linear temporal logic}\label{sec:ltl}
+%% In this part, we describe Linear Temporal Logic (LTL) by presenting its syntax and semantics. Also, we briefly review preliminaries of automata-based LTL model checking.
+
+Linear temporal logic~\cite{baier2008principles} is composed of a set of atomic propositions $\mathcal{AP}$, the boolean operators, conjunction $\wedge$ and negation $\neg$, and temporal operators, next $\bigcirc$ and until $\mathcal{U}$. LTL formulas over $\mathcal{AP}$ follow the grammar $\phi:=\top~|~\pi~|~\phi_1\wedge\phi_2~|~\phi_1\vee\phi_2~|~\neg\phi~|~\bigcirc\phi~|~\phi_1~\mathcal{U}~\phi_2$, where $\top$ is unconditionally true.   Other temporal operators, e.g., \textit{eventually} $\lozenge$, \textit{always} $\square$, can be derived from $\mathcal{U}$, where $\Diamond \phi = \top \mathcal{U} \phi$ means $\phi$ will be satisfied sometime in the future, and $\square \phi = \neg \Diamond \neg \phi$ means $\phi$ is always satisfied from now on. %% In this paper, we restrict our attention to LTL that excludes the ``next'' temporal operator, denoted by LTL$_{-X}$ in \cite{kloetzer2008fully}, since the property of asymptotic optimality requires the path generated by the planning algorithm to completely coincide with the optimal path, whereas the ``next'' operator violates the continuity of the underlying path.
+
+An infinite \textit{word} $w$ over the alphabet $2^{\mathcal{AP}}$ is defined as an infinite sequence  $w=\sigma_0\sigma_1\ldots\in (2^{\mathcal{AP}})^{\omega}$, where $\omega$ denotes an infinite repetition and $\sigma_k\in2^{\mathcal{AP}}$, $\forall k\in\mathbb{N}$. The language $\texttt{Words}(\phi)=\left\{w|w\models\phi\right\}$ is defined as the set of words that satisfy the LTL formula $\phi$, where $\models\subseteq (2^{\mathcal{AP}})^{\omega}\times\phi$ is the satisfaction relation. An LTL $\phi$ can be translated into an NBA  defined as follows \cite{vardi1986automata}:
+\begin{defn}[NBA]\label{def:nba}
+  A \textit{Nondeterministic B$\ddot{\text{u}}$chi Automaton} $B$ is defined as a tuple $B=\left(\ccalQ_{B}, \ccalQ_{B}^0,\Sigma,\rightarrow_B,\mathcal{Q}_B^F\right)$, where $\ccalQ_{B}$ is the set of states; $\ccalQ_{B}^0\subseteq\ccalQ_{B}$ is a set of initial states; $\Sigma=2^{\mathcal{AP}}$ is an alphabet;  $\rightarrow_{B}\subseteq\!\ccalQ_{B}\times \!\Sigma\!\times\ccalQ_{B}$ is the transition relation;
+%% For a transition $(q_B,\pi,q'_B)\in\rightarrow_{B}$, $\pi\in \Sigma$ is called a state label if $q_B=q'_B$, otherwise a transition label;
+and $\ccalQ_B^F\subseteq\ccalQ_{B}$ is a set of accepting states.
+\end{defn}
+
+An \textit{infinite run} $\rho_B$ of $B$ over an infinite word $w=\sigma_0\sigma_1\sigma_2\dots$, $\sigma_k\in\Sigma$, $\forall k\in\mathbb{N}$, is a sequence $\rho_B=q_B^0q_B^1q_B^2\dots$ such that $q_B^0\in\ccalQ_B^0$ and $(q_B^{k},\sigma_k,q_B^{k+1})\in\rightarrow_{B}$, $\forall k\in\mathbb{N}$.
+%% , where we call $\pi_k$ a \textit{state label} if $q_B^k=q_B^{k+1}$, otherwise a \textit{transition label} if $q_B^k \not= q_B^{k+1}$.
+An infinite run $\rho_B$ is called \textit{accepting} if $\texttt{Inf}(\rho_B)\cap\ccalQ_B^F\neq\varnothing$, where $\texttt{Inf}(\rho_B)$ represents the set of states that appear in $\rho_B$ infinitely often. The words $\sigma$ that produce an accepting run of $B$ constitute the accepted language of $B$, denoted by $\ccalL_B$. Then~\cite{baier2008principles} proves that the accepted language of $B$ is equivalent to the words of $\phi$, i.e., $\ccalL_B=\texttt{Words}(\phi)$.
+
+\subsection{Partial orders}\label{sec:partial}
+A finite partially ordered set or poset $P\! =\! (X, <_P )$  is a pair consisting of a finite base set $X$ and a binary relation $<_P \subseteq \!\!X \!\times\! X$ that is reflexive, antisymmetric, and transitive. Let  $x, y \in X$ be two distinct elements, we write $x\! <_P\! y$ if $(x,y) \!\in <_P$, while $x$ and $y$ are incomparable, written $x \|_P y$. Moreover, $x$ is covered by $y$ or $y$ covers $x$, denoted by $x \!\prec_P \!y$, if $x\!<_P \! y$ and there is no $z \!\in \!X$ such that $x \! <_P \! z \!<_P \!y$. Anantichain is a subset of a poset such that any two distinct elements in this subset are incomparable. The width of a poset is the cardinality of a maximum antichain. %% Similarly, the height of a poset is defined as the maximum cardinality of a chain.
+
+A linear order $L_X=(X, <_L)$ is a poset such that $x <_L y$, $x = y$ or $y <_L x$ holds for any pair of  $x, y \in X$. A linear extension  $L_P = (X, <_L)$ of a poset $P$ is a linear order such that $x <_L y$ if $x <_P y$. That is, a linear order that preserves the partial order. A poset can be seen as a generative model for its linear extensions.
+We define $\ccalL_P$ as the set of all linear extensions of $P$. Note that a poset and its linear extensions share the same base set. \blue{Given a collection of linear orders $\Xi$, the poset cover problem focuses on reconstructing a single poset $P$ or a set of posets $P = \{P_1,\ldots,,P_k\}$ such that $L_P = \Xi$ or $\cup_{i\in[k]}L_{P_i} = \Xi$. As shown in~\cite{heath2013poset} the poset cover problem is NP-complete. Furthermore, the partial cover problem focuses on finding a poset $P$ such that $\ccalL_P$ contains the maximal number of linear orders in $\Xi$, i.e., $\ccalL_P \subseteq \Xi$ and   $\nexists P'$ s.t. $\ccalL_{P'} \subseteq \Xi$ and $|\ccalL_{P'}| > |\ccalL_{P}|$.~\cite{heath2013poset} shows that the partial cover problem can be solved in polynomial time.}
+
+\section{Problem Definition}\label{sec:problem}
+ \subsection{Problem Definition}
+
+ Consider a discrete environment filled with regions and obtacles, where each region or obstacles can span multiple free cells in the environment. We define $l\in \mathbb{N}^+$ disjoint labeled regions of interest in free space and denote by $\mathcal{L}=\{\ell_k\}_{k=1}^{l}$ the set that collects these labeled regions. Furthermore, we represented the environment by a graph $E = (S, \to_E)$ where $S$ is the finite set of vertices corresponding to free cells and $\to_{E} \subseteq S \times S$ captures the adjacency relation.
+
+We consider a team of heterogeneous robots with different capabilities that work in the environment. Given a collection of $n$ robots belonging to $m$ types, we assume that every robot belongs to exactly one type. Moreover, let $\mathcal{K}_j, j\in[m]$ where $[m]$ is the shorthand notation for  $\{1,\ldots,m\}$, denote the set that  collects all robots of type $j$, so that $\sum_{j\in [m]} |\ccalK_j| = n$ and $\ccalK_{j} \cap \ccalK_{j'} = \emptyset$ if $j \not= j'$, where $|\cdot|$ is the cardinality of a set. Finally, we define $[r,j]$ to represent robot $r$ of type $j$, where $r\in \ccalK_j, j\in [m]$. To capture the mobility of robot $[r,j]$ in the environment, we define the { transition system} as follows:
+\begin{defn}[TS]\label{def:ts}
+  A { Transition System} for robot $[r,j]$, denoted by TS$_{r,j}$, is a tuple TS$_{r,j} = \{S, s_{r,j}^0, \to, \Pi_{r,j}, L_{r,j}\}$ where: (a) $s_{r,j}^t \in S$ is the location of robot $[r,j]$ at time $t$; (b) $s_{r,j}^0$ is the initial location; (c) $\to \subseteq \to_{E} \cup_{s\in S} \{(s,s)\} $ is the transition relation, that is, the robot can be allowed to remain idle or transition between adjacent cells; (d) $\Pi_{r,j} = \cup_{k\in [l]}\{p_{r,j}^k\} \cup \{\epsilon\}$ where $p_{r,j}^{k}$ is true if robot $[r,j]$ is at labeled region $\ell_k$, and $\epsilon$ means empty label; (e) and $L_{r,j}: S \to \Pi_{r,j} $ is the labeling function that returns an atomic propositions that is satisfied at location $s_{r,j}^t$.
+\end{defn}
+
+Given the definition of a TS, we define the {product transition system}, which captures all possible combinations of robot behaviors captured by their respective TS$_{[r,j]}$, as follows:
+\begin{defn}[PTS]\label{def:pts}
+  Given $n$ transition systems TS$_{r,j} = \{S, s_{r,j}^0, \to, \Pi_{r,j}, L_{r,j}\}$, the product transition system $\text{PTS}$ is a tuple $\text{PTS} = (S^n, s^0, \to, \Pi, L)$ where (a) $S^n = S\times \cdots \times S$ is the finite set of collective locations. We let $s^t = (s_{1,1}^t, \ldots, s_{|\ccalK_1|,1}^t, \ldots, s_{1,m}^t, \ldots, s_{|\ccalK_m|, m}^t) \in S^n$ collect all robot locations at time $t$, which requires that only a single robot can occupy one cell at a time; (b) $s^0$ is the initial locations of robots; (c) $\to \subseteq S^n \times S^n$ is the transition relation. Specifically, $(s^t, s^{t+1}) \in \to$ if $s^t_{r,j}\rightarrow_{r,j} s^{t+1}_{r,j}$ for $\forall r\in \ccalK_j, j \in [m]$ and there do not exist any two robots $[r,j]$ and $[r',j']$ such that $s^{t+1}_{r,j} = s^{t}_{r',j'}$ and $s^{t+1}_{r',j'} = s^{t}_{r,j}$. In words, each robot follows its transition relation and no two robots switch their locations; (d) $\Pi = \cup_{i\in[|\ccalK_j|], j\in [m], k\in [l]}\{\pi_{i,j}^k\} \cup \{\epsilon\}$, where $\ap{i}{j}{k}$ is true if at least $i$ robots of type $j$, denoted by $\ag{i}{j}$, are at labeled region $\ell_k$ at the same time, i.e., $|\{r\in \ccalK_j: L_{r,j}(s_{r,j}^t) = p_{r,j}^k \}| \geq i$; (d) and $L: S^n \to 2^{\Pi}$ is the labeling function that returns the set of atomic propositions satisfied by all robots at time $t$.
+\end{defn}
+
+In this paper, we consider MRTA problems where the tasks are globally described by  a fragment of LTL formulas called \ltl that excludes the operator ``next''. Since formulas such as  $\bigcirc \ap{i}{j}{k}$ enforces $\ap{i}{j}{k}$ to be true at the next immediate step, which equivalently requires $\langle i,j \rangle$ to stay next to or at region $\ell_k$ at the current step. This requirement  is time-critical and can be easily violated if robots are allowed to stutter~\cite{sahin2019multirobot}. Moreover, we consider tasks where a group of robots of certain types  need to visit different regions in sequence, e.g., to deliver objects between those locations. To capture such tasks, we  define  \blue{\it induced} atomic propositions over $\Pi$ (see Definition~\ref{def:pts})  as follows.
+ \begin{defn}[Induced atomic propositions]
+   For each atomic proposition $\ap{i}{j}{k} \in \Pi$, we associate an infinite set of  {induced} atomic propositions $\{\ap{i}{j}{k,\chi}\}_{\chi\in \mathbb{N}}$, where $\chi$ is an \red{indicator}. When $\chi=0$, $\ap{i}{j}{k,\chi}$ is reduced to $\ap{i}{j}{k}$, whose truth is state-dependent. On the other hand, if $\chi \neq 0$, the truth of $\ap{i}{j}{k,\chi}$ is state-and-path-dependent, and it additionally depends on other induced atomic propositions that share the same $i,j$ and $\chi$. That is, both $\ap{i}{j}{k,\chi}$ and $\ap{i'}{j'}{k',\chi'}$, with $\chi\not=0$, are true if the same group of $i$ robots of type $j$ visit regions $\ell_k$ and $\ell_{k'}$ but at different time instants. Furthermore, the truth of the negative atomic proposition  $\neg \ap{i}{j}{k,\chi}$ is equivalent to its basic counterpart $\neg \ap{i}{j}{k}$, irrespective of  $\chi$.
+ \end{defn}
+
+  \blue{We collect all (induced) atomic propositions in the set $\Sigma$.  In what follows, we omit the superscript $\chi$ when $\chi=0$.} We also  define the notion of {\it valid} temporal logic tasks.
+ \blue{\begin{defn}[Valid temporal logic task]
+A temporal logic task specified by a\ltl formula is valid if atomic propositions with the same non-zero indicator $\chi$ involve  the same robot type and the same number of robots.
+ \end{defn}}
+
+ \begin{exmp}
+A valid formula is such $\Diamond (\ap{2}{1}{1,1} \wedge \Diamond \ap{2}{1}{2,1}) \wedge \Diamond (\ap{1}{1}{3,2} \wedge \Diamond \ap{1}{1}{4,2}) \wedge \square \Diamond \ap{1}{3}{2}$ that requires the same $\ag{2}{1}$ to visit regions $\ell_1$ and $\ell_2$ sequentially, the same $\ag{1}{1}$ to visit regions $\ell_3$ and $\ell_4$ sequentially, and $\ag{1}{3}$ to visit region $\ell_2$ eventually; whereas formulas $\Diamond (\ap{1}{1}{1,1} \wedge \Diamond \ap{2}{1}{2,1})$ and $\Diamond (\ap{2}{2}{1,1} \wedge \Diamond \ap{2}{1}{2,1})$ are invalid due to different number of robots and robot types, respectively.
+ \end{exmp}
+
+
+
+ {A $h$-length path $\tau = s^0 \ldots s^h$ that captures the collective behavior of the team is such that $s^{t-1}\to s^{t}, \forall t\in[h]$, which is {\it collision-free} since all robots do not collide with obstacles or each other according to Definition~\ref{def:ts}.}  Given a valid\ltl formula $\phi$, a collision-free path $\tau$ that satisfies $\phi$ can be written in a prefix-suffix structure $\tau=\!\!\!\tau^{\text{pre}}[\tau^{\text{suf}}]^\omega$, where the prefix part  $\tau^{\text{pre}}\!\!\!=s^0 \!\!\!\dots s^{h_1}$ is executed once followed by the indefinite execution of the suffix part $\tau^{\text{suf}}=s^{h_1} \dots s^{h_1+h_2} s^{h_1+h_2+1}$, where $s^{h_1+h_2+1}\!\!\!=\!\!\!s^{h_1}$ \cite{baier2008principles}. We say a path $\tau$ satisfies $\phi$ if \blue{{\it (i)} the trace, defined as $\texttt{trace}(\tau):=L(s^0)\dots L(s^{h_1})[L(s^{h_1})\dots L(s^{h_1+h_2+1})]^{\omega}$  belongs to $\texttt{Words}(\phi_0)$, where $\phi_0$ is obtained by replacing all induced atomic propositions in $\phi$ with their counterparts with zero indicators; {\it (ii)} \red{it is the same $\ag{i}{j}$ that satisfy the induced atomic proposition $\ap{i}{j}{k,\chi}$ in $\phi$ with the same non-zero indicator $\chi$}.\footnote{\blue{Not only do the satisfaction conditions take into account the collective labeling of the paths, as in {\it (i)}, but differentiate exactly which robots participate, as in {\it (ii)}. When there is no atomic proposition in $\phi$ with non-zero indicator, the satisfaction condition only considers {\it (i)}, which is identical to the conventional case in Section~\ref{sec:ltl}.}}}
+  Now, let $\tau_{r,j} = s_{r,j}^0, s_{r,j}^1, \ldots, s_{r,j}^h$ denote a collision-free path of length $h$ for robot $[r,j]$. We define the cost of $\tau_{r,j}$  as $J(\tau_{r,j}) = \sum_{t=0}^{h-1} d(s_{r,j}^{t}, s_{r,j}^{t+1})$, \blue{where $d: S\times S \to \mathbb{R}^+\cup\{0\}$ maps a pair of free cells to the distance between them.} Therefore, the cost of paths $\tau$ that combines all robot paths $\tau_{r,j}$ of length $h$ can be defined as
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}
+  J(\tau) = \sum_{{r \in \ccalK_j, j \in [m]}} J(\tau_{r,j}),
+\end{align}
+\endgroup
+For  plans written in prefix-suffix form, we get
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:cost}
+J(\tau) = \beta J(\tau^{\text{pre}}) + (1-\beta) J(\tau^{\text{suf}}),
+\end{align}
+\endgroup
+where $\beta\in [0,1]$ is a user-specified parameter. Finally, the problem addressed in this paper is defined as follows.
+\begin{problem}\label{prob:1}
+Given a team of $n$ robots of $m$ types that work in an environment with labeled regions and obstacles, and a valid \ltl specification $\phi$, plan a {collision-free} path for each robot such that $\phi$ is satisfied and the sum of the path costs in~\eqref{eq:cost} is minimized.
+\end{problem}
+
+We refer to Problem~\ref{prob:1} as multi-robot task allocation under LTL specifications, in short, LTL-MRTA, which is a single-task robot and multi-robot task (ST-MR) problem, where a robot is capable of one task and a task may require multiple robots. Since the ST-MR problem is NP-hard~\cite{korsah2013comprehensive,nunes2017taxonomy}, so is the LTL-MRTA problem. Consequently, an exact method will be impractical for large-scale applications. In what follows, we propose an approximate method to solve LTL-MRTA efficiently.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{workspace.pdf}
+    \caption{\blue{Illustration of the environment adapted from the work~\cite{shoukry2017linear,sahin2019multi}. The 10$\times$10 workspace has 6 regions of interest and 4 obstacles. \red{There are two types of robots and each type has 4 robots. Magenta dots represent type-1 robots and orange dots represent type-2 robots.}}}\label{fig:workspace}
+ \end{figure}
+\begin{exmp}\label{exp:1}
+  \blue{Throughout the paper, we adopt a running example to help present our proposed method; see Fig.~\ref{fig:workspace}} for illustration of the environment.  Consider a team of 3 robots of type 1 and 2 robot of type 2, and all robots are initially located at region $\ell_1$. The LTL task is $\Diamond (\ap{2}{1}{2,1} \wedge  \Diamond \ap{2}{1}{3,1})  \wedge \Diamond \ap{1}{2}{4} \wedge \neg \ap{2}{1}{3} \,\mathcal{U}\, \ap{1}{2}{4}$, which requires that (a) eventually the same group of $\langle2,1\rangle$ visit regions  $\ell_2$ and $\ell_3$ sequentially; (b) eventually $\langle1,2\rangle$ visits $\ell_4$; and (c) $\ag{2}{1}$ do not visit regions $\ell_3$ until $\ag{1}{2}$ visits region $\ell_4$.
+\end{exmp}
+
+\subsection{Outline of the LTL-MRTA Algorithm}
+%% { \begin{algorithm}[t]
+%%       \caption{Outline of the LTL-MRTA Algorithm}
+%%       \LinesNumbered
+%%       \label{alg:frame}
+%%       \KwIn {workspace $\ccalW$,  robot team $\{\ccalK_j\}$\\ \quad \quad \quad
+%%        \ltl formula $\phi$}
+%%       Translate $\phi$ into a NBA $\ccalA_o$ \label{frame:nba}\Comment*[r]{\ref{sec:prune}}
+%%       Prune $\ccalA_o$ and do replacing to get $\ccalA_r$ \label{frame:prune}\Comment*[r]{\ref{sec:prune}}
+%%       Sort pairs of initial and accepting vertices in ascending order by the total length\label{frame:sort} \Comment*[r]{\ref{sec:pregraph}}
+%%       \For{each pair in the sorted order}{
+%%         \Comment*[r]{Find robot prefix paths}
+%%         Extract the subgraph $\ccalA_s$\ and prune $\ccalA_s$ \label{frame:subgraph}\Comment*[r]{\ref{sec:pregraph}}
+%%         Extract subtasks from $\ccalA_s$ and infer the poset with the largest width \label{frame:poset}\Comment*[r]{\ref{sec:poset}}
+%%         Build the MILP graph; see also Alg.~\ref{alg:milpgraph} \label{frame:milpgraph}\Comment*[r]{\ref{sec:graph}}
+%%         Formulate the MILP and solve it \label{frame:milp} \Comment*[r]{\ref{sec:milp}}
+%%         Extract high-level plans  \label{frame:path} \Comment*[r]{\ref{sec:path}}
+%%         Identify the accepting run in $\ccalA_r$ \label{frame:run} \Comment*[r]{\ref{sec:run}}
+%%         Solve generalized  multi-robot path planning to obtain executable paths\label{frame:mapp} \Comment*[r]{\ref{sec:mapp}-\ref{sec:solution2mapp}}
+%%         \Comment*[r]{Find robot suffix paths
+%%         }
+%%         Repeat lines~\ref{frame:subgraph}-\ref{frame:mapp} \label{frame:suffix} \Comment*[r]{\ref{sec:suf}}
+%%       }
+%% Select the plan with the lowest cost according to~\eqref{eq:cost} \label{frame:cost}
+%%  \end{algorithm}}
+ \begin{figure*}[!t]
+   \centering
+\includegraphics[width=\linewidth]{overview.pdf}
+   \caption{Schematic overview of the proposed method.  The first 5 boxes correspond to the relaxation stage and the last two constitute the correction stage.}
+\label{fig:overview}
+ \end{figure*}
+{The schematic overview of our proposed  method is shown in Fig.~\ref{fig:overview}, which consists of two stages. The first stage is referred to as the {\it relaxation} stage. We first prune the NBA by deleting infeasible transitions and remove  the negative atomic propositions in the NBA corresponding to the formula $\phi$ so that the satisfaction of the transition (referred to also as subtask) in the relaxed NBA requires multi-robots to visit certain regions; see Section~\ref{sec:prune}. Then we extract a subgraph, corresponding to a pair of initial and accepting states, from the relaxed NBA that covers at many transitions as possible; see Section~\ref{sec:pregraph}, Next, by associating each transition in the subgraph with a subtask, we extract a set of subtasks from the subgraph and infer the temporal relation by computing the poset with the largest width; see Section~\ref{sec:poset}. What follow are the construction of the routing graph that captures the regions that robots need to visit to satisfy the subtasks and the temporal order of the visitation; see Sections~\ref{sec:graph}, and the formulation of a MILP based on the vehicle routing problem; see Section~\ref{sec:milp}. In this way, a high-level abstract plan that abstracts out low-level execution can be obtained from the solution, which provides a sequence of waypoints that each robot needs to visit in order; see Section~\ref{sec:path}. Next the {\it correction} stage follows  where the high-level abstract plan is adjusted and concretized to be a low-level executable plan by solving a sequence of generalized multi-robot path planning problems that account for the collision avoidance and satisfy the original specification; see Section~\ref{sec:solution2mrta}.  The adoption of this relaxation-and-correction scheme comes from the key observation that temporal relations among subtasks can be better exploited in the relaxed NBA and existing work on vehicle routing problems can inspire scalable techniques to solve the allocation of subtasks.
+
+   %% Specifically, the \ltl formula $\phi$ is translated to a NBA $\autop$ using the state-of-the-art software~\cite{gastin2001fast}. We further prune $\autop$ and then replace all negative atomic propositions appearing in $\autop$ with atomic proposition $\top$~; The obtained automaton is denoted by $\auto{relax}$.   see Section~\ref{sec:prune}. Next, we calculate the total length of each pair of initial and accepting vertices in $\auto{relax}$ and sort them in ascending order in terms of the total length; see Section~\ref{sec:pregraph}. For each pair of initial and accepting vertices with finite total length, we find a plan in a prefix-suffix structure. In particular, given a pair of initial and accepting vertices, we find prefix robot paths as follows. First, we extract a subgraph $\auto{subtask}$ from $\auto{relax}$ and prune it as described in Section~\ref{sec:pregraph}. Then, we extract a set of subtasks from $\auto{subtask}$ and determine their temporal relation by computing the poset with the largest width using the method proposed  for the partial cover problem; see Section~\ref{sec:poset}. Then, given this maximum width poset, we construct the MILP graph using Alg.~\ref{alg:milpgraph} and formulate a MILP over this graph; see Sections~\ref{sec:graph} and~\ref{sec:milp}. Next, we extract the a high-level prefix plan for each robot from the MILP solution, which provides a sequence of waypoints that each robot needs to visit in order; see Section~\ref{sec:path}]. Note that the high-level plan does not account for collision avoidance. Finally, we return back to the original NBA and concretizing the high-level plans obtained for the relaxed NBA $\auto{relax}$, which is achieved by first identifying the accepting run that the high-level plans incur; see Section~\ref{sec:run} and then implementing the plans through a sequence of generalized multi-robot path planning instances; see Sections~\ref{sec:mapp}-\ref{sec:solution2mapp}.  After finding the prefix robot paths, we follow the same procedure to find the suffix robot paths; see Section~\ref{sec:suf}]. Iterating over each pair of initial and accepting vertices, we select the plan with the lowest cost calculated according to~\eqref{eq:cost}.
+
+   \red{On the other hand, similar to~\cite{sahin2019multi}, we adopt a hierarchical approach which first searches for an abstract high-level plan that indicates the sequence of regions that robots should visit in a proper order and then implementing the plan by finding low-level paths between consecutive regions in the plan. However, our work differs from~\cite{sahin2019multi} in the way how the high-level plans  and   executable paths are generated. More significantly,~\cite{sahin2019multi} stops with a feasible plan while we end up with a plan with better quality.}
+
+
+\section{Extracting Subtasks and Infer the Temporal Order from the NBA}\label{sec:app}
+     In this section, our goal is to extract a set of subtasks from the NBA that corresponds to the specification and then infer the temporal order, sequential or simultaneous, among these subtasks.
+\subsection{{Pruning and relaxation of the NBA}}\label{sec:prune}
+
+\begin{figure*}
+    \centering
+    \subfigure[NBA $\autop$]{
+      \label{fig:nba_0}
+  \includegraphics[width=0.38\linewidth]{nba0.pdf}}
+    \hspace{1em}
+    \subfigure[NBA $\autop^-$]{
+      \label{fig:nba_0_}
+      \includegraphics[width=0.25\linewidth]{nba0_.pdf}}
+    \hspace{1em}
+        \subfigure[NBA $\auto{relax}$]{
+      \label{fig:nba_m}
+      \includegraphics[width=0.25\linewidth]{nba_m.pdf}}
+        \caption{Different NBAs. {The vertex label is placed in the square bracket to the right of each vertex. The pruned NBA $\autop^-$ is obtained from $\autop$ by removing edges $(v_{\text{init}}, v_3), (v_{\text{init}}, v_4),  (v_{\text{init}}, v_5), (v_5,v_3), (v_5, v_6)$ and the vertex $v_5$.}}\label{fig:nba}
+\end{figure*}
+\blue{We begin with pruning and relaxing the NBA. Given a valid formula $\phi$ in\ltl, we construct a NBA $\autop = (\ccalV, \ccalE)$.\footnote{The NBA can be constructed  using the tool developed in~\cite{gastin2001fast}. Note that the NBA in Definition~\ref{def:nba} is essentially a graph. In what follows, we refer to the NBA by the graph $\autop$ for notational convenience.}  For a transition $(q_B, \gamma, q'_B)\to_B$ in the NBA $\autop$, we assume that the propositional formula $\gamma$ is  in {\it disjunctive normal form} (DNF), i.e,
+  $ \gamma = \bigvee_{p\in \ccalP} \bigwedge_{q\in \ccalQ_p} (\neg)\ap{i}{j}{k,\chi}$, where the negation operator can only precede the atomic propositions. Note that any propositional formula has an equivalent formula in DNF~\cite{baier2008principles}. We call  $\ccalC_p^{\gamma}=\bigwedge_{q\in \ccalQ_p}(\neg) \ap{i}{j}{k,\chi}$ the $p$-th {\it clause} of $\gamma$ that includes a set $\ccalQ_p$ of positive and negative {\it literals} and each positive literal is an atomic proposition $\ap{i}{j}{k,\chi}\in \Sigma$. Let $\mathsf{cls}(\gamma)$ denote the set of clauses $\ccalC_p^{\gamma}$ in $\gamma$, and let $\mathsf{lits}^+(\ccalC_p^{\gamma})$ and $\mathsf{lits}^+({\gamma})$ collect all positive literals in a clause and in a propositional formula, respectively, and similarly for $\mathsf{lits}^-(\ccalC_p^{\gamma})$ and $\mathsf{lits}^-({\gamma})$. Identical literals are kept, if any, since they may belong to different clauses. Furthermore, we call the propositional formula $\gamma$ a vertex label if $q_B=q'_B$, otherwise, an edge label. In what follows, we do not consider self-loops when we refer to edges in $\autop$, since self-loops can be captured by vertices.   With a slight abuse of notation, let {$\gamma: \!\ccalV \!\to \! 2^\Sigma $} and {$\gamma: \ccalV \times \ccalV \to 2^\Sigma$} be the functions that map a vertex and edge in the automaton to its vertex label and edge label, respectively.}
+
+Given a NBA $\autop$, the following initial steps are taken to prune $\autop$ by simplifying transitions and removing infeasible transitions. We denote the resulting automaton by $\autop^-$. In particular, for every vertex label or edge label $\gamma$ in $\autop$,
+%\begin{noindlist}
+  \blue{\subsubsection{Mutual exclusion in $\mathsf{lits}^+(\cp{p}{\gamma})$ }\label{prune:2} We delete the clause $\cp{p}{\gamma} \in \mathsf{cls}(\gamma)$ (replacing it with $\bot$) if there exist two positive literals $\ap{i}{j}{k,\chi} , \ap{i}{j}{k',\chi} \in \mathsf{lits}^+(\cp{p}{\gamma})$ such that $k\not= k'$ and $\chi\not=0$, since the same group of robots cannot be at different regions at the same time.}
+       \blue{\subsubsection{Mutual exclusion} \label{prune:2} We delete the clause $\cp{p}{\gamma} \in \mathsf{cls}(\gamma)$ (replacing it with $\bot$) if there exist a positive literal $\ap{i}{j}{k,\chi} \in \mathsf{lits}^+(\cp{p}{\gamma})$ and a negative literal $\neg \ap{i'}{j}{k} \in \mathsf{lits}^-(\cp{p}{\gamma})$ such that $i' \leq i$ since they are mutually  exclusive.}
+       \blue{\subsubsection{Absorption in $\mathsf{lits}^+(\cp{p}{\gamma})$} \label{prune:1} For each clause $\cp{p}{\gamma} \in \clause{\gamma}$, we delete the positive literal $\ap{i}{j}{k,\chi} \in \mathsf{lits}^+(\cp{p}{\gamma})$ (replacing it with $\top$), if another $\ap{i'}{j}{k,\chi'} \in \mathsf{lits}^+(\cp{p}{\gamma})$ exists such that $i' \geq i$ and $\chi=0$, since if $\ag{i'}{j}$ are at region $\ell_k$, that is, $\ap{i'}{j}{k,\chi'}$ is true, so is  $\ap{i}{j}{k}$.\footnote{\blue{Action is not taken when $\chi\not=0$.}}}
+        \blue{\subsubsection{Absorption in $\mathsf{lits}^-(\cp{p}{\gamma})$} \label{prune:1} Similarly, we delete the negative literal $\neg \ap{i}{j}{k} \in \mathsf{lits}^-(\cp{p}{\gamma})$ (replacing it with $\top$), if another $\neg \ap{i'}{j}{k} \in \mathsf{lits}^-(\cp{p}{\gamma})$ exists such that $i' < i$.}
+        \blue{\subsubsection{Violation of team size} \label{prune:2}  For each clause $\cp{p}{\gamma} \in \clause{\gamma}$, let $\ap{i_m}{j}{k,\chi}$ denote the literal in $\mathsf{lits}^+(\cp{p}{\gamma})$ that directs the largest number of robots, denoted by $i_m(j,k)$, of type $j$ to visit region $\ell_k$ for given $j$ and $k$, compared to all other positive literals in $\mathsf{lits}^+(\cp{p}{\gamma})$ for the same $j$ and $k$. We delete the clause $\cp{p}{\gamma}$ (replacing it with $\bot$) if the required number of robots of certain type exceeds the provided number, i.e., if there exists $j\in[m]$ such that $ \sum_{k\in[l]}   i_m(j,k) > |\ccalK_{j}|$.}
+        \blue{\subsubsection{Infeasible transitions} \label{prune:3} We delete all edges associated with $\bot$ label. We also delete all vertices associated with $\bot$ label except the initial and accepting vertices. {Finally, we delete every vertex, except the initial vertex, that does not have incoming edges.}}
+%\end{noindlist}
+
+  \blue{\red{As shown in Proposition~\ref{prop:prune} in Section~\ref{sec:correctness}, this pruning process does not affect the feasibility of Problem~\ref{prob:1}.} Given the pruned automaton $\autop^-$, we further relax it by replacing each negative literal in vertex or edge labels with $\top$. We denote the relaxed automaton by $\auto{relax}$. Proposition~\ref{prop:inclusion} states that the language accepted by $\autop^-$ is included in the language accepted by $\auto{relax}$, so we do not remove feasible solutions to Problem~\ref{prob:1}. In other words, $\auto{relax}$ is an over-approximation of $\autop^-$. This is why the correction stage is reguired to modify the solution obtained from $\auto{relax}$ to the satisfy $\autop^-$.
+
+\begin{cexmp}
+ \blue{(Pruning and relaxation of the NBA) The running formula is $\Diamond (\ap{2}{1}{2,1} \wedge  \Diamond \ap{2}{1}{3,1})  \wedge \Diamond \ap{1}{2}{4} \wedge \neg \ap{2}{1}{3} \,\mathcal{U}\, \ap{1}{2}{4}$. The original automaton $\autop$, the pruned automaton $\autop^-$ and the relaxed automaton $\auto{relax}$ are shown in Fig.~\ref{fig:nba}.}
+\end{cexmp}
+
+Consider an edge $e = (v_1, v_2) \in \auto{relax}$ and its starting vertex $v_1\in\ccalV_{\text{subtask}}$.
+ Assume that the current state of $\auto{relax}$ is $v_1$. To transition to $v_2$, certain robots need to simultaneously reach certain regions to  make $\gamma(v_1, v_2)$ true, while maintaining  $\gamma(v_1)$ true en route. We assume that the transition to $v_2$ occurs immediately once $\gamma(v_1, v_2)$ becomes true. Based on this interpretation, we formally define the subtask below.
+\begin{defn}[Subtask]\label{defn:subtask}
+ {A subtask is equivalent to an edge $(v_1, v_2)$ in $\auto{relax}$.}
+\end{defn}
+
+The goal of this subtask is to generate a transition leading to vertex $v_2$. Informally speaking, an edge $e\in \ccalE_\text{s}$ captures a subtask that specifies a set of \textit{target regions} that should be visited by robots of certain types. \blue{Subtasks can be viewed as generalized reach-avoid tasks where  specific types of robots are driven to desired target regions (the "reach" part of the task) while satisfying the vertex label along the way (the "avoid" part of the task. Avoidance here is defined in a more general way compared to the conventional definition that requires robots to stay away from given regions in space).} Next we give  the notion of equivalent subtasks.
+\begin{defn}[Equivalent subtasks]\label{defn:eq}
+ Subtasks $(v_1, v_2)\in \ccalE_\text{s}$ and $(v'_1, v'_2) \in \ccalE_\text{s}$ are equivalent, denoted by $(v_1, v_2) \sim (v'_1, v'_2)$, if $\gamma(v_1) = \gamma(v'_1)$, $\gamma(v_1, v_2)=\gamma(v_1', v'_2)$ and they  are not in the same path that connects $v_0$ and $v_{\text{accept}}$.
+\end{defn}
+
+ The last condition in Def.~\ref{defn:eq}  is necessary since two subtasks in the same path mark different progress towards task completion, even if they have identical labels.
+\begin{cexmp}({Subtask})
+  Observe that $\auto{relax}$ captures high-level plans that are composed of subtasks, formally defined later, that need to be satisfied in a specific order to reach the accepting state. For instance, the path $v_\text{init}\to v_1\to v_4\to v_3\to v_6$ in Fig.~\ref{fig:nba_m} represents a high-level plan where first $\langle1,2\rangle$ visit region $\ell_4$, then $\langle2,1\rangle$ visits region $\ell_2$ and finally the same two robots of type 1 visit regioon $\ell_3$. The temporal order between these subtasks specifies that the time when $\langle1,2\rangle$ visits region $\ell_4$ is independent from the time when $\langle2,1\rangle$ visit region $\ell_2$, and that $\langle1,2\rangle$ visiting region $\ell_4$ and $\langle2,1\rangle$  visiting region $\ell_2$ should occur prior to $\langle2,1\rangle$ visiting region $\ell_3$.
+\end{cexmp}
+
+In the rest of this section and in Section~\ref{sec:solution}, we focus on the relaxed automaton $\auto{relax}$ and design high-level plans that ignore collision avoidance between robots and only specify the sequence of regions that the robots should visit and the corresponding timing.} Efforts to exploit the high-level plans embedded in the NBA can be found in~\cite{xluo_CDC19,camacho2017non,camacho2019ltl}. For example,~\cite{xluo_CDC19} extracts subtasks from a NBA that can be used to synthesize plans fast for new LTL formulas. On the other hand,~\cite{camacho2017non} converts temporal planning problems to standard planning problems by defining actions based on the transitions in the NBA. Finally,~\cite{camacho2019ltl} converts formal languages to reward machines that capture the structure of the task to be used for reinforcement learning.
+
+
+  \subsection{Extraction of subgraphs $\auto{subtask}$ from $\auto{relax}$}\label{sec:pregraph}
+  In  this section, we exploit the structure of these high-level plans by decomposing the graph $\auto{relax}$ into subgraphs such that each subgraph corresponds to one pair of sorted initial and accepting vertices,  and then extracting subtasks and their temporal order  from these subgraphs in the next Section~\ref{sec:poset}.
+
+
+
+\begin{figure}[!t]
+  \centering
+   \includegraphics[width=0.6\linewidth]{lasso.pdf}
+  \caption{Graphical depiction of prefix-suffix structure when $\gamma(v_{\text{accept}})=\bot$, whis resembles a lasso. The dashed loop around the vertex $v_{\text{accept}}$ implies the presence of vertex label $\gamma(v_{\text{accept}})$, corresponding to case~\hyperref[sec:presence]{{\it (i)}}. The shaded blue line and the orange loop that partially overlap represent the prefix and suffix part, respectively at the absence of verted label $\gamma(v_{\text{accept}})$, corresponding to case~\hyperref[sec:absence]{{\it (ii)}}.}
+  \label{fig:lasso}
+\end{figure}
+
+\subsubsection{Revisit of prefix-suffix structure}\label{sec:presuf}
+\green{The paths satisfy the specification are in a form of prefix-suffix structure. In what follows, assisted by Fig.~\ref{fig:lasso}, we discuss the prefix-suffix structure in the NBA $\auto{relax}$ in two cases based on the presence or absence of the vertex label of the the accepting vertex $v_{\text{accept}}$.
+  \domanda{(i) Presence of \upshape$\gamma(v_{\text{accept}})$}\label{sec:presence} If the robots reach locations that drive the transition in NBA to the accepting vertex $v_{\text{accept}}$ with $\gamma(v_{\text{accept}})=\bot$ and remain idle, the LTL formula $\phi$ is satisfied.
+  \domanda{(ii) Absence of \upshape $\gamma(v_{\text{accept}})$}\label{sec:absence} For the suffix part,  not only do the transitions in the NBA $\autop^-$ occur along a cycle around $v_{\text{accept}}$, but also robots need to travel back to some locations to make their trajectories loops, thus, synchronizing and restarting the inifite execution. Let $v_{\text{prior}}$ and $v_{\text{next}}$ denote the vertices taht right before and after $v_{\text{acccept}}$ in the cycle; see also Fig.~\ref{fig:lasso}. If after the relaxation, the edge label $\gamma(v_{\text{accept}}, v_{\text{next}})$ is not $\top$, then robots first need to satisfy $\gamma(v_{\text{accept}}, v_{\text{next}})$ immediately after the satisfcatoin of the edge label $\gamma(v_{\text{prior}}, v_{\text{accept}})$ (due to $\gamma(v_{\text{accept}}) = \bot$) when they are about to finish one round along the cycle, and what's more, they also need to travel back to initial locations of the suffix part, i.e., final locations of the prefix part, to close the trajectory loop and synchronize. However, the issue is that it is possible that robots can not visit regions that satisfy $\gamma(v_{\text{accept}}, v_{\text{next}})$ immediately after the satisfaction of $\gamma(v_{\text{prior}}, v_{\text{accept}})$. Even so, travelling back to initial location might violate the vertex label $\gamma(v_{\text{next}})$.  To overcome this issue, we select the cycle around $v_{\text{accept}}$ such that $\gamma(v_{\text{accept}}, v_{\text{next}})=\top$ after the relaxation. Also, we extend the prefix plan and let the last part of the prefix plan drive the transition one step further to $v_{\text{next}}$ and the final locations of the prefix plan satisfy its vertex label $\gamma(v_{\text{next}})$; see also the shaded prefix plan in Fig.~\ref{fig:lasso}, so that the edge label $\gamma(v_{\text{accept}}, v_{\text{next}})$ is satisfied while robots head towards their initial locations.}
+
+In what follows, we sort the pairs of initial and accepting vertices based on two cases in~\ref{sec:presuf}.
+
+  \subsubsection{Sort the pairs of initial and accepting vertices by path length}\label{sec:sort}\green{Given a pair of initial vertex $v_0$ and accepting vertex $v_{\text{accept}}$ in $\auto{relax}$, we first compute the number of edges in the shortest simple path from  $v_0$ to $v_{\text{accept}}$ where a simple path does not contain any  repeating vertices. This is related to the prefix part. To this end, we remove all other initial vertices and accepting vertices from $\auto{relax}$. Then, for the initial vertex $v_0$, {\it (i)} if its vertex label  is $\bot$, we removed any of its  outgoing edges if the initial robot locations do not satisfy the corresponding edge label; {\it (ii)} if the vertex label is not $\bot$, we check whether the initial robot locations satisfy the vertex label. If yes, we do nothing, otherwise,  this case is the  same as {\it (i)} and thus, we remove any of its  outgoing edges if the initial robot locations do not satisfy the corresponding edge label. Next, the shortest simple path can be found using Dijkstra's algorithm.  Notice that if a vertex is both an initial and accepting vertex, we view it differently, one as the initial vertex and one as the accepting vertex, although it appears twice in the shortest simple path.
+
+    Then, we compute the number of edges in the shortest simple cycle around the given accepting vertex $v_\text{accept}$, where in a simple cycle, repeating vertices only appear at the first and last. This is related to the suffix part. Similar to finding the shortest simple path, we first remove all other accepting vertices from~$\auto{relax}$ and  all initial vertices (including $v_0$)  if the associated vertex labels are $\bot$, along with all of its outgoing edges if $\gamma(v_{\text{accept}})=\bot$ and the edge label is not $\top$. In this way, the only vertex whose vertex label is $\bot$ is the accepting vertex $v_{\text{accept}}$.  Notice that if the label of the accepting vertex is not $\bot$, the length of the shortest simple cycle is 0. By default, if no simple path or cycle exists, the length is infinite. After obtaining the shortest simple path and cycle, we assign their total length to the given pair of initial and accepting vertices.  Finally,  we sort all pairs of initial and accepting vertices in an ascending order in terms of the total length.}
+\begin{figure}[!t]
+  \centering
+  \subfigure[$\gamma(v_{\text{accept}}) \neq \bot$]{
+      \label{fig:presence}
+      \includegraphics[width=0.3\linewidth]{presence.pdf}}
+  \subfigure[$\gamma(v_{\text{accept}}) = \bot$]{
+      \label{fig:absence}
+      \includegraphics[width=0.6\linewidth]{absence_presuf.pdf}}
+  \caption{Fig.~\ref{fig:presence} depicts the NBA for the prefix and suffix parts with the presence of $\gamma(v_{\text{accept}})$ and Fig.~\ref{fig:absence} depicts the NBA for the prefix and suffix parts, respectively, with the absence of $\gamma(v_{\text{accept}})$.}
+  \label{fig:presuf}
+\end{figure}
+
+
+  \green{\subsubsection{Extract the subgraph \upshape $\auto{subtask}$}\label{subgraph:1}
+\green{Given a pair of vertices  $v_0$ and $v_\text{accept}$ whose total length is not infinite, next we extract one subgraph for the prefix and one for the suffix part, respectively, from  $\auto{relax}$.}  Here, we discuss the prefix subgraph. The suffix subgraph is similar and is discussed in Subsection~\ref{sec:suf}.
+
+We follow the same procedures as those when computing the shortest simple path in step~\hyperref[sec:sort]{{\it 1)}}, including removing outgoing edges from $v_0$ depending on whether the initial robot locations satisfy them and removing all other initial and accepting vertices. Then, we remove all outgoing edges from $v_{\text{accept}}$ if $v_{\text{accept}} \not=v_0$, because we focus on the prefix part. Next, let $\ccalV_{\text{s}}$ denote the set that contains all remaining vertices in $ \auto{relax}$ that belong to a path that connects $v_0$ and $v_{\text{accept}}$, then we construct a subgraph $\auto{subtask}=(\ccalV_{\text{s}}, \ccalE_\text{s})$ from  $\auto{relax}$ which includes all edges between vertices in $\ccalV_{\text{s}}$. Based on the existence of $\gamma(v_{\text{accept}})$, we operate on $\auto{subtask}$ in two manners.
+\domanda{\it (i) Presence of \upshape$\gamma(v_{\text{accept}})$}\label{i:presence} If $\gamma(v_{\text{accept}})$ exists, we add a vertex $v'_{\text{accept}}$ {without self-loop} and an edge $(v_{\text{accept}}, v'_{\text{accept}})$ to  $\auto{subtask}$, with the edge label being $\top$, so that the edge $(v_{\text{accept}}, v'_{\text{accept}})$ will be treated as a subtask and its vertex label will be enabled.
+Then, we let $v'_{\text{accept}}$ replace $v_{\text{accept}}$ as the new accepting vertex. In this way, we can find the prefix and suffix parts at the same time. Note that when $v_0 = v_{\text{accept}}$, we only connect $v'_{\text{accept}}$ to $v_{\text{accept}}$ that acts as the accepting vertex since we view $v_0$ and $v_{\text{accept}}$ differently; see also~Fig.~\ref{fig:presence}.
+        \domanda{\it (ii) Absence of \upshape$\gamma(v_{\text{accept}})$} If $\gamma(v_{\text{accept}})$ does not exist, we connect $v_{\text{accept}}$ to $v_{\text{next}}$ in $\auto{relax}$  such that $\gamma(v_{\text{accept}}, v_{\text{next}})= \top$. As discussded in~Section~\ref{sec:presuf}, the vertex label of $\gamma(v_{\text{next}})$ should be satisfied at last (it has a vertex label since we remove all vertices without vertex lables in step~\hyperref[prune:3]{{\it 6)}} in Section~\ref{sec:prune}), similar to~\hyperref[i:presence]{{\it i)}}, we add a new vertex $v'_{\text{next}}$ without self-loop and a new edge $(v_{\text{next}}, v'_{\text{next}})$ with the edge label being $\top$  to $\auto{subtask}$; see also Fig.~\ref{fig:absence}.}}
+
+
+In what follows, we further prune the NBA $\auto{subtask}$  by exploiting the structure of the NBA.
+
+  \subsubsection{Prune the subgraph \upshape $\auto{subtask}$} \label{subgraph:2}
+\blue{Recall in Example~\ref{exp:1} that some visitation can be executed in parallel. To capture this, We define the independent diamond (ID) property adapted from~\cite{stefanescu2006automatic}  and sequential triangle (ST) property.
+\begin{defn}[Independent diamond property]\label{defn:id}
+Given 4 different vertices $v_1, v_2, v_3, v_4$ in the NBA such that $v_1 \xrightarrow{\gamma} v_2 \xrightarrow{\gamma'} v_3$, we say that these 4 states have the ID property if {\it (i)} $\gamma(v_1) = \gamma(v_2) = \gamma(v_4) = \top$  {\it (ii)} $v_1 \xrightarrow{\gamma'} v_4 \xrightarrow{\gamma} v_3$ and (iii) $v_1 \xrightarrow{\gamma \wedge \gamma'} v_3$.
+\end{defn}
+\begin{defn}[Sequential triangle property]
+  Given 3 different vertices $v_1, v_2, v_3$ in the NBA such that $v_1 \xrightarrow{\gamma} v_2 \xrightarrow{\gamma'} v_3$, we say that these 3 vertices $v_1, v_2, v_3$ have the ST property if {\it (i)} $\gamma(v_1) = \gamma(v_2) = \top$  and {\it (ii)} $v_1 \xrightarrow{\gamma \wedge \gamma'} v_3$.
+\end{defn}
+
+Intuitively, in the ID property, we have equivalent subtasks $(v_1, v_2) \sim (v_4, v_3)$ and $(v_1, v_4) \sim (v_2, v_3)$. Moreover, subtasks $(v_1, v_2)$ and $(v_1, v_4)$ can be executed independently. As for the ST property, subtask $(v_1, v_2)$ should be satisfied no later than $(v_2, v_3)$. Based on these two properties, for any edge $(v_1, v_3)$ in $\auto{subtask}$, we delete it if there exist vertices $v_2, v_4$ or vertex $v_2$ such that combined they have ID or ST properties. We denote by $\auto{subtask}^-$ the pruned NBA.
+
+Notice that subtasks included in the NBA $\auto{subtask}$ can combine elementary  subtasks and a composite subtasks can be an elementary subtask of another composite subtask at a higher layer, therefore, removing composite subtasks  is vital for reducing the size of $\auto{subtask}$. Similar to the pruning of $\autop$ to get $\autop^-$, feasibility of Problem~\ref{prob:1} is not compromised by pruning the graphs $\auto{subtask}$, as shown in Proposition~\ref{prop:subgraph} in Section~\ref{sec:correctness}. %% \red{ This also justifies the method to sort a pair of initial and accept vertices. The shortest path usually results in longer labels that can be decomposed into multiple shorter labels, hence more subtasks but each one can be fulfilled easily.}
+\begin{figure}[t]
+    \centering
+    \subfigure[NBA $\auto{subtask}^-$]{
+      \label{fig:subgraph}
+      \includegraphics[width=0.3\linewidth]{p_nba0.pdf}}
+    \hspace{0.7em}
+    \subfigure[Subtasks]
+    {\label{fig:subtask}
+      \includegraphics[width=0.55\linewidth]{subtask.pdf}}
+        \caption{The NBA $\auto{subtask}^-$ and corresponding subtasks. The NBA $\auto{subtask}^-$ is obtained from $\auto{subtask}$ by removing edges $(v_1, v_3)$ and $(v_2, v_6)$.}
+  \end{figure}
+\begin{cexmp} (ID and ST properties)
+  There is only one pair of initial and accepting vertices in the NBA $\auto{relax}$ in Fig.~\ref{fig:nba_m}, which is also the NBA $\auto{subtask}$. The length for the vertex $v_\text{accept}$ is $4+0=4$. In the NBA $\auto{subtask}$, instances of the ID and ST properties are the set of 4 vertices $v_1, v_2, v_3, v_4$ and the set of 3 vertices $v_2, v_3, v_6$, respectively. Based on ID and ST properties, the subtask $(v_1, v_3)$ can be decomposed into subtasks $(v_1, v_2)$ and $(v_2, v_3)$ or $(v_1, v_4)$ and $(v_4, v_3)$. Therefore, we call $(v_1, v_3)$ {\it composite} subtask and $(v_1, v_2)$ or $(v_2, v_3)$ {\it elementary} subtasks. Although both can lead to vertex $v_3$, the latter is preferred since it is easier to satisfy and more flexible to implement. {The reason is that it imposes a precedence constraint that $\langle 2,1\rangle$ visit region $\ell_2$ before $\langle1,2 \rangle$ visits region $\ell_4$, compared to the former that requires that the two subtasks are accomplished at the same time. So we can delete $(v_1, v_3)$ without significant consequences, same applied to $(v_2, v_6)$.}
+\end{cexmp}
+}
+
+
+
+
+
+\begin{cexmp}(NBA $\auto{subtask}^-$)
+ The NBA $\auto{subtask}^-$ is shown in Fig.~\ref{fig:subgraph}.
+\end{cexmp}
+%% \begin{figure}[t]
+%%   \centering
+%%   \includegraphics[width=1\linewidth]{p_nba0.pdf}
+%%    \caption{Subgraph $\auto{subtask}$}
+%%   \label{fig:nba_b}
+%% \end{figure}
+
+\subsection{Infer temporal order between subtasks in  $\auto{subtask}^-$}\label{sec:poset}
+In this section,  we infer the temporal relation between subtasks in the pruned NBA $\auto{subtask}^- = (\ccalV_\text{s}, \ccalE_\text{s})$. To capture the temporal relation among subtasks in a high-level plan,  we rely on the use of partial orders described in Subsection~\ref{sec:partial}.
+
+
+Specifically, given the NBA $\auto{subtask}^-$, let $\Theta$ denote the set that collects all simple paths that connect $v_0$ and $v_{\text{accept}}$ in $\auto{subtask}^-$. For a simple path $p\in\Theta$, let $\ccalT(p)$ denote the set of subtasks/edges in $p$. We say two simple paths $p_1, p_2$ have the same set of subtasks if $\ccalT(p_1) =\ccalT(p_2)$. Then we partition $\Theta$ into subsets of  simple paths that contain the same set of subtasks, that is, $\Theta = \cup_e \Theta_e$, $\Theta_e \cap \Theta_{e'} = \emptyset$ if $e\not=e'$. The motivation for this partition is that the set of linear extensions generated by a poset has the same set of elements. {In what follows, we map subtasks to integers to facilitate the discovery of the  poset.}
+
+Given a subset $\Theta_e$ of simple paths in the partition, with a slight abuse of notation, let $\ccalT(\Theta_e)$ denote the set of corresponding  subtasks. Let the function $f_e:\ccalT(\Theta_e)\to [|\ccalT(\Theta_e)|]$ map each subtask to a positive integer. Using $f_e$, we can map every path in $\Theta_e$ to a sequence of integers. Let $\Gamma_e$ collect all sequences of integers for all paths in $\Theta_e$, so $|\Theta_e| \!= \! |\Gamma_e|$. Moreover, a sequence in $\Gamma_e$ is a permutation of the same set of integers, denoted by $X_e = [|\Theta_e|]$. For every sequence $S_e \in \Gamma_e$, let $S_e[i]$ denote its $i$-th entry. We define a linear order $L_{X_e} = (X_e, <_L)$ such that  $S_e[i] \! <_L \! S_e[j] $ if $i \! < \! j$. In other words, the subtask $S_e[i]$ should be executed prior to  $S_e[j]$. Then, let $\Xi_e$ collect all linear orders over $X_e$ that can be defined from sequences in $\Gamma_e$. An underlying poset $P_e \! = \!(X_e, <_{P_e})$ of $\Xi_e$ can be found using the algorithm for the partial cover problem in~\cite{heath2013poset}, where the order represents the precedence relation.
+
+{Finally, given a partition $\{\Theta_e\}$ and a corresponding set of posets $\{P_e\}$, we select the poset $P$ with the maximal width. The width of a poset is the cardinality of a maximum antichain, which is a subset of the poset where any two distinct elements are incomparable. If there are multiple posets with the same width, we select one randomly.  Intuitively, the wider a poset is, the larger the number of temporally independent subtasks it contains.}
+
+%% After finding the poset for the given pair of initial and accepting vertices with finite length,  we sort the posets in descending order in terms of the width. Intuitively, the wider a poset is, the larger the number of temporally independent tasks is, since order captures precedence relation.
+
+
+\begin{cexmp}
+  (Temporal subtask constraints):  \blue{There are 2 simple paths in $\auto{subtask}^-$ and all have the same set of 4 edges.  $\Theta_1\! =\! \{v_\text{init}\!\!\to\!\!v_1\!\!\to\!\! v_4\!\!\to \!\!v_3\!\!\to\!\! v_6$, $v_\text{init}\!\!\to\!\! v_1\!\!\to\!\! v_2\!\!\to\!\! v_3\!\!\to\!\! v_6$\}; see~Fig~\ref{fig:subgraph}. The design of equivalent subtasks, mapping function, integer sequence and the poset are shown in Fig.~\ref{fig:subtask}. The temporal relation between subtasks is that  $\ag{2}{1}$  visiting region $\ell_3$ should be the final event.}
+\end{cexmp}
+
+%% Given $e \!\!= \!\!(v_1, v_2) \!\!\in\!\!\ccalE_\text{s}$, let $\ccalE_e$ collect all edges in $\ccalE_\text{s}$ that share the same first vertex label and edge label with $e$, i.e., $\ccalE_e = \{e' = (v'_1, v'_2) \!\in\! \ccalE_p \, |\, \gamma(v_1)\! =\! \gamma(v'_1), \gamma(v_1, v_2) \!=\! \gamma(v'_1, v'_2)\}$. Next, we partition $\ccalE_e$ into two disjoint subsets $\ccalE_e^1$ and $\ccalE_e^2$ such that any $e_1, e_2 \in \ccalE_e^1$ do not belong to a common path in $\Pi$ and $\ccalE_e^2$ is the complement of $\ccalE_e^1$, where $\Pi$ collects all simple paths that connect $v_0$ and $v_{\text{accept}}$ in $\auto{subtask}$. Tasks in $\ccalE_e^1$ are temporally independent and $\ccalE_e^1$ contains all possible such tasks/e{e'ges.
+
+%% Given $\ccalE_e$ and its partition into $\ccalE_e^1$ and $\ccalE_e^2$, let the function $f_e: \ccalE_e \to \{N_e, \ldots,N_e+|\ccalE_e^2|\}$ map all edges in $\ccalE_e^1$ to the positive integer $N_e$, i.e., $f(e_1) = f(e_2)=N_e, \forall e_1, e_2 \in \ccalE_e^1$, and every edge in $\ccalE_e^2$ to a distinct integer in $\{N_e+1, \ldots, N_e+|\ccalE_e^2|\}$ with one-to-one correspondence, where  $[N_e-1]$ are the integers that have been already used for other sets in $\{\ccalE_e\}$. Since ${\ccalE_e}$ forms a partition of $\ccalE_\text{s}$, we can combine all functions $f_e$ in the function $f: \ccalE_p \to \mathbb{N}^+$ that maps an edge in $\ccalE_p$ to a positive integer. %% In Example~\ref{exp:1}, the function is defined as $f(v_{\text{init}}, v_{1}) = 1, f(v_{1}, v_{2}) = f(v_5, v_4) = 2, f(v_1, v_5) = f(v_{2}, v_{4}) = f(v_3, v_7)=3, f(v_{2}, v_{3}) = f(v_4, v_7) =4$.
+
+
+%% \begin{cexmp}
+%%   Consider the running example. The equivalence sets are $\ccalE_{(v_{\text{init}}, v_{1})} = \ccalE^1_{(v_{\text{init}}, v_{1})} = \{(v_{\text{init}}, v_{1})\}$, $\ccalE_{(v_{1}, v_{2})} = \ccalE^1_{(v_{1}, v_{2})} = \{(v_{1}, v_{2}), (v_5, v_4)\}$, $\ccalE_{(v_{1}, v_{5})} = \ccalE_{(v_{1}, v_{5})}^1 =  \{(v_1, v_5), (v_{2}, v_{4}), (v_3, v_7)\}$, $\ccalE_{(v_{2}, v_{3})} = \ccalE^1_{(v_{2}, v_{3})} = \{(v_{2}, v_{3}), (v_4, v_7)\}$. The function is defined as $f(v_{\text{init}}, v_{1}) = 1, f(v_{1}, v_{2}) = f(v_5, v_4) = 2, f(v_1, v_5) = f(v_{2}, v_{4}) = f(v_3, v_7)=3, f(v_{2}, v_{3}) = f(v_4, v_7) =4$. The set of sequences $\Gamma = \Gamma_\sim^1 = \{(1,2,4,3), (1,2,3,4), (1,3,2,4)\}$ and the order relation of the underlying poset $P_1 = P = \{1<_{P}2, 1<_{P}4, 1<_{P}3, 2<_{P}4\}$. In words, eventually 1 robot of type 1 visits $\ell_1$ before 2 robots of type 1 visits $\ell_3$, and the time that 1 robot of type 2 visits $\ell_2$ can be arbitrary.
+%% \end{cexmp}
+\section{MILP Solution to the Relaxed Automaton}\label{sec:solution}
+\subsection{Construction of the MILP graph}\label{sec:graph}
+           {{Given the poset $P$ with the maximal width}, let $X_{P}$ denote its base set. Note that each element in $X_P$ is an integer, which is also an edge in the NBA $\auto{subtask}^-$. \blue{Our goal is to find a feasible plan that traverses all elements/subtasks in $X_{P}$ by satisfying all vertex and edge labels sequentially. In this way,  this plan will generate a run that connects $v_0$ and $v_{\text{accept}}$ in~$\auto{subtask}^-$.} We construct a graph $\ccalG = (\ccalV_{\ccalG},\ccalE_{\ccalG})$ where each vertex represents a specific region that is associated with a specific literal in a specific label. Each vertex/region is visited by at most one robot during the whole process. Simultaneous visits of multiple vertices in $\ccalV_\ccalG$ by a team of robots  satisfy a literal, a clause, or a label. The time of visits reflects the precedence order among edges. Below, we first construct  the vertex set and then the edge set. Both constructions follow four layers of nested iterations, starting with the edges, then the labels, then the clauses, and finally the literals.} The outline of the algorithm is shown in Alg.~\ref{alg:milpgraph}. An illustrative graph for Example~\ref{exp:1} is shown in Fig.~\ref{fig:milp}.
+\begin{algorithm}[t]
+      \caption{Construct the MILP graph}
+      \LinesNumbered
+      \label{alg:milpgraph}
+      \KwIn {Poset $P$}
+      \Comment*[r]{Create the vertex set}
+      Create the vertex set $\ccalV_{\text{init}}$ for initial locations \label{milp:init}\;
+      \Comment*[r]{vertices for  labels}
+      \For{$(v_1, v_2) \in X_P$ \label{milp:for}}{
+        \If{$\gamma(v_1, v_2) \not= \top$ \label{milp:nottrue}}{
+          \For{$\ccalC_p^\gamma \in \clause{\gamma} $\label{milp:clause}}{
+            \For{$\ap{i}{j}{k,\chi} \in \mathsf{lits}(\ccalC_p^{\gamma})$\label{milp:ap}}{
+              Create $i$ vertices \label{milp:i}\;
+            }
+          }
+        }
+          \If{$\gamma(v_1)\not= \top, \bot$ \label{milp:nottrue2}}{
+            Create vertices by repeating lines~\ref{milp:clause}-\ref{milp:i} \label{milp:repeat}\;
+          }
+
+      }
+      \Comment*[r]{Create the ege set}
+      \For{$(v_1, v_2) \in X_P$ \label{milp:for2}}{
+        \If{$\gamma(v_1, v_2) \not= \top$ \label{milp:e}}{
+            \For{$\ccalC_p^\gamma \in \clause{\gamma} $\label{milp:clause2}}{
+              \For{$\ap{i}{j}{k,\chi} \in \mathsf{lits}(\ccalC_p^{\gamma})$\label{milp:lits}}{
+                $(i)$ Initial robot locations \label{milp:i2}\;
+                $(ii)$ Locations of prior tasks \label{milp:ii}\;
+                $(iii)$ Locations associated with $\gamma(v1)$ \label{milp:iii}\;
+              }
+            }
+        }
+        \If{$\gamma(v_1) \not= \top,\bot$ \label{milp:nottrue3}}{
+          Create edges by repeating lines~\ref{milp:lits}-\ref{milp:ii} \label{milp:repeat2}\;
+        }
+
+
+      }
+    \end{algorithm}
+
+
+\subsubsection{Construction of the vertex set}\label{sec:vertex} First we create $n$ vertices, collected in the set $\ccalV_{\text{init}}\subseteq \ccalV_{\ccalG}$ corresponding to the initial locations of the robots in $s^0$ [line~\ref{milp:init}, Alg.~\ref{alg:milpgraph}] (blue dots in Fig.~\ref{fig:milp}). Next, we iterate over $X_{P}$ to construct new vertices for all vertex or edge labels that are neither $\top$ nor $\bot$. Given $e\! =\! (v_1, v_2) \in X_{P}$, \blue{if $\gamma(v_1, v_2) \not= \top$, we operate on $\gamma(v_1, v_2) \!= \! \bigvee_{p\in \ccalP} \bigwedge_{q \in \ccalQ_{p}} \ap{i}{j}{k,\chi}$ starting by iterating over clauses $\ccalC_p^{\gamma}$ in $\clause{\gamma}$,} and then over literals in $\ccalC_p^\gamma$ [lines~\ref{milp:for}-\ref{milp:i}, Alg.~\ref{alg:milpgraph}].
+The literal $\ap{i}{j}{k,\chi}\in $ $\mathsf{lits}^+(\ccalC_p^{\gamma})$ implies that $\ag{i}{j}$ should visit the target region $\ell_k$ simultaneously. Hence, we create $i$ vertices in $\ccalV_\ccalG$ all associated with region $\ell_k$. If $\ag{i}{j}$ visit these $i$ vertices simultaneously, {one robot each vertex}, then $\ap{i}{j}{k,\chi}$ is true (red, yellow, and green dots in Fig.~\ref{fig:milp}).\footnote{\blue{If $\chi\not=0$, additionally, the robots visiting these $i$ vertices should be the same as that visiting another $i$ vertices which are associated with a literal with identical non-zero indicator.} } {{After the iteration over $\gamma(v_1, v_2)$ is complete, vertices in $\ccalV_\ccalG$ associated with the vertex label $\gamma(v_1)$ can be constructed in the same manner if $\gamma(v_1)$ is neither $\top$ nor $\bot$} [lines~\ref{milp:nottrue2}-\ref{milp:repeat}, Alg.~\ref{alg:milpgraph}].} Repeating this process, and iterating over $X_{P}$ completes the construction of the vertex set $\ccalV_\ccalG$. {Note that each vertex in $\ccalV_\ccalG$ is associated with a literal and each literal is associated with multiple vertices and specifies the region and the robot type associated with these vertices.}
+To capture this correspondence, let $\ccalM^\ccalV_{e}\! : \!\ccalV_{\ccalG}\setminus \ccalV_{\text{init}} \!\to \! X_{P} $ and $\ccalM^\ccalV_{\mathsf{lits}} \! :\! \ccalV_\ccalG\setminus \ccalV_\text{init} \! \to \! \prod_{\mathsf{lits}} $  map a vertex in $\ccalV_\ccalG$ to its associated edge and literal, respectively, and $\ccalM^\mathsf{lits}_{\ccalV}: \! \! \prod_{\mathsf{lits}} \! \to \! 2^{\ccalV_\ccalG}$ and $\ccalM^\mathsf{cls}_{\ccalV} \!: \! \prod_{\mathsf{cls}}\! \to \! 2^{\ccalV_\ccalG}$ map a literal and clause to the associated vertices, where $\prod_{\mathsf{lits}}$ and $\prod_{\mathsf{cls}}$ are the cartesian products $ X_{P} \times\{0, 1\} \times [|\ccalP|]  \times \ccalQ_p$ and $X_{P}\times \{0, 1\} \times[|\ccalP|]$, respectively, and 0, 1 represent the label type, 0 for vertex label and 1 for edge label, respectively.  Furthermore, we define $\ccalM^\ccalV_\ccalL \!: \! \ccalV \! \to \! \ccalL$ and $ \ccalM^\ccalV_\ccalK \!: \! \ccalV \! \to \! \{\ccalK_j\}$ that map a vertex to its associated  region and robot type. \blue{If $\chi\not=\!0$, then $\ccalM_{\gamma}^\chi\!:\! \mathbb{N}^+ \!\!\to 2^{X_{P}\times \{0,1\}}$ maps $\chi$ to all labels (vertex or edge labels) that have literals with superscript $\chi$}.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\linewidth]{milp1.pdf}
+  \caption{\blue{Graph $\ccalG$ of LTL task $\phi = \Diamond (\ap{2}{1}{2,1} \wedge  \bigcirc \Diamond \ap{2}{1}{3,1})  \wedge \Diamond \ap{1}{2}{4} \wedge \neg \ap{2}{1}{3} \,\mathcal{U}\, \ap{1}{2}{4} $. $s^0_{1,1}$, $s^0_{2,1}$ and $s^0_{3,1}$ are initial locations of 3 robots of type 1 and $s^0_{1,2}$ and $s^0_{2,2}$ are the initial locations of 2 robots of type 2. Red dots $\ell_{2}^{1}$ and $\ell_{2}^{2}$ correspond to the edge label $\ap{2}{1}{2,1}$ of element 3, i.e., edge $(v_1, v_2)$ in $X_P$; see Fig.~\ref{fig:subtask}, yellow dots $\ell_{3}^{1}, \ell_{3}^{2}$ correspond to the edge label $\ap{2}{1}{3,1}$ of element 4, and green dot $\ell_{4}^{1}$ corresponds to the edge label $\ap{1}{2}{4}$ of element 2. No dots correspond to vertex labels since all vertex labels are either $\top$ or $\bot$.  The edges from $\ell_2^{1}$ to $\ell_3^{1}$ and from $\ell_2^{2}$  to $\ell_3^{2}$ are due to $3 <_{P} 4$. }}
+    \label{fig:milp}
+ \end{figure}
+\subsubsection{Construction of  the edge set} \blue{Given the vertex set $\ccalV_\ccalG$, we follow the similar procedure to construct the edge set $\ccalE_\ccalG$ which captures the precedence order in ${P}$, by iterating over $X_P$}. For $e \!= \!(v_1, v_2) \!\in \!X_{P}$, if $\gamma(v_1, v_2) \not=\top$, we operate on $\gamma(v_1, v_2) \!= \! \bigvee_{p\in \ccalP} \bigwedge_{q \in \ccalQ_{p}} \ap{i}{j}{k,\chi}$ starting by iterating over clauses $\ccalC_p^{\gamma}$ in $\clause{\gamma}$, and then over literals in $\ccalC_p^\gamma$ [lines~\ref{milp:for2}-\ref{milp:iii}, Alg.~\ref{alg:milpgraph}]. Consider the literal $\ap{i}{j}{k,\chi} \in \mathsf{lits}^+(\ccalC_p^{\gamma})$. Its associated $i$ vertices correspond to target region $\ell_k$ that should be visited by $i$ robots. We identify three types of starting vertices in $\ccalV_\ccalG$ from where $i$ robots depart for region $\ell_k$ to satisfy $\ap{i}{j}{k,\chi}$.
+
+\domanda{(i) Vertices associated with initial robot locations}\label{sec:a}The initial locations $s^0$ of robots of type $j$ are starting locations. We add an edge from each vertex associated with an initial location to each vertex associated with $\ap{i}{j}{k,\chi}$ \blue{(blue edges in~Fig.~\ref{fig:milp}), with a weight equal to the length of the shortest path from the initial location to the region the vertex corresponds to}.
+
+\domanda{(ii) Vertices associated with prior subtasks}\label{sec:b}Let $X^e_{\prec_{P}}$, $X^e_{<_{P}}$ and $X^e_{\|_{P}}$ denote the sets that collect elements in $X_{P}$ that are covered by, smaller than, and incomparable to $e$, respectively; see Section~\ref{sec:partial}. To find starting locations, we iterate over $S_1^e = X^e_{<_{P}} \cup X^e_{\|_{P}}$ which includes all subtasks that can be fulfilled prior to $e$.
+\blue{Given a subtask $e' = (v'_1, v'_2) \in S_1^e$, if the edge label $\gamma'(v'_1, v'_2) \not=\top$, we iterate all literals in $\gamma'$ by iterating over clauses in $\gamma'$.} \blue{In what follows, we investigate the following cases depending on the value of $\chi$ in $\ap{i}{j}{k,\chi}$. \paragraph{$\chi = 0$} When $\chi=0$, no restriction is imposed on robots within the specified type.  Given $\ccalC_{\gamma'}^p $, for any literal $\ap{i'}{j'}{k',\chi'} \in\mathsf{lits}^+(\ccalC_{\gamma'}^p)$, if $j'\!=\!j$, then those vertices in $\ccalV_\ccalG$ associated with this literal are starting locations. If $i'\!<\!i$, we add $i\!\cdot \! i'$ edges to $\ccalE_\ccalG$ by creating an edge from any vertex associated with $\ap{i'}{j'}{k',\chi'}$ to any vertex of $\ap{i}{j}{k,\chi}$. Otherwise, if $i' \!\geq \! i$, i.e., at least $\ag{i}{j}$ are at region $\ell_k$, we randomly select $i$ from these $i'$ vertices and add $i$ one-to-one edges starting from these $i$ vertices and ending at the $i$ vertices associated with $\ap{i}{j}{k,\chi}$ (red edges in Fig.~\ref{fig:milp}).\footnote{\blue{Since there are more then $i$ homogeneous robots of type $j$ and of these only $i$ robots are required, if suffices to build $i$ one-to-one edges.}} {Since each region may span multiple cells, the weight of these edges is the length of the shortest path from region  $\ell_{k'}$ to $\ell_k$. %% \red{This simpilication will be addressed in Section~\ref{sec:solution2mapp}}.
+  }
+  \paragraph{$\chi \not=0$} In this case, the same $\ag{i}{j}$ are required to visit several regions sequentially.
+  Given $\ccalC_{\gamma'}^p $, for any literal $\ap{i'}{j'}{k',\chi'} \in\mathsf{lits}^+(\ccalC_{\gamma'}^p)$ with $j'=j$ and $\chi'=\chi$, there are $i'=i$ vertices associated with this literal. In this case, we add $i$ one-to-one edges starting from these $i'$ vertices and ending at the $i$ vertices associated with $\ap{i}{j}{k,\chi}$.} After creating edges in the graph $\ccalG$ associated with $\gamma'(v'_1,v'_2)$ of $e'$, we identify  starting locations among the vertices associated with $\gamma(v'_1)$ of $e'$ and build edges in the same manner.
+\domanda{(iii) Vertices associated with $\gamma(v_1)$ of $e$}\label{sec:c} When the iteration over $S_1^e$ is over, we identify  starting locations among the vertices associated with  $\gamma(v_1)$ of $e$, since $\gamma(v_1)$  becomes true before $\gamma(v_1, v_2)$.
+
+
+\blue{\begin{cexmp}(Mappings in Fig.~\ref{fig:milp})
+    The mappings regarding the red vertex $\ell_2^{1}$ are (see Section~\ref{sec:vertex}):
+    $\mathcal{M}_e^{\mathcal{V}}(\ell_{2}^{1})  = (v_1,v_2) = 3$ and $\mathcal{M}_{\mathsf{lits}}^{\mathcal{V}}(\ell_{2}^{1})  = ((v_1,v_2), 1, 1, 1)$ since the vertex corresponds to the first literal $\ap{2}{1}{2,1}$ of the first clause of the edge label of the element 3, i.e., $(v_1, v_2)$, in $X_p$; $\mathcal{M}_\mathcal{L}^{\mathcal{V}}(\ell_{2}^{1})  = \ell_2$  and $\mathcal{M}_\mathcal{K}^{\mathcal{V}}(\ell_{2}^{1})  = \mathcal{K}_1$ since the literal that $\ell_2^1$ corresponds to requires 2 robots of type 1 to visit region $\ell_2$. Furthermore,  the literal/clause-to-vertex mappings are:
+    $\mathcal{M}^{\mathsf{lits}}_{\mathcal{V}}(((v_1,v_2), 1, 1, 1)) = \mathcal{M}^{\mathsf{cls}}_{\mathcal{V}}(((v_1,v_2), 1, 1))  = \{\ell_2^{1}, \ell_2^{2}\}$, since the literal $\ap{2}{1}{2,1}$ requires 2 robots to visit region $\ell_2$, $\mathcal{M}^{\mathsf{lits}}_{\mathcal{V}}(((v_1,v_4), 1, 1, 1)) = \mathcal{M}^{\mathsf{cls}}_{\mathcal{V}}(((v_1,v_4), 1, 1))  = \{\ell_4^{1}\}$ since the literal $\ap{1}{2}{4}$ requires 1 robot to visit region $\ell_4$. Finally, the indicator-to-label mapping is: $\ccalM^{\chi}_{\gamma} (1)  = \{((v_1, v_2), 1), ((v_3, v_6), 1)\}$ since the indicator 1 appears in the edge label of $(v_! ,v_2)$ and the edge label of $(v_3, v_6)$.
+   \end{cexmp}
+  }
+
+\blue{So far we have constructed starting locations corresponding to the literal $\ap{i}{j}{k,\chi}$ in $\mathsf{lits}^+(\ccalC_p^{\gamma})$ [lines~\ref{milp:i2}-\ref{milp:iii}, Alg.~\ref{alg:milpgraph}]. We need to continue construct starting locations for all other literals in~$\mathsf{lits}^+(\ccalC_p^{\gamma})$ [line~\ref{milp:lits}] and other clauses in $\clause{\gamma}$ [line~\ref{milp:clause2}].
+After constructing all edges pointing to vertices associated with literals in the edge label $\gamma(v_1, v_2)$ [line~\ref{milp:e}], we next construct  edges pointing to vertices associated with literals in the vertex label $\gamma(v_1)$ of $e$ if they are neither $\top$ nor $\bot$, by identifying starting vertices among vertices associated with initial robot locations and locations of prior subtasks, as in cases \hyperref[sec:a]{\it (i)} and \hyperref[sec:b]{\it (ii)} [lines~\ref{milp:nottrue3}-\ref{milp:repeat2}]. When the iteration over $X_{P}$ is over [line~\ref{milp:for2}], we get the edge set $\ccalE_\ccalG$.}
+
+ \subsection{Formulation of the MILP problem}\label{sec:milp}
+ In this section, we propose an MILP-based method inspired by the vehicle routing problem (VRP) with temporal constraints~\cite{bredstrom2008combined} to solve the LTL-MRTA problem that is encoded by the graph $\ccalG$. \blue{In the VRP, a fleet of vehicles traverse a given set of customers such that all vehicles depart from and return to the same depot and each customer is visited by exactly one vehicle. Normally, a weighted graph is built first with vertices corresponding to the customers and the depot, edges corresponding to the paths the vehicles can travel along, and edge weights representing the the travel cost, e.g., energy and time. Then,  a MILP-based model can be formulated to solve the problem. Compared to the VRP, the MRTA-LTL problem is significantly more complex. First, robots are not required  to return to their initial locations, instead there may exist robots that need to execute the task forever due to the  ``always'' operator. Second, there may exist  labeled regions that do not need to be  visited at all and others that need tobe visited exactly once,  more than once, or even infinitely  many times. Finally, temporal constraints may exist  among robots. For example, robots that execute a cooperative subtask together are subject to synchronization constraints and robots that execute two different subtasks can be subject to precedence constraints. In what follows, we formulate an MILP to solve this MRTA-LTL problem.}
+
+
+Given the routing graph $\ccalG$, the robots move along $\ccalG$ to drive the transition in~$\auto{subtask}^-$ from
+$v_0$ to $v_{\text{accept}}$. To formulate the MILP, we define two types of variables: the routing variables $x_{uvr}\! \in\!\{0, 1\}$ and the scheduling variables $t^-_{vr}, t^+_{vr}\! \in\! \mathbb{N}$, where $x_{uvr}=1$  if robot  $r\in \ccalM^\ccalV_\ccalK(v)$ traverses the edge $(u,v)\! \in\! \ccalE_\ccalG$, and \blue{$t^-_{vr}, t^+_{vr}$ are times when robot $r$ should arrive at and is allowed to leave from $v \in \mathcal{V}_\ccalG$}. We assume that robot $r$ is still at vertex $v$ at departure time $t^+_{vr}$. Since the satisfaction of the edge label is instantaneous, if $v \in \ccalV_\ccalG$ is associated with an edge label, we have
+  $t_{vr}^- = t_{vr}^+$, \blue{which means that the robot is allowed to leave at the next time instant.} As for the vertex label, we have $t_{vr}^-  \leq t_{vr}^+$, \blue{which means that the robot should stay where it is to wait for the satisfaction of the corresponding edge label.} Below, we describe  different types of constraints and the objective function of the proposed MILP.
+\subsubsection{Routing constraints} \blue{These restrict the flow when the robot traverses between connected vertices in $\ccalV_\ccalG$. Specifically,} $\forall v \in \ccalV_\ccalG\setminus\ccalV_{\text{init}}$, we have
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}
+   & \sum_{u:(u,v)\in \ccalE_\ccalG} \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} x_{uvr}  \leq 1, \;\forall r \in \ccalM^\ccalV_{\ccalK}(v), \label{eq:1}\\
+  & \sum_{w:(v,w)\in \ccalE_\ccalG} x_{vwr}   \leq  \sum_{u:(u,v)\in \ccalE_\ccalG} x_{uvr}, \;\forall r \in \ccalM^\ccalV_{\ccalK}(v), \label{eq:2}
+\end{align}
+\endgroup
+and  $\forall \,v \in \ccalV_{\text{init}}$, we have
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{subequations}\label{eq:2.5}
+  \begin{align}
+    & \sum_{w:(v,w)\in \ccalE_\ccalG} x_{vwr}  \leq 1, \;\text{if}\; r = r_v \in \ccalM^\ccalV_{\ccalK}(v), \label{eq:2.5a}\\
+    & \sum_{w:(v,w)\in \ccalE_\ccalG} x_{vwr}  = 0, \;\forall r \in \ccalM^\ccalV_{\ccalK}(v)\setminus \{ r_v\}, \label{eq:2.5b}
+  \end{align}
+\end{subequations}
+\endgroup
+      {where $r_v$ refers to the specific robot at the initial location $\ccalM^\ccalV_{\ccalL}(v)\!\in \!s^0$ if $v \in \ccalV_{\text{init}}$}. \blue{The constraint \eqref{eq:1} ensures that $v$ is visited by at most one robot belonging to type $\ccalM^\ccalV_{\ccalK}(v)$, which does not take the strict equality since the clause that vertex $v$ is associated with can be false, so there is no need to visit this vertex.~\eqref{eq:2} captures the flow constraint on a vertex that the inflow is no less than the outflow, which hints that the robot can remain idle if it is not assigned a subtask} and \eqref{eq:2.5}  is the initial condition of~\eqref{eq:2}.
+      \subsubsection{Scheduling constraints} \blue{These capture the timing relation on a vertex,~\eqref{eq:3} and~\eqref{eq:3.5}, or between visitation of two connected vertices~\eqref{eq:4}.} First, we require positivity of the scheduling variables, i.e.,
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align} \label{eq:3}
+  0 \leq t_{vr}^{-}, t_{vr}^+ \leq M_{\max} \sum_{u:(u,v)\in \ccalE_\ccalG} x_{uvr}& , \forall r\in \ccalM^\ccalV_{\ccalK}(v),
+\end{align}
+\endgroup
+where $M_{\max}$ is a large positive integer. The constraint~\eqref{eq:3} implies that $t_{vr}^- = t_{vr}^+ = 0$ if $v$ is not visited by robot $r$. The initial condition of~\eqref{eq:3} is
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:3.5}
+   t_{vr}^- = t_{vr}^+ = 0,  \quad   \;\forall r \in \ccalM^\ccalV_{\ccalK}(v), \;\forall v \in \ccalV_{\text{init}}.
+\end{align}
+\endgroup
+The scheduling constraints between visitation of two connected vertices considering the travelling time , $\forall r\in \ccalM^\ccalV_{\ccalK}(v),\, \forall (u,v)\in \ccalE_\ccalG$, are
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{subequations}\label{eq:4}
+  \begin{align}
+    & \hspace{-0.6em}t_{ur}^+  + (T_{uv} + M_{\min})  x_{uvr}  \leq t_{vr}^- + M_{\max} (1 - x_{uvr}),  \nonumber \\
+    & \pushright{\text{if}\; u\|_{P} v,} \label{eq:4a} \\
+    & \hspace{-0.6em} t_{ur}^+ +  T_{uv} x_{uvr} \leq  \,t_{vr}^- + M_{\max} (1 - x_{uvr}), \nonumber \\
+    &  \pushright{\text{if}\;  u\in \ccalV_{\text{init}}\; \text{or}\; u<_{P}v \; \text{or}\; (u,v)\in X_P,} \label{eq:4b}
+  \end{align}
+\end{subequations}
+\endgroup
+\blue{where $M_{\min}$ is a small positive number, $T_{uv}$ is the travelling time from $u$ to $v$, $u \in \ccalV_{\text{init}}$ means the starting vertex $u$ is the initial vertex in case~\hyperref[sec:a]{{\it i})}, $u \|_{P} v$ and $u\!<_{P} \!v$ mean that the subtask $\ccalM^\ccalV_{{e}}(u)$ is incomparable to or smaller than $\ccalM^\ccalV_e(v)$, which corresponds to the case~\hyperref[sec:b]{{\it ii)}} where $u$ is associated with prior substasks, and $(u,v)\in X_P$ points to case~\hyperref[sec:c]{{\it iii)}} where $u$ is associated with the vertex label and $v$ is associated with the edge label of the same subtask. We set $T_{uv}$ as the shortest travelling time between two regions.} \blue{When $x_{uvr}=1$, constraint~\eqref{eq:4a} becomes $t_{ur}^+  + T_{uv} + M_{\min}   \leq t_{vr}^-$, and~\eqref{eq:4b} becomes $t_{ur}^+  + T_{uv}  \leq t_{vr}^-$. Because $T_{uv} \geq 0$, constraints~\eqref{eq:4} ensure that $t_{vr}^-$ should be no less than $t_{ur}^+$ if $x_{uvr}=1$.} {Note that a cycle in $\ccalG$ must include a pair of incomparable vertices, since all comparable vertices constitute a chain.} Constraint~{\eqref{eq:4a} avoids cycles in $\ccalG$ where all vertices correspond to the same region. E.g., consider such a cycle $u_1,u_2,\ldots, u_c, u_1$. Without  constraint~\eqref{eq:4a}, zero travelling time will be exploited by~\eqref{eq:1} and~\eqref{eq:2}, generating a solution $x_{u_1 u_2 r} = ,\ldots,=x_{u_c u_{1} r}= 1$ for a robot $r$, without this robot actually visiting any vertex from its initial location.  Constraint~\eqref{eq:4a} is functionally similar to the subtour elimination constraint in vehicle routing problems which prevents any solution that consists of a disconnected tour. We leverage a small positive value $M_{\min}$ to ensure that time increases along the edge that connects incomparable vertices, thus preventing the visitation of a cycle.
+
+  \subsubsection{Label constraints}\label{sec:labelconstraints} \blue{These encode the logic relation between labels, clauses and literals, and the realization of literals.}
+                {Given the subtask $e$, every label  $\gamma  = \bigvee_{p\in \ccalP} \bigwedge_{q\in \ccalQ_p} \ap{i^q}{j^q}{k^q,\chi^q}$, vertex or edge label,   is true as long as one of its clauses is true.} To this end, we associate each clause  $\ccalC_{p}^{\gamma} \in \clause{\gamma}$ with a binary variable $b_p$ such that $b_p=1$ if $\ccalC_{p}^{\gamma}$ is true. Hence, $\gamma$ being true can be encoded as
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:c}
+   \sum_{p  \in \ccalP} b_p = 1.
+\end{align}
+\endgroup
+That is, one and only one clause is true. \blue{The logical relation, between a clause and its literals, that the satisfaction of the clause is equivalent to the satisfaction of all its literals, can be encoded as}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}
+ \hspace{-0.3em}\!\!\! \left. \left[ \sum_{q\in \ccalQ_p} \sum_{v \in \ccalM^\mathsf{lits}_{\ccalV}(e,0|1,p,q)} \sum_{u: (u,v) \in \ccalE_\ccalG} \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} \!\!\!x_{uvr} \right] \!\!\middle/\!\! {\sum_{q\in \ccalQ_p} i^q} \!\!\!\right.= b_p, \label{eq:6}
+\end{align}
+\endgroup
+\blue{which bridges the routing variables $x_{uvr}$ with the logical variables $b_p$, that is, the visitation of certain regions drives the transition in the NBA.} {Let $$z_{q} = \sum_{v \in \ccalM^\mathsf{lits}_{\ccalV}(e,0|1,p,q)} \sum_{u: (u,v) \in \ccalE_\ccalG} \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} x_{uvr}$$ be the inner summation. If $b_p=1$, then all literals in $\ccalC_p^{\gamma}$ are true. In this case, for the $q$-th literal $\ap{i^q}{j^q}{k^q,\chi^q} \!\in\! \mathsf{lits}^+(\ccalC_p^\gamma)$, all $i^q$ vertices in ${\ccalM^\mathsf{lits}_{\ccalV}(e,0|1,p,q)}$ should be visited, so $\sum_{u: (u,v) \in \ccalE_\ccalG} \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} x_{uvr} = 1$ for each vertex $v \in {\ccalM^\mathsf{lits}_{\ccalV}(e,0|1,p,q)}$, and therefore $z_{q}\!=\! i^q$, and the left side of~\eqref{eq:6} becomes $ \sum_{q\in \ccalQ_p} z_q/ {\sum_{q\in \ccalQ_p} i^q} = {\sum_{q\in \ccalQ_p} i^q}/{\sum_{q\in \ccalQ_p} i^q} = 1 $. If $b_p\!=\!0$, all $x_{uvr}$ in~\eqref{eq:6} equal 0, that is, no vertices need to be visited.
+
+      \blue{Note that the logical relation in~\eqref{eq:6} only encodes that some vertices should be visited sometime to satisfy the literals, next we encode the synchronization constraint that, if the clause $\ccalC_p^\gamma$ is true, all vertices in~$\ccalM^\mathsf{cls}_\ccalV(e,0|1,p)$ should be visited at the same time.}
+      We define the pairwise vertex set induced from the clause $\ccalC_p^\gamma$ as  $\ccalV_{\gamma, p}^{\text{sync}} = \{(u,v)\,|\, u, v\in \ccalM^\mathsf{cls}_\ccalV(e,0|1,p), u\not= v \}$. If $b_p=1$, visiting any pair in $\ccalV_{\gamma, p}^{\text{sync}}$ simultaneously is encoded as
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}
+  & \quad\quad  \sum_{r\in \ccalM^\ccalV_{\ccalK}(u)} t_{ur}^-  = \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^- , \quad\forall (u,v) \in \ccalV_{\gamma, p}^{\text{sync}}\label{eq:7}
+\end{align}
+\endgroup
+\blue{Combining~\eqref{eq:3},~\eqref{eq:4},~\eqref{eq:6} and~\eqref{eq:7}, $\sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t^-_{vr}$ equals 0 if the  clause that $v$ corresponds to is false. That is, a robot remains idle if it is not responsible for the satisfaction of any clause.}
+
+
+
+
+\subsubsection{Temporal constraints} \blue{We first introduce the notion of the activation and completion time of a subtask. Then, given the subtask $e$, there are three types of temporal constraints regarding the activation and completion time,  within the subtask or between subtasks.
+\begin{defn}[Activation and completion time of a subtask or the associated vertex label]
+Given a subtask $e = (v_1, v_2)$, we define the  activation time of a subtask (or the associated vertex label) as when its vetex label $\gamma(v_1)$ turns true, and the completion time  of a subtask (or the associated vertex label) as when its edge label $\gamma(v_1, v_2)$ becomes true (or the last time the associated vertex label $\gamma(v_1)$ is true). The span of a subtask (or the associated vertex label) starts from the activation time and ends at the completion time.
+\end{defn}}
+
+\blue{Note that the span of the subtask  is not necessarily equal to the span of the associated vertex label; see the following~\hyperref[sec:onesubtask]{{\it i)}}.}
+
+\domanda{(i) Temporal constraints on the completion of two sequential subtasks}\label{sec:constraintonedge}
+\blue{This imposes the precedence constraint that subsequent subtasks should be completed after the completion of the prior subtasks. For this, define variable  $t_e$ as the completion time of the subtask $e$, i.e., time when its edge label  becomes true. When the edge label $\gamma(v_1, v_2)$ is not $\top$, i.e., there are corresponding vertices in the routing graph $\ccalG$, we have that }
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:edgetime}
+  t_e = \sum_{p\in \ccalP} \sum_{r\in \ccalM^\ccalV_{\ccalK}(v_p)}t_{v_p r}^-,
+\end{align}
+\endgroup
+where $v_p$ is randomly selected from $\ccalM^\mathsf{cls}_\ccalV(e,1,p)$ \green{due to constraints~\eqref{eq:c} and~\eqref{eq:7} that only one clause is true and all corresponding vertices are visited at the same time.
+
+  Given the current subtask $e$, we consider its prior subtasks in the set $X^e_{\prec_{P}}$, that is, subtasks that are covered by $e$, other than a larger set $X^e_{<_{P}}$ due to the transitivity of the partial order.}
+If $X^e_{\prec_{P}}$ is non-empty, we iterate over subtasks in it.  Given $e' \in X^e_{\prec_{P}}$, the fact that the substask $e'$ is completed before the current substask $e$ can be encoded as
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:12}
+  t_{e'} +  M_{\min}  \leq t_e, \; \forall \, e' \in X_{\prec P}^e,
+\end{align}
+\endgroup
+where $M_{\min}$ excludes the case where two edge labels become true simultaneously, violating the precedence order.
+
+\green{Let $S_2^e = X^e_{\prec_{P}} \cup X^e_{\|_{P}}$ collect all subtasks whose satisfaction can directly lead to vertex $v_1$ of $e$. When $S_2^e= \emptyset$, subtask $e$ is the first that needs to be completed. A stricter version of constraint~\eqref{eq:12} is that, when the vertex label of $e$ is $\bot$ and is not the first one to be completed, which only happens at the absence of vertex label of $v_{\text{accept}}$ since all other vertices with label $\bot$ are removed in step~\hyperref[prune:3]{{\it 6)}} in Section~\ref{sec:prune}, then the subtask $e$ should be satisfied one step  later than the complection of subtask in $X_{\prec_P}^e$ that is the last one to be completed. We only consider $ X_{\prec_P}^e$ in this case since $X_{\|_P}^e = \emptyset$ due to that $e$ appears after vertex $v_{\text{accept}}$. To determine this last satisfied subtask in $X_{\prec_P}^e$, we define $|X_{P}|^2$ binary variables $b_{e}^{e'}, \forall e, e' \in X_{P}$,  such that $b_{e}^{e'}=1$  iff $t_e \geq t_{e'}$, that is, iff $e$ is satisfied after $e'$. This implication can be encoded as}}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}
+  M_{\max} (b_{e}^{e'} - 1) \leq t_e -  t_{e'} \leq M_{\max} b_{e}^{e'} - M_{\min},
+\end{align}
+  \endgroup
+  where $M_{\min}$ is a positive number that is smaller than or equal to the minimum possible gap between $t_e$ and $t_{e′}$ if $t_e \not= t_{e′}$, and it is used to enforce $b_{e}^{e'}=1$ if $t_e = t_{e'}$. Furthermore, we define $z\! =\! |X_{\prec_P}^e| -1$. Observe that, for $e'\! \in\! X_{\prec_P}^e $, the term $z\! -\!  \sum_{o \in X_{\prec_P}^e\setminus \{e'\}  } b_{e'}^o = 0$ if $e'$ is the last fulfilled task, otherwise  positive. Finally, if the vertex label of $e$ is $\bot$ and  $X_{\prec_P}^e \neq \emptyset$, that is, $e$ is not the first subtask in order, then constraint~\eqref{eq:12} becomes
+\begin{align}\label{eq:plusone}
+  t_{e'} + 1 + &  M_{\max} \Big( \sum_{o \in X_{\prec_P}^e\setminus \{e'\}} b_{e'}^o - z \Big)  \leq t_e  \nonumber \\
+  & \le  t_{e'} + 1 +  M_{\max} \Big(z  - \sum_{o \in X_{\prec_P}^e\setminus \{e'\}} b_{e'}^o\Big).
+ \end{align}
+Only when $\sum_{o \in X_{\prec_P}^e\setminus \{e'\}} b_{e'}^o = z$, does~\eqref{eq:plusone} come into effect, that is, $t_e = t_{e'}+1$.
+
+\domanda{(ii) Temporal constraints on one subtask}\label{sec:onesubtask} \green{These capture the containment constraints that the completion time of a subtask should lie in the span of the associated vertex label, or exactly one time instant later than the completion of its vertex label. Intuitively, the ``avoid'' part should be maintained until the ``reach'' part is realized.}
+
+
+When the vertex label $\gamma(v_1)$ is neither $\top$ or $\bot$, except that subtask $e$ is the first subtask that should be completed and also the initial robot locations do not satisfy the its vertex label $\gamma(v_1)$, the containment relation, $\forall\, \ccalC_p^{\gamma} \!\in\! \clause{\gamma(v_1)}$ and $\forall v \!\in\! \ccalM^\mathsf{cls}_\ccalV(e,0,p)$, can be encoded as
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+  \begin{align}
+ \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^-  \leq  t_e \leq
+    \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^+ + 1  + M_{\max} (1 - b_{p}) \label{eq:17}
+  \end{align}
+  \endgroup
+If $b_p=0$, then no robot visits vertex $v$ according to~\eqref{eq:6}, so~ $ \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} \!t_{vr}^- =\! 0\! \leq \!t_e$, i.e., the left inequality holds. The right one holds obviously. {Only when $b_p=1$, does~\eqref{eq:17} come into effect.} \green{As for the exception, when subtask $e$ is the first subtask that should be completed, i.e., $S_2^e = \emptyset$,  and its vertex label $\gamma(v_1)$ is either $\bot$ or is not satisfied by the initial robot locations, we have that the edge label becomes true at time instant 0, i.e., $t_e = 0$.}
+
+
+\domanda{(iii) Temporal constraints on  the  activation of the current substask and the completion  of prior substasks}
+\blue{These capture the precedence constraints that the activation of the current subtask $e$  should be at most one time step later than the the completion of the last subtask that can occur prior to it. Otherwise, the automaton induced from $X_{P}$ will be trapped at $e$ since all subtasks that can be completed  before $e$ have been satisfied.} Recall that $S_2^e = X^e_{\prec_{P}} \cup X^e_{\|_{P}}$. \green{We first assume that $S_2^e$ is non-empty.}
+Then, when the vertex label of $e$ is not $\bot$, $\forall \, \ccalC_p^{\gamma} \in \clause{\gamma} , \forall \,v \in \ccalM^\mathsf{cls}_\ccalV(e,0,p), \forall e' \in S_2^e$, the precedence constraint is
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:20}
+  & \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^-   \leq t_{e'}  + 1 +
+  M_{\max} \Big(z  - \sum_{o \in S_2^e\setminus \{e'\}} b_{e'}^o\Big).
+\end{align}
+\endgroup
+Only when $ \sum_{o\in S_2^e\setminus \{e'\}} b_{e'}^o = z $, does~\eqref{eq:20} come into effect.
+
+\green{On the other hand, if the set $S_2^e$ is empty, which means that there is no subtask prior to $e$, then the subtask $e$ should be activated at time 0. If the vertex label $\gamma(v_1)$ of $e$ is neither $\top$ nor $\bot$ and also the initial robot locations satisfy it, $\forall\, \ccalC_p^{\gamma} \!\in\! \clause{\gamma}$, we have that}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:zeroactivation}
+  & \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^-  \leq M_{\text{max}} (1- b_p), \;\forall \,v \in \ccalM^\mathsf{cls}_\ccalV(e,0,p).
+\end{align}
+\endgroup
+
+Another constraint is that, after the activation of the current subtask, i.e., $\gamma(v_1)$ becomes true, it should remain true until all subtasks in $X^e_{\prec_P}$ are completed. Otherwise, the precedence relation that subtasks in $X^e_{\prec_P}$ are fulfilled before $e$ will be violated. \blue{Then, $\forall \, \ccalC_p^{\gamma} \in \clause{\gamma} , \forall \,v \in \ccalM^\mathsf{cls}_\ccalV(e,0,p)$,  $\forall e' \in X^e_{\prec_P}$,}  this constraint can be encoded as,
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:redundant}
+   t_{e'}   \leq  \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^+   + M_{\max}(1 - b_p).
+\end{align}
+\endgroup
+\blue{Indeed, constraint~\eqref{eq:redundant} is redundant, which can be enforced by constraints~\eqref{eq:17} and~\eqref{eq:12}.
+In~\eqref{eq:17} we have $t_e \leq    \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^+ + 1 + M_{\max} (1 - b_{p})$ and in~\eqref{eq:12}, we have $ t_{e'} +  M_{\min}  \leq t_e$. Therefore, $t_{e'} +  M_{\min} \leq  \sum_{r\in \ccalM^\ccalV_{\ccalK}(v)} t_{vr}^+  + 1 + M_{\max} (1 - b_{p})$. If $M_{\min} \geq 1$,~\eqref{eq:redundant} holds.}
+
+
+
+
+
+\subsubsection{Same-$\ag{i}{j}$ constraints}\label{sec:samegroup}
+\blue{Finally, we encode the constraints that some subtasks are executed by the same $\ag{i}{j}$, which are captured by same non-zero indicator $\chi$.} Given a non-zero indicator $\chi$, we can locate all labels, vertex or edge labels,  by the mapping $\ccalM_\mathsf{\gamma}^\chi(\chi)$ that have literals with the same  superscript $\chi$. For an edge label $(e, 1) \! \in \! \ccalM_\mathsf{\gamma}^\chi(\chi)$ or a vertex label $(e, 0) \! \in \! \ccalM_\mathsf{\gamma}^\chi(\chi)$ , each clause has at most one literal $\aap{i}{j}{k}{\chi}$ with superscript $\chi$ and it is associated with $i$ vertices in $\ccalG$. We enumerate these $i$ vertices and denote the $b$-th vertex by $v_k^b$. Then for any two labels $\gamma, \gamma'\in\ccalM_\mathsf{\gamma}^a(\chi)$ and any two clauses $\ccalC_p^\gamma \in \clause{\gamma}$ and $\ccalC_{p'}^{\gamma'} \in \clause{{\gamma'}}$ that have  literals $\aap{i}{j}{k}{\chi}$ and $\aap{i}{j}{k'}{\chi}$, respectively, {the constraint} that the corresponding literals are satisfied by the same $\ag{i}{j}$, $\forall b \in [i]$ and  $\forall  r \in \ccalK_j$, can be encoded as
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{subequations}\label{eq:same}
+  \begin{align}
+    & \sum_{u:(u, v_k^b) \in \ccalE_\ccalG} x_{u v_k^b r} + M_{\max} (b_p - 1) \nonumber \\& \quad\quad\quad \leq  \sum_{u:(u, v_{k'}^b) \in \ccalE_\ccalG} x_{u v_{k'}^b r} + M_{\max}(1 - b_{p'}),\\
+    & \sum_{u:(u, v_{k'}^b) \in \ccalE_\ccalG} x_{u v_{k'}^b r} + M_{\max} (b_{p'} - 1) \nonumber \\& \quad\quad\quad \leq \sum_{u:(u, v_{k}^b) \in \ccalE_\ccalG} x_{u v_{k}^b r} + M_{\max}(1 - b_{p}),
+  \end{align}
+\end{subequations}
+\endgroup
+where $v_{k'}^b$ is the $b$-th vertex associated with $\aap{i}{j}{k'}{\chi}$. Only when $b_p = b_{p'}=1$, does~\eqref{eq:same} come into effect. Then, $\sum\nolimits_{u:(u, v_k^b) \in \ccalE_\ccalG} x_{u v_k^b r} = \sum\nolimits_{u:(u, v_{k'}^b) \in \ccalE_\ccalG} x_{u v_{k'}^b r} $, i.e., vertices $v_k^b$ and $v_{k'}^b$ are visited by the same robot $r$.
+
+\subsubsection{MILP objective}The objective is to minimize the weighted sum of travelling distance and execution time, i.e.,
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{equ:obj}
+  \min\; \;&  \alpha \sum_{(u,v)\in \ccalE_\ccalG}  \sum_{r \in \ccalM^\ccalV_{\ccalK}(v)} w_{uv} x_{uvr} +  \beta \sum_{v\in \ccalV_{\ccalG}} \sum_{r \in \ccalM^\ccalV_{\ccalK}(v)} t^+_{vr}.
+\end{align}
+ \endgroup
+  where $\alpha$ and $\beta$ are weights.
+  \begin{rem}
+   Compared to Problem~\ref{prob:1}, the objective~\eqref{equ:obj} involves the optimization of time. In the simulations in Section~\ref{sec:sim}, we observed that without optimizing the time, some scheduling variables can take large values, which impacts the plan synthesis; see Section~\ref{sec:path}. Note that travel distance and execution time are typically non-conflicting objectives.
+
+  \end{rem}
+\subsection{Construction of robot prefix plans from the MILP solution}\label{sec:path}
+\green{After solving the MILP discussed in Section~\ref{sec:milp}, we first obtain a time axis by sorting the completion times of all subtasks and it will be used in Section~\ref{sec:run} to extract a run from the NBA $\auto{subtask}^-$ that connects the initial vertex $v_0$ and the accepting vertex $v_\text{accept}$. Then, we extract a high-level plan for each robot  that will be concretized in Section~\ref{sec:mapp} to generate low-level paths that satisfy the specification.
+
+
+  \subsubsection{Time axis} Note that the progress made in the NBA is directly linked to the satisfaction of the edge label, and the satisfaction of  the specification $\phi$ relies upon the relative order between substasks, other than the exact occurence time. We collect the  set of completion times of all subtasks, evaluated at $t_e$ defined in Section~\ref{sec:onesubtask}, and sort them in an ascending order to form a unique non-decreasing time axis, denoted by $\vec{t}$. Note that there may exist identical time instants due to the parallel completion of subtasks. To break the tie, we increment each time instant by a small constant if it is identical with its previous one and further shift the remaing instants into the future by the same amount. For instance, by incrementing 1, the time axis $\vec{t}= (3, 4, 4, 7, 7)$ becomes $(3, 4, 5, 8, 9)$. In large part, we mantain the relevant order between these time instants and only slightly stagger completion times of subtasks that are independent. The reason is that independent elementary subtasks that are completed at the same time will enable an edge label in the NBA $\autop$ that corresponds to a composite subtask, while this edge does not exist in the NBA $\auto{subtask}^-$. Our manipulation prevents this happening with the intention of decomposing complex subtasks and focusing on elementary subtasks. }
+
+\subsubsection{High-level plans for robots} \green{Next  we extract a high-level plan for each robot, which is a sequence of waypoints that are related  to the satisfaction of an edge label (completion of a subtask) in $\auto{subtask}^-$, along with a sequence of associated  non-decreasing time instants. For robot $[r,j]$, let $p_{r,j}$ denote its plan and $t_{r,j}$ denote the  timeline. Consider the initial location $v^*_0 \in \ccalV_{\text{init}}$ of robot $[r,j]$ and let $v^*_1$ be the vertex such that $x_{v^*_0 v^*_1 r} =1$. Recall that each vertex in the routing graph $\ccalG$ is associated with an label that is captured by the mapping $\ccalM_{\mathsf{lits}}^{\ccalV}$ in Section~\ref{sec:vertex}. If the label of $v_1^*$ is a vertex label, we continue to search for vertex $v_2^*$ such that $x_{v_1^* v_2^* r}=1$ until a vertex $v^*$ is found that is associated with an edge label. Then the associated region  $\ccalM^\ccalV_{\ccalL}(v^*)$ is the first waypoint robot $r$ visits to complete a subtask and thus, we add this region $\ccalM^\ccalV_{\ccalL}(v^*)$ to the plan $p_{r,j}$. Next, the visit time  $t^-_{v^* r} = t^+_{v^* r}$ equals the completion time of the associated subtask, which is captured by $\ccalM_{e}^{\ccalV}(v^*)$. Note that each time instant in the time axis $\vec{t}$ corresponds to one subtask.  We adjust this visit time to be the time instant in $\vec{t}$ that is associated with the same subtask, and then add it to the timeline $t_{r,j}$. Continuing the above process, we can construct a sequence of waypoints along with the associated timeline where visit times are aligned with time instants in the time axis. Based on the high-level plan, in Section~\ref{sec:solution2mrta} we design low-level executable paths  for the prefix part to take into account negative literals and collision avoidance.}
+
+%% \blue{The synthesized plan corresponds to the whole or a partial prefix plan
+%%   depending on whether a vertex label exists for $v_{\text{accept}}$, which will be discussed in Section~\ref{sec:suf}. Note that the high-level plans are defined on an abstraction of the environment, minimizing the travelling distance between regions and ignoring inter-robot collision avoidance. Furthermore, these plans are associated with the relaxed automaton $\auto{relax}^-$. In Section~\ref{sec:solution2mrta}, we show how to use these high-level plans to generate low-level executable plans that work for the original automaton $\autop^-$.}
+\begin{cexmp}
+  \blue{After solving the MILP for the environment in Fig.~\ref{fig:workspace}, the extracted plans and the associated timeline are as follows: $p_{1,2} = \{l_{1,2}, \ell_4\}$, $t_{1,2} = \{ 0, 7 \}$, $p_{2,1} = \{l_{2,1}, \ell_2, \ell_3\}$, $t_{2,1} = \{0, 7, 17\}$ and $p_{2,4} = \{l_{2,4}, \ell_2, \ell_3\}$, $t_{2,4} = \{0, 7, 17\}$. That is, robot $[1,2]$ visits region $\ell_4$ at time 7, and also robots $[2,1]$ and $[2,4]$ visit region $\ell_2$ at time 7 and then arrive at region $\ell_3$ at time 17. The remaining  robots remain idle. Note that the time robot $[1,2]$ visits region $\ell_4$ is independent of the time robots $[2,1]$ and $[2,4]$ visit region $\ell_2$.
+ Also observe that the lengths of the plans differ.}
+\end{cexmp}
+
+\subsection{Construction of robot suffix paths}\label{sec:suf}
+\green{We have discussed the way of finding low-level executable paths  that induces a run in $\autop^-$ that connects $v_0$ to $v_{\text{accept}}$ when the vertex label of $v_{\text{accept}}$ exists (see Fig.~\ref{fig:presence}) or to $v_{\text{next}}$ in order to activate the suffix part when the vertex label of $v_{\text{accept}}$ does not exist (see the left figure in Fig.~\ref{fig:absence}). In what follows, for the second case where the vertex label of $v_{\text{accept}}$ does not exist, we find suffix paths  that drive the transitions in $\autop^-$ from $v_{\text{next}}$ back to itself by passing through $v_{\text{accept}}$; see the right figure in Fig.~\ref{fig:absence}. Observe that two figures in~Fig.~\ref{fig:absence} are identical if we replace the $v_{\text{next}}$ on the top in the right figure with $v_0$, therefore, starting from the NBA $\autop^-$ in Section~\ref{sec:prune},\footnote{The NBA $\autop$ can be saved and used throughout a given LTL formula $\phi$.} we can treat $v_{\text{next}}$ as $v_0$ and follow the same procedure as for the prefix part to obtain paths for the suffix part.
+
+  First, the initial robot locations for the suffix part are the final locations obtained by designing low-level executable paths for the prefix part in~Section~\ref{sec:solution2mrta}.  Based on the NBA $\autop^-$ we obtain the relaxed NBA $\auto{relax}$.  Then, similar to finding the shortest simple cycle around $v_{\text{accept}}$ in Section~\ref{sec:sort}, we remove all other accepting vertices from $\auto{relax}$ and then remove all initial vertices (including $v_0$) if the associated vertex labels are $\bot$. Furthermore, we delete any of outgoing edges of $v_{\text{accept}}$ if the edge label is not equal to $\top$, and then find the shortest simple cycle around $v_{\text{accept}}$ where $v_{\text{next}}$ follows $v_{\text{accept}}$ immediately. Next, by treating $v_{\text{next}}$ as an initial vertex $v_{0}$, we can follow Section~\ref{sec:pregraph} to extract a subgraph $\auto{subtask}$ from $\auto{relax}$ for the suffix part, except that the outgoing edges in $\auto{relax}$ of $v_{\text{accept}}$ are kept for the prefix part, and prune it to obtain the NBA $\auto{subtask}^-$}.
+  By following steps in Section~\ref{sec:poset}, we can find a poset $P$  and build a routing graph $\ccalG = (\ccalV_G, \ccalE_G)$ as in Section~\ref{sec:graph}. To find a high-level plan, we formulate a MILP problem based on $\ccalG$ by following almost identical procedures in Section~\ref{sec:milp} with one exception, the  same-$\ag{i}{j}$ constraints~\hyperref[sec:samegroup]{5)}, since we need to maintain the same $\ag{i}{j}$ as those in the prefix plan. Specifically, after solving the MILP for the prefix part, for all literals $\ap{i}{j}{k,\chi}$ that appear in $\phi$ with the same $\chi\not=0$, they are satisfied by the same $\ag{i}{j}$. We define by $\ccalK^\chi \subseteq \ccalK_j$ the set of $\ag{i}{j}$ that make these literals true. and denote by  $r^b$ the $b$-th robot in the set $\ccalK^\chi$. Then for any label $\gamma \in\ccalM_\mathsf{\gamma}^\chi(\chi)$ and any clause $\ccalC_p^\gamma \in \clause{\gamma}$ that has  literal $\aap{i}{j}{k}{\chi}$, {the constraint} that this literal is satisfied by the same $\ag{i}{j}$  can be encoded as}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}
+    \sum\nolimits_{u:(u, v_k^b) \in \ccalE_\ccalG} x_{u v_k^b r^b} =  b_p, \;\forall\, r^b \in \ccalK^\chi,
+  \end{align}
+\endgroup
+where $v_k^b$ is the $b$-th vertex in the set of vertices in the routing graph $\ccalG$  that are associated with literal $\ap{i}{j}{k,\chi}$. If the clause $\ccalC_p^\gamma$ is true, i.e.,  $b_p=1$, the $b$-th vertex $v_k^b$ is visited by the $b$-th robot $r^b \in \ccalK^\chi$.
+
+\green{ The solution to this MILP returns high-level plans that induce a run in $\auto{subtask}^-$ that starts from and ends at the accepting vertex $v_{\text{accept}}$. Then, we can get the low-level executable paths by following the method in~Section~\ref{sec:solution2mrta} that drive the transitions to vertex label of $v_{\text{next}}$. The last step is to design paths that satisfy  the vertex label of $v_{\text{next}}$ so that robots go back  to their initial locations from the final locations of these paths returned by Section~\ref{sec:solution2mrta} and meanwhile do not violated the specification. In this way, robots' path constitute a cycle.
+
+  After obtaining the prefix and suffix paths for each pair of initial and accepting vertices with finite total length, we select the paths with the lowest cost according to~\eqref{eq:cost}.
+
+
+  \section{Design of Low-Level Paths that Satisfy the Original LTL Task}\label{sec:solution2mrta}
+  In this section, we first extract a run from NBA $\auto{subtask}^-$ that is induced from the high-level plan and then find the counterpart of this run from the NBA $\autop^-$ that connects the initial vertex $v_0$ and the accepting vertex $v_{\text{accept}}$. To satisfy the specification $\phi$, we formulate a sequence of generalized multi-robot path planning problems to design low-level executable paths that incur the run in $\autop^-$, by following along the high-level plan.
+\subsection{Extraction of the run from the relaxed NBA \upshape $\auto{subtask}^-$}\label{sec:run}
+  %% Note that we operate on $\auto{subtask}^-$ other than the pruned NBA  $\auto{subtask}^-$. This is because independent elementary subtasks can occur simultaneously, which together consistitute a composite subtask whose associated edge  appears in the NBA $\auto{subtask}^-$ but not in~$\auto{subtask}^-$.
+
+\green{Each distinct time instant in the time axis $\vec{t}$ obtained in Section~\ref{sec:path} has one-to-one correspondence with subtasks in the set $X_P$, and the sorted time axis generates a linear extension of subtasks in $X_P$ that incurs a run in the relaxed NBA $\auto{subtask}^-$ that connects the initial vertex $v_{0}$ and accepting vertex $v_{\text{accept}}$. In this section, we proceed along the time axis $\vec{t}$ to extract this run using the backtracking search. The outline of the algorithm is shown in Alg.~\ref{alg:extract}.
+
+  To this end, we define $c\in \mathbb{N}$ as the {\it global counter} which keeps track of the progress that has been made along the axis $\vec{t}$. Specifically, $c$ is the index of the subtask that  has  been completed most recently, therefore, $\vec{t}(c+1)$ denotes  the   completion time of the current subtask, which is the immediate one to be completed. Let $v_1$ denote the vertex that is the  most recently reached when following along the time axis and $e'=(v_1', v_2')$ denote the subtask that time instant $\vec{t}(c+1)$ corresponds to.  We start from the initial vertex $v_1= v_0$ with global counter $c=0$ [line~\ref{run:initialization}, Alg.~\ref{alg:extract}]. At each iteration, among all outgoing edges from the vertex $v_1$, we find the one whose incurred subtask is equivalent to the current subtask $e$ [line~\ref{run:edgelabel}, Alg~\ref{alg:extract}]. Then, after the time instant $\vec{t}(c+1)$,  vertex $v_2$ becomes the most recently reached vertex. We then increase the global counter by 1 and add it to a stack, a last-in-first-out container [line~\ref{run:put}, Alg.~\ref{alg:extract}]. The iteration will terminate until the accepting vertex $v_{\text{accept}}$ is reached.}
+
+
+ \begin{algorithm}[t]
+      \caption{Extract the  run from $\auto{subtask}^-$ }
+      \LinesNumbered
+      \label{alg:extract}
+      \KwIn {time axis $\vec{t}$, relaxed NBA $\auto{subtask}^-$}
+         \Comment*[r]{Initialization}
+         $v_1 = v_0, c = 0,  stack = \emptyset $ \label{run:initialization}\;
+           \Comment*[r]{Backtracking search}
+           \While{\upshape $v_1 \not= v_{\text{accept}}$}{
+             Obtain the subtask $e'=(v'_1, v_2')$ that is associated with $\vec{t}(c+1)$\;
+           \For{\upshape $(v_1, v_2) \in \auto{subtask}$}{
+             \If{\upshape   $ \gamma(v_1, v_2) = \gamma(v'_1, v'_2)$ {\bf and} $\gamma(v_1) = \gamma(v'_1)$ \label{run:edgelabel}}{
+               Determine {\it (i)} essential clauses, {\it (ii)} essential robots, {\it (iii)} negative clauses, and {\it (iv)} the sequence of vertices leading to  $v_2$\label{run:info}\;
+                 $stack.put(v_2, c+1)$\label{run:put}\;
+
+             }
+           }
+           $(v_1, c) = stack.pop()$\;
+         }
+
+ \end{algorithm}
+
+ \green{When an edge $(v_1, v_2)$ in~$\auto{subtask}^-$ is matched with a subtask in~$X_P$, we keep track of information regarding {\it (i)} the exact clauses that are\ satisfied in the vertex label $\gamma(v_1)$ (if $\gamma(v_1) \neq \top, \bot$) and edge label $\gamma(v_1, v_2)$ (if $\gamma(v_1, v_2) \neq \top$), since only one clause in each label is true by~\eqref{eq:c}, and {\it (ii)} the subset of robots that participate to satisfy each literal in these clauses, {\it (iii)} the exact clause composed of negative literals in $\autop^-$ that is associated with the satisfied clause in {\it (i)} but is replaced with $\top$ during the relaxation stage in Section~\ref{sec:prune}, and  {\it (iv)} the sequence of vertices in $\auto{subtask}^-$ that have been visited up to vertex $v_2$. We next discuss {\it (i)-(iii)} in detail.
+
+   \domanda{(i) Essential clauses} Given the edge label or vertex label $\gamma=\bigvee_{p\in \ccalP} \bigwedge_{q\in \ccalQ_p} \ap{i}{j}{k,\chi}$ that is neither $\top$ nor $\bot$, we refer to the unique clause that is satisfied as the {\it essential clause} and denote by $\gamma^+$, which is determined by locating the binary variable, defined in~Section~\ref{sec:labelconstraints} representing the truth of a clause, whose value is 1. That is, $b_p=1, \, \forall\, \ccalC_{p}^{\gamma} \in \clause{\gamma}$. On the othe hand, when the vertex or edge label is $\top$, we define the essential clause as $\top$ by default.
+   \domanda{(ii) Essential robots} We refer to the set of robots whose collective behavior satisfies the literals in the essential clause as the {\it essential robots}. For $q$-th literal $\ap{i}{j}{k,\chi}$ in the essential clause $\ccalC_p^\gamma$ of a vertex or edge label, we determine its essential robots by locating the binary variable, representing one robot visiting a vertex in the routing graph $\ccalG$ associated with this literal, whose value is 1. That is, $x_{uvr}=1, \, \forall\, v\in \ccalM_{\ccalV}^\mathsf{lits} (e, 0|1, p, q),\,\forall\, r\in \ccalM_\ccalK^\ccalV(v), \,\forall\, (u,v)\in\ccalE_\ccalG$. On the other hand, if the essential clause is $\top$, there is no essential robots.
+   \domanda{(iii) Negative clause} The collective behavior of essential robots satisfies the essential clauses in $\auto{subtask}^-$. For every essential clause if the associated label is neither $\top$ nor $\bot$, there exists a unique clause in the NBA $\autop^-$ that only differs from the essential clause in that it may contain the conjunction of the negative literals that were removed during the relaxation stage. We refer to this conjunction of negative literals  as the {\it negative clause} and denote by $\gamma^-$, which will be avoided when desinging the low-level paths in Section~\ref{sec:mapp}. We  define the negative clause as $\top$ by default, if the corresponding clause in $\autop^-$ does not have negative literals. In this way, the conjunction $\gamma^+ \wedge \gamma^-$ of an essential  clause and its corresponding negative clause correspond to  one {\it complete clause} in~$\autop^-$.
+
+   On the other hand, when the vertex or edge label in $\auto{subtask}^-$ is $\top$, the associated essential clause is $\top$. However, the negative clause may not be $\top$, which happens when all clauses in the corresponding label in $\autop^-$ only include negative literals. For the edge label, we randomly select one of its clauses as the negative clause. For the vertex label, we select one of its clauses that is not mutually exclusive with the complete clause of its incoming edge. Otherwise, if the robot locations in the designed low-level paths  satisfy the complete clause of its incoming edge, then the robot locations right at the next time instant  should satisfy the negative clause associated with the considered vertex label. Due to the mutual exclusion,  this situation is hard to realize.}
+
+
+
+ %%  To this end, we define $c\in \mathbb{N}$ as the {\it global counter} which keeps track of the progress that has been made along the axis $\vec{t}$. Specifically, $c$ is the index of the subtask that  has  been completed most recently, therefore, $\vec{t}(c+1)$ denotes  the   completion time of the current subtask, which is the immediate one to be completed. Let $v_1$ denote the vertex that is the  most recently reached when following along the time axis.  We start from the initial vertex $v_1= v_0$ with global counter $c=0$ [line~\ref{run:initialization}, Alg.~\ref{alg:extract}]. At each iteration, we determine the set $H$ of time instants that are identical to $\vec{t}(c+1)$, of which the corresponding subtasks will be completed parallelly at the same time. We denote by $\gamma_{\text{edge}}$ and $\gamma_{\text{vertex}}$ the conjunciton of the associated edge labels  and vertex labels of those subtasks, respectively. [line~\ref{run:instants}, Alg.~\ref{alg:extract}].
+ %%   Among all outgoing edges from the vertex $v_1$, we find the subtask $(v_1, v_2)$  whose edge label abd vertex label are logically equivalent to $\gamma_{\text{edge}}$ and $\gamma_{\text{vertex}}$, respectively [line~\ref{run:edgelabel}, Alg~\ref{alg:extract}]. Recall that when $|H|>1$, by definition~\ref{defn:id} of ID property, all independent subtasks  have vertex labels $\top$.    In this way, after the time instant $\vec{t}(c+1)$,  vertex $v_2$ becomes the most recently reached vertex. We then increase the global counter by $|H|$ and add it to a stack, a last-in-first-out container [line~\ref{run:put}, Alg.~\ref{alg:extract}]. The iteration will terminate until the accepting vertex $v_{\text{accept}}$ is reached.}
+
+
+ %% \begin{algorithm}[t]
+ %%      \caption{Extract the  run from $\auto{subtask}^-$ }
+ %%      \LinesNumbered
+ %%      \label{alg:extract}
+ %%      \KwIn {time axis $\vec{t}$, relaxed NBA $\auto{subtask}^-$}
+ %%         \Comment*[r]{Initialization}
+ %%         $v_1 = v_0, c = 0,  stack = \emptyset $ \label{run:initialization}\;
+ %%           \Comment*[r]{Backtracking search}
+ %%         \While{\upshape $v_1 \not= v_{\text{accept}}$}{
+ %%           Determine the set of identical time instants: $H = \{\vec{t}(h): \vec{t}(h) = \vec{t}(c+1), \;\forall\,  c+1 \leq h \leq |\vec{t}|\}$
+ %%           and the conjunction of labels $\gamma_{\text{edge}}$ and $\gamma_{\text{vertex}}$ \label{run:instants}\;
+ %%           \For{\upshape $(v_1, v_2) \in \auto{subtask}$}{
+ %%             \If{\upshape   $ \gamma(v_1, v_2) = \gamma_{\text{edge}}$ {\bf and} $\gamma(v_1) = \gamma_{\text{vertex}}$ \label{run:edgelabel}}{
+ %%                 Determine {\it (i)} essential clauses, {\it (ii)} essential robots {\it (iii)} the sequence of vertices \label{run:info}\;
+ %%                 $stack.put(v_2, c+|H|)$\label{run:put}\;
+
+ %%             }
+ %%           }
+ %%           $(v_1, c) = stack.pop()$\;
+ %%         }
+
+ %% \end{algorithm}
+
+ %% \green{When an edge $(v_1, v_2)$ in~$\auto{subtask}^-$ is matched with a subtask in~$X_P$, we keep track of information regarding {\it (i)} the exact clauses that are\ satisfied in the vertex label $\gamma(v_1)$ (if $\gamma(v_1) \neq \top, \bot$) and edge label $\gamma(v_1, v_2)$ (if $\gamma(v_1, v_2) \neq \top$), since only one clause in each label is true by~\eqref{eq:c}, and {\it (ii)} the subset of robots that participate to satisfy each literal in these clauses, {\it (iii)} the sequence of vertices in $\auto{subtask}^-$ that have been visited up to vertex $v_2$. We next discuss {\it (i)} and {\it (ii)} in detail.
+
+ %%   \domanda{(i) Essential clauses} When $H=1$, given the edge label or vertex label $\gamma=\bigvee_{p\in \ccalP} \bigwedge_{q\in \ccalQ_p} \ap{i}{j}{k,\chi}$, we refer to the clause that is satisfied as the {\it essential clause} and denote by $\gamma^+$, which is determined by locating the binary variable, defined in~Section~\ref{sec:labelconstraints} representing the truth of a clause, whose value is 1. That is, $b_p=1, \, \forall\, \ccalC_{p}^{\gamma} \in \clause{\gamma}$. On the other hand, when $|H|>1$, we first determine the essential clauses for the elementary subtasks, and then determine the essential clause for the composite substask that is the conjunction of these clauses.
+ %%   \domanda{(ii) Essential robots} We refer to the set of robots whose collective behavior satisfies the literals in the essential clause as the essential robots. For each literal $\ap{i}{j}{k,\chi}$ in the essential clause for each elementary subtask, we determine its essential robots by locating the binary variable, representing one robot visiting a vertex in the routing graph $\ccalG$ associate with this literal, whose value is 1. That is, $x_{vr}=1, \, \forall\, v\in \ccalM_{\ccalV}^\mathsf{lits} (e, 0|1, p, q),\,\forall\, r\in \ccalM_\ccalK^\ccalV(v)$.
+
+
+
+
+ \begin{cexmp}
+   The time axis obtained from individual timeline $\{t_{1,2}, t_{2,1}, t_{2,4}\}$ is  $\vec{t} = \{7, 17\}$, since each time instant unless the starting instant 0 corresponds to an edge label.  The detailed search over the NBA $\auto{subtask}^-$, also $\auto{relax}$, in Fig.~\ref{fig:nba_m} is shown Table~\ref{tab:search}, where the first column lists the vertex that is being searched and the second column records the set $stack$ once the search over the left-side vertex is over. The run in the relaxed NBA $\auto{relax}$ in Fig.~\ref{fig:nba_m} is $v_0 \to v_1 \to v_3 \to v_6(v_{\text{accept}})$. That is, robots $[2,1], [2,4]$ and $[1,2]$ are involved in the subtask $(v_1,v_3)$ that occurs at time instant  $7$, and robots $[2,1] $ and $[2,4]$ are involved in the subtask $(v_3, v_6)$ that occurs at time instant $17$.
+ \end{cexmp}
+ \begin{table}[t]
+   \caption{Extract a run from automaton $\auto{subtask}^-$}\label{tab:search}
+   \centering
+   \red{\begin{tabular}{cl}
+     \toprule
+     vertex & $stack$\\
+     \midrule
+     $v_0$ & $\{(v_1, 1)\}$\\
+     $v_1$ & $\{(v_4, 2), (v_2, 2), (v_3, 2)\}$\\
+     $v_4$ & $\{(v_2, 2), (v_3, 2)\}$\\
+     $v_2$ & $\{(v_3, 2)\}$\\
+     $v_3$ & $\{(v_{\text{accept}}, 3)\}$\\
+     $v_{\text{accept}}$ & $\emptyset$\\
+     \bottomrule
+   \end{tabular}}
+ \end{table}
+}
+ \blue{\subsection{Generalized multi-robot path planning}\label{sec:mapp}
+   Using  the relation between the pruned NBA  $\autop^-$ and the relaxed NBA $\auto{subtask}^-$, we can find the counterpart in $\autop^-$ of the  run generated in Section~\ref{sec:run}. We denote by $\rho_T$ this counterpart, which   can induce   a sequence of temporally
+   sequential subtasks. Our goal is to a collection of executable paths for the robots that incur the run $\rho_T$, thus, satisfying the global LTL task $\phi$. To achieve this, we  consider the sequence  of subtasks in $\rho_T$ and formulate  the execution of each subtask into a {\it generalized multi-robot path planning problem (GMMPP)}. Compared to the classical multi-robot path planning that, given an initial robot configuration, designs paths to reach the target configuration, the GMMPP imposes extra constraints on the immediate configuration.
+ {The algorithm for  designing executable paths is outlined in Alg.~\ref{alg:sequentialMAPP}.}
+
+ %% \begin{figure}[t]
+ %%  \centering
+ %%  \includegraphics[width=0.9\linewidth]{adjustment.pdf}
+ %%  \caption{\blue{Adjustment of time spans. Consider three consecutive subtasks $e_1, e_2, e_3$. Every green horizontal bar depicts the time interval when the vertex label of one subtask is true and the red triangle marks the satisfaction of the edge label, i.e., the completion of the subtask. The upper part illustrates the general relation between the spans of subtasks (unaligned in the vertical direction for better illustration) and the lower  part shows the overlapping at the endpoints after the alignment.}}
+ %%  \label{fig:adjustment}
+ %% \end{figure}
+ %% We first  align the timing of subtasks, consisting of two consecutive vertices in the found run $\rho_T$,  along the timeline. Specially, we fix the completion time of each subtask as an ``anchor' and then align the time interval when the associated vertex label is true,  so that the activation time of this subtask is the same as  the completion time   of the previous subtask, and the last time when the associated vertex label is true is the same as the completion time of this subtask; see also Fig.~\ref{fig:adjustment}. In this way,  the union of all spans of subtasks covers the whole timeline and the spans of two consecutive subtasks only overlap at the endpoint. Also, the time interval when the vertex label is true is the same as the span of the subtask. To realize the alignment, each  pair of  time instants in $t_{r.j}$ that specify the time interval when a vertex label is true will be modified so that the first time instant equals the completion of the previous subtask and the second one equals the completion of the current subtask that this vertex label corresponds to.
+
+ %% {Note that the plan $\{p_{r,j}\}$ and the timeline $\{t_{r,j}\}$ still satisfy the constraints in Section~\ref{sec:milp} except~\eqref{eq:4}. Because we adjusted the timeline by fixing the time instants associated with edge labels, only constraints related to time instants associated with vertex labels can be affected, that is, \eqref{eq:4}, \eqref{eq:17} and~\eqref{eq:20}. Specifically, the completion time of the subtask is the same as the completion time of the corresponding vertex label, thus, the containtment in~\eqref{eq:17} is satisfied. Furthermore, the activation time of the current subtask is same as the completion time of the subtask immediately preceding it, thus, temporal constraint~\eqref{eq:20} is satisfied. Constraints in~\eqref{eq:4} can be  violated since the alignment can bring forward the activation time of the vertex label or delay the completion time of the vertex label, which might make the time difference between visitation of connecting vertices slightly less than the required travelling time. However, since the travelling time used in~\eqref{eq:4} is the shortest travelling time between regions, the constraints~\eqref{eq:4} are the approximation of the real situation, thus, violation of~\eqref{eq:4} is acceptable and will be addressed in Section~\eqref{sec:solution2mapp}.}
+
+ {Observe that givent the completion time of two consecutive subtasks in the time axis $\vec{t}$, we can obtain the tightest span of the vertex label of the second subtask. Specifically, the activation time, at the latest, of the vertex label of the second subtask is exactly one time instant later than the completion time of the first subtask; see also constraint~\eqref{eq:20} that captures the temporal relation between two subtasks. On the other hand, the earliest completion time of the vertex label of the second subtask is exactly one time instant earlier than the completion time of the second subtask; see also constraint~\eqref{eq:17} that captures the temporal relation for the same subtask.  To design the low-level paths,  we let each robot visit waypoints in its individual plan $p_{r,j}$ sequentially, maybe at different time instants than those in its timeline $t_{r,j}$ when taking collision avoidance into account, but relative temporal relations with other robots (precedence or simultaneity) are kept. Also we maintain the tightest span of the vertex label between completion times of two consecutive subtasks.}
+
+ To this end, for each robot $[r,j] \in \{\ccalK_j\}$, we define a {\it local counter} $\zeta_{r,j} \in \mathbb{N}$  that  keeps track of how much progress has been made along the individual plan $p_{r,j}$. Specifically, $\zeta_{r,j} = a$ indicates that the most recent waypoint in the plan $p_{r,j}$ visited by  robot $[r,j]$ is the $a$-th waypoint. Furthermore, recall the  global clock $c$ that monitors the completion time of the subtask immediately preceding the current subtask in the axis $\vec{t}$, which also captures the execution progress along the run $\rho_T$. We initialize all local counters and the global clock as 0 [line~\ref{seq:initilization}, Alg.~\ref{alg:sequentialMAPP}].%%  \green{Next, we discuss the correspondence between clauses in the NBA $\auto{subtask}^-$ and those in $\autop$ in two cases:
+ %% \domanda{(i) Label is neither $\top$ nor $\bot$} Given a subtask $e$ contained in the run $\rho_T$ in $\auto{subtask}^-$, only one clause (a conjunction of positive literals) can be true in every associated label $\gamma$, vertex or edge label by~\eqref{eq:c}, if it is neither $\top$ nor $\bot$. We refer to this clause as the {\it satisfied clause} and denote by $\gamma^+$. For every satisfied clause in $\auto{subtask}^-$, there exists a unique clause in the pruned NBA $\autop^-$ that only differs from the satisfied clause in that it may contain the conjunction of the negative literals that were removed  during the relaxation stage . We refer to this conjunction of negative literals  as the {\it negative clause} and denote by $\gamma^-$, which is defined as $\top$ by default, if the corresponding clause does not have negative literals. In this way, each label is associated with a satisfied clause and a negative clause which together constitute one clause.
+
+ %% \domanda{(ii) Label is $\top$}  When the vertex or edge label is $\top$, the associated satisfied clause is $\top$ by default. However, the negative clause may not be $\top$, which happens when all clauses in the corresponding label in $\autop^-$ only include negative literals. For the edge label, we randomly select one of its clauses as the negative clause. For the vertex label, we select one of its clauses that is not mutually exclusive with the conjunction of the satisfied and negative clauses associated with  the edge label of the subtask that is immediately preceding the current subtask. Otherwise, if the robot locations in the designed low-level paths  satisfy the edge lalel of the previous subtask in $\autop^-$, then the next robot locations should satisfy the negative clause associated with the vertex label of the current subtask. Due to the mutual exclusion,  this situation is hard to realize.}  In what follows, we describe  the ingredients of a single instance of the generalized multi-robot path planning problem [line~\ref{seq:ingredients}, Alg.~\ref{alg:sequentialMAPP}].
+{\begin{algorithm}[t]
+    \caption{Executable multi-robot path planning}
+    \algorithmfootnote{The right-side time instant $\vec{t}(c+1)$ in~line~\ref{seq:axis} is the one before updated.}
+      \LinesNumbered
+      \label{alg:sequentialMAPP}
+      \KwIn {environment $E$,  robot team $\{\ccalK_j\}$, subtask sequence $\rho_T$, waypoint sequence $\{p_{r,j}\}$, time sequence $\{t_{r,j}\}$, NBA $\autop^-$ and $\auto{subtask}^-$}
+      \Comment*[r]{Initilization}
+        $\tau_{r,j} = s_{r,j}^0 $, $\zeta_{r,j} = 0, \forall\, [r,j] \in \{\ccalK_j\}$, $c = 0$ \label{seq:initilization}\;
+      \For{$e = (v_1, v_2) \in \rho_T$}{
+        \Comment*[r]{Solving GMMPP}
+        \If{\upshape initial robot locations satisfy the edge label $\gamma(v_1, v_2)$ \label{seq:initial}}{
+          $\zeta_{r,j} = \zeta_{r,j} + 1, \; \forall \, [r,j] \in \ccalR_{1,2}$ \label{seq:counter_initial}\;
+          $c = c + 1$ \label{seq:c_initial}\;
+        }
+        \Else{
+          Formulate the GMMPP by determining the set $\ccalR$ of robots required to move, the updated environment $E'$, sets of initial locations $X_I$ and target locations $X_G$, running constraint $\gamma_1^-$, terminal constraints $\gamma_{1,2}^- $ and $\gamma_2^-$, and horizon $T+1$ or $T+2$ \label{seq:ingredients}\;
+          Solve the GMMPP for horizon $T+1$ or $T+2$ as in Section~\ref{sec:solution2mapp} to obtain paths $\tau'_{r,j}$. If no solution exists, increment $T$ by a constant\label{seq:mapp}\;
+          \Comment*[r]{Update}
+          \If{\upshape $v_2 = v_{\text{accept}}$  for the prefix plan \label{seq:terminate}}{
+            $\tau_{r,j} = \tau_{r,j} \cdot \tau'_{r,j}[1:T_e+1], \;\forall \,[r,j] \in \ccalR $, and repeat $T_e+1$ times the last waypoint in $\tau_{r,j}$ for robots in $[r,j] \in \{\ccalK_j\} \setminus \ccalR$ \label{seq:finalpath}\;
+            {\bf break}\;
+          }
+          \ElseIf{\upshape $v_2 = v_{\text{next}}$ for the suffix plan \label{seq:terminate}}{
+            $\tau_{r,j} = \tau_{r,j} \cdot \tau'_{r,j}[1:T_e+2], \;\forall \,[r,j] \in \ccalR $, and repeat $T_e+2$ times the last waypoint in $\tau_{r,j}$ for robots in $[r,j] \in \{\ccalK_j\} \setminus \ccalR$ \label{seq:finalpath}\;
+            {\bf break}\;
+          }
+           \Else{
+            $\tau_{r,j} = \tau_{r,j} \cdot \tau'_{r,j}[1:T_e], \;\forall \,[r,j] \in \ccalR $, and repeat  $T_e$ times  the last waypoint in $\tau_{r,j}$ for robots in $[r,j] \in \{\ccalK_j\} \setminus \ccalR$ \label{seq:path}\;
+            $t_{r,j}(\zeta) =  t_{r,j}(\zeta)  + T_e - (\vec{t}(c+1) - \vec{t}(c))$, $\forall \,\zeta \geq  \zeta_{r,j}$, and $ \forall\, [r,j] \in \{\ccalK_j\} $ \label{seq:timeline} \;
+            $\vec{t}(c') = \vec{t}(c') + T_e - (\vec{t}(c+1) - \vec{t}(c))$, $ \forall \, c' \geq c+1$  \label{seq:axis}\;
+            $\zeta_{r,j} = \zeta_{r,j} + 1, \; \forall \, [r,j] \in \ccalR_{1,2}$ \label{seq:counter}\;
+            $c = c + 1$ \label{seq:c}\;
+          }
+        }
+      }
+      \If{\upshape close the loop for the suffix plan}{
+        Formulate the GMMPP by determining the set $\ccalR$ of robots required to move , the updated environment $E'$, sets of initial locations $X_I$ and target locations $X_G$, running constraint $\gamma_1^-$, and horizon $T$ \label{seq:ingredients_loop}\;
+        Solve the GMMPP for horizon $T$as in Section~\ref{sec:solution2mapp} to obtain paths $\tau'_{r,j}$. If no solution exists, increment $T$ by a constant\label{seq:mapp_loop}\;
+      }
+\end{algorithm}}
+
+Specifically, consider a subtask $e = (v_1, v_2)$ generated by the run $\rho_T$ that is the next one to be accomplished. \green{In what follows, we assume that the vertex label $\gamma(v_2)$ exists, which may not be the case when  $v_2 = v_{\text{accept}}$ and $\gamma(v_{\text{accept}}) = \bot$; see Fig.~\ref{fig:absence}.}
+Let $\gamma_1^+$ and $\gamma_1^-$ denote the essential and negative clauses associated with the vertex label $\gamma(v_1)$, respectively. Let $\gamma_{1,2}^{+}$ and $\gamma_{1,2}^{-}$  denote the essential and negative clauses  associated with the edge label $\gamma(v_1, v_2)$, respectively. Also $\gamma_2^+$ and $\gamma_2^-$ denote the essential and negative clauses associated with the vertex label $\gamma(v_2)$ of the next substask, respectively. The goal of a GMMPP is to determine a collection of executable paths such that robots complete the current subtask (by satisfying the corresponding edge label $\gamma_{1,2}^+ \wedge \gamma_{1,2}^-$ at the end while respecting the vertex label $\gamma_1^+ \wedge \gamma_1^-$ en route) and activate the next subtask (by satisfying the next vertex label $\gamma_2^{+}\wedge \gamma_2^{-}$ after the completion of the current subtask). We refer to $\gamma_1^-$ as the {\it running constraint}, and $\gamma_{1,2}^- $ and $ \gamma_2^{-}$ as the {\it terminal constraints}.
+
+%% Let $\gamma_1^-$ denote the negative clause associated with the vertex label $\gamma(v_1)$. Let $\gamma_2^{+,1} (\gamma_2^{-,1}) $ and $\gamma_2^{+,2} (\gamma_2^{-,2})$ denote the satisfied (negative) clause associated with the edge label $\gamma(v_1, v_2)$ and the vertex label of the next subtask, respectively. Then, we define $\gamma_2^+ = \gamma_2^{+,1} \wedge \gamma_2^{+,2}$ and $\gamma_2^- = \gamma_2^{-,1} \wedge \gamma_2^{-,2}$. As mentioned  in the definition of subtasks (see Definition~\ref{defn:subtask}), the completion of a subtask requires the satisfaction of its edge label while respects its vertex label. Thus, the goal of a GMMPP is to determine a collection of executable paths that satisfy the clauses $\gamma^+_2 \wedge \gamma^-_2$ at the end and respect the clause $\gamma_1^-$ en route.\footnote{We do not consider the satisfied clause, denoted by $\gamma_1^+$, in the vertex label of the current subtask since it is satisfied at the end of the previous subtask and will maintain true since involved robots remain idle, same as that $\gamma_2^{+,2}$ of the next vertex label is addressed when dealing with the current subtask.} That is, robots complete the current subtask (by satisfying the corresponding edge label $\gamma_2^{+,1}\wedge \gamma_2^{-,1}$ and the vertex label $\gamma_1^-$) and activate the next subtask (by satisfying the next vertex label $\gamma_2^{+,2}\wedge \gamma_2^{-,2}$). We refer to $\gamma_1^-$ as the {\it running constraint},  $\gamma_2^-$ as the {\it terminal constraint}, and $\gamma_2^+$ as the {\it target}.
+
+Note that not all robots need to move for one specific subtask, since only the set of essential robots are responsible for the satisfaction of this subtask.  Next, we determine the set of essential robots that should move in 4 cases:
+\domanda{(i) Essential robots associated with the target $\gamma_{1,2}^{+}$ and $\gamma_2^{+}$}  We collect essential robots associated with literals in $\gamma_{1,2}^{+}$ and $\gamma_2^{+}$ in the sets $\ccalR_{1,2}$ and $\ccalR_2$, respectively, where  robots need to reach certain target regions related to the current and next subtasks.
+\domanda{(ii) Essential robots associated with the constraint $\gamma_1^+$} We collect essential robots associated with literals in $\gamma_{1}^{+}$ in the sets $\ccalR_{1}$,  where robots need to remain at certain target regions related to the current subtask.
+\domanda{(iii) Essential robots associated with subsequent subtasks} These robots move simultaneously with the above two types of robots to reach  waypoints associated with subsequent subtasks of the current subtask $e$. We collect robots in the set $\ccalR'_{1,2}$ and identify them in the following way. First, we identify the completion time  of the current subtask, which is given by $\vec{t}(c+1)$.  Next, we iterate over the remaining robots that are not in $\ccalR_1 \cup \ccalR_{1,2} \cup \ccalR_2$. For every such robot $[r',j']$, the time when it should visit the next waypoint based on its local counter $\zeta_{r',j'}$ is given by $t_{r',j'}(\zeta_{r',j'}+1)$. Note that {$t_{r', j'}(\zeta_{r',j'}+1) > \vec{t}(c+1)$}, since we proceed along the run $\rho_T$ and the completion time of  subtasks that have not been considered, by the precedence relation in~\eqref{eq:12}, will be larger than that of the current subtask. Finally, we calculate the time difference $\Delta t = t_{r', j'}(\zeta_{r',j'}+1) - \vec{t}(c+1)$  and then check whether the robot $[r', j']$ can arrive at the target region $p_{r',j'}(\zeta_{r',j'}+1)$  within time $\Delta_t$ starting from  its current location by taking the shortest route. {If not, robot $[r', j']$ should move simultaneously when completing the current subtask.}
+\domanda{(iv) robots associated with running and terminal constraints} The robots in this case  are different from the above-mentioned three types due to that they are related to negative clauses $\gamma_1^-$, $\gamma_2^-$ or $\gamma_{1,2}^-$. These robots navigate without specific targets, unless they appear in the first 3 cases, only to satisfy the threshold imposed by the negative literals on the number of certain type of robots that appear somewhere. We collect them in the set $\ccalR^-$, which contains all robots that belong to certain types mentioned in $\gamma_1^-$, $\gamma_2^-$ or $\gamma_{1,2}^-$. That is, $\ccalR^- = \{\{\ccalK_j\}: \neg \ap{i}{j}{k} \in \mathsf{lits}^- (\gamma_1^- \vee \gamma_2^- \vee \gamma_{1,2}^-) \}$.
+
+Let $ \ccalR = \ccalR_1 \cup\ccalR_{1,2} \cup \ccalR_{2} \cup \ccalR'_{1,2} \cup \ccalR^-$ denote the set that collects all robots that need to move.  Then, robots in $\{\ccalK_j\}\setminus\ccalR$ do not need to move and we treat them as obstacles, giving rise to a new environment $E'=(S', \to_{E'})$. %% Among those robots that do not need to move, some may be located at regions that conflict with negative literals in $\gamma_1^-$, $\gamma_{1,2}^-$ and $\gamma_2^-$. For these robots and for every negative literal $\neg \ap{i}{j}{k}$ in $\gamma_1^-$, $\gamma_{1,2}^-$ and $\gamma_2^-$, we identify the number $i'$ of robots of type $j$ that is at region $\ell_k$ and update this literal $\neg \ap{i}{j}{k}$ to be $\neg \ap{i-i'}{j}{k}$.\footnote{We observe this conflict occurs less often. Normally, robots do not move unless they are assigned to certain region to execute some subtask. Tasks that requires robot to demonstrate a collective behavior (visit certain region simultaneously) and afterwards prohibit  such behavior  appear less often in the common tasks such as persistent coverage, sequencing.}
+Moreover, we define by $X_I$ and $X_G$ the sets of initial and target locations, respectively, for robots in $\ccalR$ such that $X_I(r,j) \in S'$ and $X_G(r,j)\subseteq S'$ are the initial  and target locations of robot $[r,j] \in \ccalR$. Specifically, the initial robot locations are those where the robots stand at the end of the subtask immediately preceding $e$. On the other hand, the target region of  robot $[r,j] \in \ccalR_{1,2}$ is determined  by its associated literal in $\gamma_{1,2}^+$, which is also given by  $p_{r,j}(\zeta(r,j)+1)$. Similarly, the target region of robot $[r,j] \in \ccalR_{1} \cup \ccalR_{2}$ can also be determined by its associated literal in $\gamma_1^+$ or $\gamma_2^+$. Furthermore, the target region of robot $[r',j'] \in \ccalR'_{1,2}$ is the  location from where robot $[r',j']$ can reach the region $p_{r',j'}(\zeta(r',j')+1)$ within time $\Delta t$ by taking the shortest route in the new environment $S'$. If the selected target location of robot $[r',j']$ has already been assigned to another robot of in $\ccalR'_{1,2}$, then we select another free cell on the shortest route to be this robot's target location, that is close to the previously selected occupied cell and has not been assigned.
+
+   Finally, let $\tau'_{r,j}$ denote the path segment of robot $[r,j] \in \ccalR$, where $\tau'_{r,j}(t)$ denotes the robot location at time $t$ for $ t\in \{0,  \ldots, T, T+1\}$, where time instants 0, $T$ and $T+1$ indicate the completion time of the immediately preceding subtask and the current subtask and the activation time of the next subtask, respectively.  The generalized multi-robot path planning problem we formulate in this paper is adapted from~\cite{yu2016optimal} and is defined as follows.
+  \begin{defn}[Generalized multi-robot path planning]\label{defn:gmmpp}
+    Given a discrete environment $E'$, a set of robots $\ccalR = \ccalR_1 \cup\ccalR_{1,2} \cup \ccalR_{2} \cup \ccalR'_{1,2}$, a set of initial locations $X_I$ and a set of target regions $X_G$, the running constraint $\gamma_1^-$, the terminal constraints $\gamma_{1,2}^-$ and $\gamma_2^-$, and the horizon $T+1$, find a collection of path segments $\tau'_{r,j}$ for all robot $[r,j]\in \ccalR$ such that {\it (i)} every robot $[r,j] \in \ccalR\setminus\ccalR_1$ starts from the initial location and arrives at the target region at time instants $T$ or $T+1$, i.e., $ \tau'_{r,j}(0) = X_I(r,j)$ and  $ \tau'_{r,j}(T) \in X_G(r,j)$ for $[r,j] \in  \ccalR_{1,2} \cup \ccalR'_{1,2}$ or $ \tau'_{r,j}(T+1) \in X_G(r,j)$ for $[r,j] \in \ccalR_{2}$. Furthermore, every robot $[r,j] \in \ccalR_1$ remain in the target region for all time except  at 0 and $T, T+1$, that is, $ \tau'_{r,j}(0) = X_I(r,j)$ and $\tau'_{r,j}(t) \in X_G(r,j)$ for $t = 1,\ldots, T-1$;
+  {\it (ii)} the paths of  any two distinct robots $[r,j]$ and $[r', j']$ are collision-free, that is, there does not exist time instant $t=1, \ldots,T+1$ such that $\tau'_{r,j}(t) = \tau'_{r',j'}(t)$ (meet collision, that is, two robots occupy the same cell at the same time) or $\tau'_{r,j}(t) = \tau'_{r',j'}(t-1) \wedge \tau'_{r',j'}(t) = \tau'_{r,j}(t-1)$ (head-on collision, that is, two robots at adjacent cells switch locations with each other); and {\it (iii)} the paths $\{\tau'_{r,j}\}$ must satisfy the running constraint $\gamma^-_1$ for all $t = 1, \ldots, T-1$, and they also satisfy the terminal constraint $\gamma^-_{1,2}$ at time instant $T$ and $\gamma^-_{2}$ at time instant $T+1$.
+\end{defn}
+
+  The paths do not need to satisfy the running constraint $\gamma_1^-$ at time instants 0,  $T$ and $ T+1$ since the tightest span of the vertex label of the current subtask can be one time instant later than the completion of the immediately preceding subtask and one time instant earlier than the completion of the current subtask.
+
+
+
+  Recall that Definition~\ref{defn:gmmpp} is introduced based on the assumption that $\gamma(v_2)$ exists.  As stated before that when $\gamma(v_2) = \bot$, we have $v_2 = v_{\text{accept}}$. In this case, we consider these two subtasks $(v_1, v_2), (v_2, v_{\text{next}})$ at the same time. First, we treat the edge label $\gamma(v_2, v_{\text{next}})$ as if it were the vertex label of $\gamma_2$, since $\gamma(v_2, v_{\text{next}})$ should be satisfied one step later after the immediately preceding subtask, acting like the vertex label. Therefore, we obtain the negative clause $\gamma^-_2$ and the subset of robots $\ccalR^-$  from the label $\gamma(v_2, v_{\text{next}})$ and $\gamma_2^-$ should still be satisfied at time instant $T+1$. The subset $\ccalR_2$ is empty since $\gamma(v_2)$ is $\top$. Next, we consider the vertex label of $v_{\text{next}}$ so that $\gamma(v_{\text{next}})$ is activated at time instant $T+2$. To this end, let $\ccalR'_2$ collect all essential robots related to the  essential clause of $\gamma(v_{\text{next}})$ so that the set $\ccalR$ of robots that need to move also includes $\ccalR'_2$ and robots in $\ccalR'_2$ should reach target regions at time instant $T$+2. Furthermore, we denote by $\gamma'^-_2$ the negative clause related to $\gamma(v_{\text{next}})$ and the set of robots $\ccalR^-$ should include all robots of some types that appear in negative literals in $\gamma_2'^-$. Therefore, $\gamma'^-_2$ is also a terminal constraint which should be satisfied at time instant $T+2$. In the following Section~\ref{sec:solution2mapp} we discuss how to solve the above  generalized multi-robot path planning problem with given horizon $T+1$ or $T+2$.
+
+  If the edge label of the first subtask in the run $\rho_T$ is satisfied by the initial  robot locations, we increase the  local counters of robots that participate   and the global counter by 1 [lines~\ref{seq:initial}-\ref{seq:c_initial}, Alg.~\ref{alg:sequentialMAPP}]. Otherwise, we solve the corresponding GMMPP by follwing Section~\ref{sec:solution2mapp}.   We initialize  $T$ by $\vec{t}(c+1) - \vec{t}(c)$,  which is the difference between the completion time of the immediately preceding subtask and the current one. We generate another instance of GMMPP by incrementing the $T$ until a solution is found and denoted by $T_e$  the final $T$ of the solution [line~\ref{seq:mapp}, Alg.~\ref{alg:sequentialMAPP}]. {Given a solution to the generalized mulri-robot planning problem, Alg.~\ref{alg:sequentialMAPP} proceeds with the following updates [lines~\ref{seq:path}-\ref{seq:c}, Alg.~\ref{alg:sequentialMAPP}].
+
+    \green{If the second vertex $v_2$ in $e$ is $v_{\text{accept}}$ for the prefix plan or is $v_{\text{next}}$ for the suffix plan, the iteration terminates since the associated GMMPP finds paths that satisfy the vertex label of $v_2$ at the final time and the only remaining edge with label $\top$ in Fig.~\ref{fig:presuf} is satisfied naturally [line~\ref{seq:terminate}, Alg.~\ref{alg:sequentialMAPP}]. For robot $[r, j] \in \ccalR$, we append the path segment $\tau'_{r,j}(t)$, for all $t = 1, \ldots, T_e+1$, to its already-executed path $\tau_{r,j}$, i.e.,  $\tau_{r,j} = \tau_{r,j} \cdot \tau'_{r,j}[1:T_e+1]$ where ``$\cdot$'' denotes the concatenation of two path segments. Then, for other robot $[r,j] \in \{\ccalK_j\}\setminus \ccalR$, we  append  $T_e+1$ times  the last waypoint of  $\tau_{r,j}$  to $\tau_{r,j}$, that is, these robots  remain idle for $T_e+1$ time instants [line~\ref{seq:finalpath}, Alg.~\ref{alg:sequentialMAPP}].}
+
+    Otherwise, if the second vertex is a regular vertex, first, for robot $[r, j] \in \ccalR$, we append the path segment $\tau'_{r,j}(t)$, for all $t=1,\ldots, T_e$, to its already-executed path $\tau_{r,j}$. Then, for other robot $[r,j] \in \{\ccalK_j\}\setminus \ccalR$, we  append  $T_e$ times the last waypoint of  $\tau_{r,j}$  to $\tau_{r,j}$ [line~\ref{seq:path}, Alg.~\ref{alg:sequentialMAPP}]. Then, for each robot $[r,j] \in \{\ccalK_j\}$, we increase the time instants in $t_{r,j}$ with indices larger than or equal to  $\zeta_{r,j}$ by $T_e - (\vec{t}(c+1) - \vec{t}(c))$ [line~\ref{seq:timeline}, Alg.~\ref{alg:sequentialMAPP}], where $\vec{t}(c+1) - \vec{t}(c)$ is the time difference given by the high-level plan whereas $T_e$ is the time difference given by the low-level executable path.
+    Similarly, we increase the time instants in $\vec{t}$ with indices larger than or equal to  $c+1$ by $T_e - (\vec{t}(c+1)- \vec{t}(c))$.
+    In this way, for all high-level plans, the subsequent parts that have not been executed are shifted into the future by the same amount in order to mantain the correct temporal relation (precedence or simultaneity) between visitation of waypoints in $\{p_{r,j}\}$. Next, we increase  the local counter by 1 for all robots in $\ccalR_{1,2}$, which captures progress towards completing their individual plans [line~\ref{seq:counter}, Alg.~\ref{alg:sequentialMAPP}]. Similarly, we increase the global counter $c$ by 1 [line~\ref{seq:c}, Alg.~\ref{alg:sequentialMAPP}].}
+}
+
+
+\subsection{Solution to the generalized multi-robot path planning}\label{sec:solution2mapp}
+
+
+\blue{ Conventional multi-robot path planning on graphs finds collision-free and optimal paths for groups of robots starting from a set of initial locations and ending at a set of desired target locations; see, e.g., \cite{yu2016optimal} and the references therein. To find executable paths that satisfy the subtasks defined here, we generalize the mult-robot path planning problem in several ways. First,  only a subset of robots that are involved in the current or future subtasks are allowed to move.  Second, we extend the notion of a single target location to a taget region such that reaching any cell in the target region suffices. Third, the path segment that solves the  subtask should satisfy the corresponding vertex label and edge label.
+
+
+  In what follows, we adapt the method proposed in~\cite{yu2016optimal} to solve the generalized multi-robot path planning problem with given horizon $T+1$ or $T+2$. We discuss the case for $T+2$ since this case includes extra formulation at time instant $T+2$ and all formulations established over the first $T+1$ instants can be directly applied to the case for $T+1$.
+  The key idea is to construct a time-expanded graph $\ccalG_T = (\ccalV_T, \ccalE_T)$ of the environment which contains $T+3$ copies of the free cells in the environment $E'$; see Fig.~\ref{fig:mapp}. We organize the vertices and edges of this time-expanded graph $\ccalG_T$ in a matrix structure, so that each row corresponds to a free cell in the environment $E'$ and each column corresponds to a time instant $t\in \{0,\ldots,T+2\}$. Then, a vertex $u_t \in \ccalV_T$ that appears in the $t$-th column of this matrix structure indicates whether the cell $u\in E'$ is occupied by a robot at the time instant $t$. The edges in $\ccalG_T$ capture  adjacency relations between neighboring cells in $E'$ and consecutive time instants in $\{0,\ldots,,T+2\}$. Specifically, for any two adjacent cells $u$ and $v$ in $E'$, an ``X''-shape structure, referred to as a {\it merge-split gadget}, is created to capture the transition from vertex $u$ at time $t$ to vertex $v$ at time $t+1$; see also Fig.~\ref{fig:gadget}. In this way, robots traveling along a given row in the matrix structure corresponding to $\ccalG_T$ effectively remain idle at their current cell, while robots switching between different rows in $\ccalG_T$ transition between adjacent cells in $E'$. We say that a sequence of transitions in $\ccalG_T$ form $t=0$ to $t=T+2$ produces a robot path in $E'$.
+
+Next, we formulate an Integer Linear Programming (ILP) to solve this generalized multi-robot path planning problem. Let $s_{uvrj} \in\{0,1\}$ be the routing variable such that $s_{u_{t}v_{t+1}rj} = 1$ if robot $[r,j]$ traverses the edge $(u_t,v_{t+1}) \in \ccalE_T$. In what follows, we describe the constraints and objective of this ILP.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{mapp.pdf}
+  \caption{Time-expanded graph over horizon $T+1$}
+  \label{fig:mapp}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.6\linewidth]{gadget.pdf}
+  \caption{Merge-split gadget for avoiding head-on collision}
+  \label{fig:gadget}
+\end{figure}
+\subsubsection{Routing constraints}
+The constraint that each edge can be traversed by at most one robot at the given time is encoded as}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}
+  \sum_{[r,j] \in \ccalR} s_{u_t v_{t+1}rj} \leq 1, \quad \forall \,(u_t,v_{t+1}) \in \ccalE_T,
+\end{align}
+\endgroup
+\blue{for all $t=0,\ldots, T+1$, where $[r,j]\in\ccalR$ means the summation is taken over all robots in $\ccalR$. Furthermore, the flow conservation constraint is encoded as,}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begingroup
+  \begin{align}\label{equ:flow}
+  \sum_{u_{t-1}:(u_{t-1}, v_t) \in \ccalE_T} \!\! \! s_{u_{t-1} v_t rj} &  = \!\!\!  \sum_{w_{t+1}:(v_t, w_{t+1}) \in \ccalE_T} s_{v_t w_{t+1} rj},
+  \end{align}
+\endgroup
+\blue{for all $[r,j]\in \ccalR$ and all $t=1,\ldots,T+1$. This means that every robot that arrives at a vertex in $\ccalG_T$ has to leave that vertex at the next time step. Next, the constraints at the initial time are encoded as,}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begingroup
+
+\begin{subequations}\label{equ:source}
+  \begin{align}
+    \sum_{v_1:(u_0, v_1) \in \ccalE_T} s_{u_0v_1 rj} &  = 1,  \\
+    \sum_{v_1:(w_0, v_1) \in \ccalE_T} s_{w_0v_1 rj} & = 0, \quad \forall\, w \in E'\setminus u,
+  \end{align}
+\end{subequations}
+\endgroup
+\blue{for all $[r,j]\in \ccalR$, where $u_0$ is the vertex that is associated with the cell $u = X_I(r,j)$ where robot $[r,j]$ is at the initial time. Constraints~\eqref{equ:source} say that robot $[r,j]$ has to depart from its initial location. Note that this departure is in the graph $\ccalG_T$ and is associated more with time than physical location.}
+\blue{\subsubsection{Collision-avoidance constraints}
+Avoiding head-on collision collisions at every  gadget, $\forall u, v \in E'$ with $u\not= v$ can be captured by the constraint}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begingroup
+\begin{align}\label{eq:headon}
+ \sum_{[r,j]\in \ccalR} \left( s_{u_t v_{t+1} r j } + s_{v_t u_{t+1} r j } \right) \leq 1, \; \forall \,(u_t, v_{t+1}) \in \ccalE_T,
+\end{align}
+\endgroup
+\blue{for all $t=0,\ldots,T+1$. Moreover, avoiding meet collisions,  $\forall v \in E'$, can be captured by the constraint}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{eq:meet}
+ \sum_{[r,j]\in\ccalR}  \, \sum_{u_t: (u_t, v_{t+1}) \in \ccalE_T} s_{u_t v_{t+1} r j } \leq 1,  \; \forall \,(u_t, v_{t+1}) \in \ccalE_T,
+\end{align}
+\endgroup
+\blue{for all $t=0,\ldots,T+1$.
+\subsubsection{Target constraint}
+The general constraints that robot $[r,j]$ in $\ccalR_{1,2}$, $\ccalR_2$ and $\ccalR'_{2}$ arrives at a cell that is in the target region $X_G(r,j)$ at certain time instant $t$ can be encoded as}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begingroup
+  \begin{align}\label{equ:sink}
+  \sum_{v: v \in X_G(r,j) } \;\sum_{u_{t-1}:(u_{t-1}, v_{t}) \in \ccalE_T} s_{u_{t-1} v_{t} rj} &  = 1,
+  \end{align}
+  \endgroup
+ \green{Specifically, $t$ in~\eqref{equ:sink} takes the value ranging from $1, \ldots, T-1$ when encoding the constraint that robot $[r,j] \in\ccalR_1$ reach or stay at the target region $X_G(r,j)$ to maintain the truth of  the vertex label of the current subtask.  For the constraint that robot $[r,j]\in\ccalR_{1,2}$ arrives at a cell in $X_G(r,j)$ at the time instant $T$ to complete the current subtask, we have $t = T$ in~\eqref{equ:sink}. Similarly,  the constraint that robot $[r,j] \in \ccalR_2$ arrives at a cell that is in the target region $X_G(r,j)$ at the time $T+1$ to activate the next subtask or the next edge, depending on whether the vertex label of the next subtask is $\bot$, can be encoded by assigning $T+1$ to $t$ in~\eqref{equ:sink}. Finally, let $t$ in~\eqref{equ:sink} be $T+2$ to encode the constraint that robot $[r,j]\in \ccalR'_{2}$ arrives its target region at time instant $T+2$ to activate the label of vertex $v_{\text{next}}$.}
+
+ \blue{ \subsubsection{Running and terminal constraints} The general running and terminal constraints that negative literals $\neg \ap{i}{j}{k}$ should be respected at certain time instant $t$ can be encoded as
+   \begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begin{align}\label{equ:avoid}
+  \sum_{[r,j]\in \ccalR \cap \ccalK_j} \sum_{v \in \ell_k \cap E'}   \sum_{u_{t-1}: (u_{t-1}, v_{t}) \in \ccalE_T} s_{u_{t-1} v_{t} r j } \leq i - 1,
+\end{align}
+\endgroup
+where $[r,j] \in \ccalR \cap \ccalK_j$ means the summation is taken over all robots of type $j$ in $\ccalR$ and $v \in \ell_k \cap E'$ means the summation is taken over all cells in region $\ell_k$ that are not occupied by other robots that do not need to move. Then, the running constraint that any
+negative literal $\neg\ap{i}{j}{k} \in \mathsf{lits}^-(\gamma_1^-)$ in the vertex label of the current subtask should be respected (excluding time instants $0, T$, $ T+1$ and $T+2$), can be encoded by assigning to $t$ in~\eqref{equ:avoid} values ranging from $1, \ldots, T-1$. Similarly, we encode the terminal constraint that the negative literal  $\neg\ap{i}{j}{k}$ in $\mathsf{lits}^-(\gamma_{1,2}^-)$, $\mathsf{lits}^-(\gamma_{2}^-)$ and $\mathsf{lits}^-(\gamma_{2}'^-)$ should be satisfied at the time $T, T+1$ and $T+2$, respectively, by letting $t$ in~\eqref{equ:avoid} take the values of $T, T+1$ and $T+2$, respectively.}
+\blue{\subsubsection{ILP objective} The ILP objective is to minimize the total travelling distance and is defined as}
+\begingroup\makeatletter\def\f@size{9}\check@mathfonts
+\def\maketag@@@#1{\hbox{\m@th\normalsize\normalfont#1}}%
+\begingroup
+\begin{align}
+  \min \sum_{[r,j] \in \ccalR} \; \sum_{t\in \{0,\ldots, T\}} \sum_{(u_t, v_{t+1}) \in \ccalE_T} d_{uv} s_{u_{t} v_{t+1} r j}   .
+\end{align}
+\endgroup
+\blue{where $d_{uv} \in \mathbb{N}$ is the distance between cells $u$ and $v$.
+
+  The solution of this ILP provides  a collection of executable paths that satisfy  the current subtask at time $T$ and as well as the vertex label of the next subtask at time $T+1$. This means that these paths by construction enable the transition to the next subtask. The robot locations at time $T$ also serve as the initial locations for the next instance of GMMPP.
+}
+
+  \section{Correctness and Feasiblity}\label{sec:correctness}
+  Given a  workspace and robots, some words in the accepted language  $\ccalL(\ccalA)$ may not be possible to realize. Let $\ccalL_W(\ccalA)$ collect words in $\ccalL(\ccalA)$ that can be realized. Moreover, given a pair of initial and accepting vertices, $v_0$ and $v_\text{accept}$, let $\ccalL^{f, v_0 \scriptveryshortarrow v_{\text{accept}}}_W(\ccalA)$ collect finite words that can be realized and can generate a run in $\ccalA$ from $v_0$ to $v_{\text{accept}}$. The following propositions show that feasibility of Problem~\ref{prob:1} is preserved under the proposed LTL-MRTA algorithm. The proofs are shown in the supplementary materials.
+  \begin{prop}\label{prop:prune}
+    Given the workspace and the robot initial locations, if $\ccalL_W(\ccalA) \not= \emptyset$, then $\ccalL_W(\auto{relax}) \not= \emptyset$.
+  \end{prop}
+  \begin{prop}\label{prop:inclusion}
+Given the workspace and the robot initial locations, $\ccalL_W(\autop^-) \subseteq \ccalL_W(\auto{relax})$.
+  \end{prop}
+ \begin{prop}\label{prop:subgraph}
+   Given the workspace, initial robot locations and a pair of initial and accepting vertices, $v_0$ and $v_{\text{accept}}$, suppose an obstacle-free path exists between any two regions. If $\ccalL^{f,v_0\scriptveryshortarrow v_{\text{accept}}}_W(\auto{relax}) \not= \emptyset$, then $\ccalL^{f,v_0\scriptveryshortarrow v_{\text{accept}}}_W(\ccalA_{s}) \not= \emptyset$.
+ \end{prop}
+
+
+\section{Simulation Results}\label{sec:sim}
+We present two case studies, implemented in Python 3.6.3 on a computer with 2.3 GHz Intel Core i5 and 8G RAM, that illustrate the correctness and efficiency of our method. The MILP is solved using Gurobi~\cite{gurobi} with $M_{\max}\!\!=\!\!10^5$ and $M_{\min}\!\!=\!\!1$. We generate a  $10\!\times\! 10$ grid world with 10 regions and 10 obstacles randomly placed in the world at each trial. The team of robots consists of of 5 types with $N$ robots of each type. The initial locations are randomly generated.
+%% \begin{table}[t]
+%%   \caption{Results with respect to the size of workspace}\label{tab:1}
+%%   \centering
+%%   \begin{tabular}{cccccc}
+%%     \toprule
+%%     $W$ & $T$(sec) & $W$ & $T$(sec) & $W$ & $T$(sec)\\
+%%     10& 122.00 &  20 & 119.12& 50& 120.10\\
+%%      \bottomrule
+%%   \end{tabular}
+%% \end{table}
+
+%% \subsubsection{Case \RNum{1}}First, we consider a team of robots of 3 types, with each type including 4 robots. The LTL task captures a multi-agent travelling salesman problem (TSP)~\cite{bektas2006multiple},
+%% %\vspace{-1em}
+
+%% \footnotesize
+%% \begin{align*}
+%%   %% \phi = & \Diamond \ap{1}{1}{1} \wedge \Diamond \ap{1}{2}{2} \wedge \Diamond \ap{1}{3}{3} \wedge \Diamond \ap{1}{1}{4} \wedge \Diamond \ap{1}{2}{5} \wedge \Diamond \ap{1}{3}{6} \nonumber \\  & \wedge \Diamond \ap{1}{1}{7} \wedge \Diamond \ap{1}{2}{8} \wedge \Diamond \ap{1}{3}{9} \wedge \Diamond \ap{1}{1}{10} \\
+%%   \phi_1=  \bigwedge\nolimits_{j\in [3]} (\Diamond \ap{1}{j}{j}) \wedge \bigwedge\nolimits_{j\in [3]} (\Diamond \ap{1}{j}{j+3}) \wedge \bigwedge\nolimits_{j\in [3]} (\Diamond \ap{1}{j}{j+6}) \wedge (\Diamond \ap{1}{1}{10})
+%% \end{align*}
+%% \normalsize
+%% For simplicity, we define only $t^-_{vr}$ for vertices associated with edge labels, since $t^-_{vr} = t^+_{vr}$. The  MILP has 454 variables and 638 constraints. We vary  $W$ and the results are averaged over 5 runs for each $W$. Each time the solution attains the optimal allocation in terms of the sum of the travelling distance, i.e., $\sum_{(u,v)\in \ccalE_\ccalG}  \sum_{r \in \ccalM^\ccalV_{\ccalK}(v)} w_{uv} x_{uvr}$, which is verified by a brute-force search method.
+%% For $W=10,20,50$, the average runtimes are $122.00,119.12, 120.10$ in seconds, respectively, which accounts for the time needed to build the  NBA all the way to extracting a solution. The runtimes are similar since only the shortest paths between pairwise regions are required and the MILP only generates a sequence of waypoints that is then augmented using the shortest paths.
+\subsubsection{Case \RNum{1}} {The cooperative persistence coverage task is}
+
+\small
+\begin{align*}
+  %% & \phi = \square \Diamond \ap{x}{1}{1} \wedge \square \Diamond \ap{x}{2}{2} \wedge \square \Diamond \ap{x}{3}{3}  \wedge \square \Diamond \ap{x}{4}{4} \wedge \square \Diamond \ap{x}{5}{5} \nonumber \\
+  %% & \wedge \Diamond \square\ap{x}{1}{6} \wedge \Diamond \square\ap{x}{2}{7} \wedge \Diamond \square\ap{x}{3}{8} \wedge \Diamond \square\ap{x}{4}{9} \wedge \Diamond \square\ap{x}{5}{10}
+   \phi_2 = \bigwedge\nolimits_{j\in[4]} \square \Diamond( \ap{x}{j}{j} \wedge \ap{x}{j+1}{j} ) ,
+\end{align*}
+\normalsize
+where $x \!\!=\!\! N/3$. We vary $N$ and compare our method to the method for cLTL+ problems in~\cite{sahin2019multirobot} in terms of runtime and cost measured by~\eqref{eq:cost} with $w=0.5$. This task cannot be categorized as a cLTL problem since here robots are heterogeneous. {Although translating LTL to NBA is worst-case exponential w.r.t. the length of the formula, in practice the translation is quick (0.03 and 0.10 seconds for case \RNum{1} and \RNum{2}, respectively). Both NBAs $\ccalA$ and $\auto{relax}$ have 5 vertices and 14 edges (excluding self-loops). The size of $\ccalA$ is independent of the number of robots. There is one pair of initial and accepting vertices and  $\auto{subtask}^-$ has 5 vertices and 5 edges.} Since the method in~\cite{sahin2019multirobot} depends on the horizon $h$ of the plan, we vary $h$ between 5, 10, 15.\footnote{The SAT solver Z3 is used to solve the Integer Linear Programming since~\cite{sahin2019multirobot} addresses feasibility and all variables are binary.} The results  are shown in Table~\ref{tab:2} and are averaged over 10 trials for each $N$. Our method is two orders of magnitude faster than~\cite{sahin2019multirobot}. This is because it decomposes the problem so that first a sequence of waypoints is decided by solving a MILP and then a shortest path  between waypoints is computed. More importantly, our method outperforms~\cite{sahin2019multirobot} in terms of cost.  The feasibility-oriented formulation in~\cite{sahin2019multirobot} causes robots that are not assigned to any task to move aimlessly, while in our solution, such robots remain idle.
+
+\begin{table}[t]
+  \centering
+  \caption{Comparative results w.r.t. the number of robots}\label{tab:2}
+  \begin{tabular}{c|c|c|c|c}
+   \toprule
+   \multicolumn{2}{c|}{$N$} & 3 & 6 & 9 \\
+   \midrule
+   \multirow{4}{*}{\vtop{\hbox{\strut runtime}\hbox{\strut \;\,\,(sec)}}} & LTL-MRTA & {\bf 0.1}\bm{$\pm $}{\bf 0.0} & {\bf 0.9}\bm{$\pm$}{\bf 0.5} & {\bf 1.5}\bm{$\pm$}{\bf 0.7}\\
+    & $h=5$ & 173.2$\pm$54.3 & 403.9$\pm$207.9 & 511.7$\pm$327.9\\
+    & $h=10$ & 71.1$\pm$23.8 & 153.6$\pm$108.8  & 285.9$\pm$271.4\\
+    & $h=15$ & 68.3$\pm$6.4 & 159.7$\pm$20.8 & 349.7$\pm$35.5\\
+    \midrule
+    \multirow{4}{*}{cost} & LTL-MRTA &  {\bf 19.9}\bm{$\pm$}{\bf 4.4} & {\bf 32.7}\bm{$\pm$} {\bf 3.4} & {\bf 46.9}\bm{$\pm$}{\bf 5.8}\\
+    & $h=5$  & 63.0$\pm$8.0 & 118.7$\pm$22.7  & 156.5$\pm$32.7\\
+    &$h=10$ & 64.4$\pm$5.7 & 126.6$\pm$14.5 & 189.2$\pm$18.8\\
+    & $h=15$ & 92.5$\pm$5.4 & 185.2$\pm$ 6.5 & 268.7$\pm$16.5\\
+        \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection{Case \RNum{2}}We consider tasks where some locations are visited sequentially by the same set of robots. For instance, these can be tasks where objects are  picked up by several robots and then delivered to another location.
+Let $N=5$. The LTL formula  considered is
+
+\small
+\begingroup
+\begin{align*}
+  \phi_3 = &  \square \Diamond (\pi^{\ell_1,0}_{3,1} \wedge \pi^{\ell_4, 0}_{4,4}) \wedge \Diamond ( \pi^{\ell_2,1}_{3,3} \wedge  (\pi^{\ell_2,1}_{3,3} \,\mathcal{U} \, \pi^{\ell_2,0}_{1,4})  \wedge \Diamond \pi_{4,3}^{\ell_3,0})   \nonumber \\ & \wedge \Diamond (\aap{2}{2}{\ell_7}{0} \wedge (\aap{3}{5}{\ell_8}{2} \vee \aap{3}{5}{\ell_{10}}{2}) \wedge \bigcirc  \Diamond  \aap{3}{5}{\ell_{9}}{2} ) \wedge \Diamond \square \aap{1}{2}{\ell_{10}}{0}
+\end{align*}
+\endgroup
+\normalsize
+The NBA $\ccalA$ has 31 vertices and 182 edges. There is one pair of initial and accepting vertices. The subgraph $\auto{subtask}^-$ has 25 vertices and 48 edges. The MILP has 3760 variables and 4477 constraints. The runtime over 10 trials is 4.8$\pm$2.2$s$. {An animation can be found in~\cite{ltlmrta}.} We observe that the paths satisfy the task. The methods in~\cite{schillinger2018decomposition,schillinger2018simultaneous,faruq2018simultaneous} can not address such cooperative tasks and~\cite{sahin2017provably,sahin2017synchronous,sahin2019multi,sahin2019multirobot} can not capture tasks where the same set of robots needs to visit different locations.
+
+
+\section{Discussion}
+The pruning of the NBA $\ccalA$ and the extraction of subgraphs $\autop$ in~Section~\ref{sec:app} prunes the space of feasible solutions. Thus, optimality cannot be guaranteed. However, our method does not reduce the feasible set  too much. In particular, edges removed in step~\hyperref[prune:2]{2)} in Subsection~\ref{sec:prune} correspond to vertices with label $\bot$ that can not easily transition to next vertices {(weak terminal vertices in some sense)}. {In Subsection~\ref{sec:pregraph}, pairs of initial and accepting vertices with shorter total length are selected that lead to the  extraction of larger subgraphs $\auto{subtask}^-$ {with more transitions} from $\auto{relax}$.} {The reason is that edge labels in shorter paths often contain conjunctions of several edge labels in longer paths}. Similarly, edges removed from $\auto{subtask}^-$ in step~\hyperref[sec:pregraph]{2)} {have alternatives simple paths} meaning that their corresponding subtasks can be decomposed into smaller sequential subtasks, {that is, same plan but different schedule}. Finally, in Subsection~\ref{sec:poset} the partial cover problem returns the poset that covers the largest set of linear plans, thus, keeping as many as transitions in $\auto{subtask}^-$. As a result, while optimality can not be guaranteed,  the solutions obtained from the proposed algorithm have low  enough cost. %% Finally, extension to the full class of LTL formulas including negative atomic propositions and consideration of mutual collision avoidance among robots will be our future direction.
+\section{Conclusion}
+We have proposed an efficient MILP solution to the LTL-MRTA problem. Numerical simulations show that our method outperforms existing methods in terms of runtime and quality of the solution.
+\bibliographystyle{IEEEtran}
+\bibliography{xl_bib}
+\end{document}
