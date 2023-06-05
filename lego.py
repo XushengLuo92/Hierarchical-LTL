@@ -31,6 +31,36 @@ CompositeSubtask = namedtuple('CompositeSubtask', ['subtask2element'])
 Hierarchy = namedtuple('Hierarchy', ['level', 'formula', 'buchi_graph', 'hass_graphs', 'element2edge'])
 PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
+def get_task_specification():
+    hierarchy = []
+    # ------------------------ task 1 -------------------------
+    # level_one = dict()
+    # level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
+    # hierarchy.append(level_one)
+
+    # level_two = dict()
+    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    # hierarchy.append(level_two)
+    # ------------------------ task 2 -------------------------
+    # level_one = dict()
+    # level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
+    # hierarchy.append(level_one)
+
+    # level_two = dict()
+    # level_two["l100"] = "<> l2_1_1_0 && <> l4_1_1_0"
+    # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
+    # hierarchy.append(level_two)
+    # ------------------------ task 3 -------------------------
+    level_one = dict()
+    level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
+    hierarchy.append(level_one)
+
+    level_two = dict()
+    level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0)) && <> l6_1_1_0 && <> !l6_1_1_0 U l3_1_1_0"
+    hierarchy.append(level_two)
+    return hierarchy
+
 def get_ordered_subtasks(task):
     workspace = Workspace()
     with open('data/workspace', 'wb') as filehandle:
@@ -105,18 +135,6 @@ def print_composite_subtasks(pruned_subgraph, element2edge, composite_subtasks_d
     for (subtask, elements) in composite_subtasks_dict.items():
         for element in elements:
             print("composite subtask {0}, element {1}, label {2}".format(subtask, element, pruned_subgraph.edges[element2edge[element]]["label"]))
-
-def get_task_specification():
-    hierarchy = []
-    level_one = dict()
-    level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
-    hierarchy.append(level_one)
-
-    level_two = dict()
-    level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0)) && <> l6_1_1_0 && <> !l6_1_1_0 U l3_1_1_0"
-    hierarchy.append(level_two)
-    return hierarchy
 
 def build_buchi_graph_and_poset(task_specification):
     primitive_subtasks = dict()
@@ -386,12 +404,7 @@ def find_shared_element(vector1, vector2):
             return element
     return None  # No shared element found
 
-def main():
-    task_specification = get_task_specification()
-    task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification)
-    print_subtask_info(task_hierarchy, primitive_subtasks, composite_subtasks)
-    primitive_subtasks_with_identifier, primitive_subtasks_partial_order = produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks)
-    print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
+def print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy):
     print("************* partial order between primitive subtasks **************")
     for partial_order in primitive_subtasks_partial_order:
         pre = partial_order[0]
@@ -404,6 +417,22 @@ def main():
             format(pre.parent, pre.element, pre_element2edge[pre.element], pre_buchi_graph.edges[pre_element2edge[pre.element]]['label'],
                    suc.parent, suc.element, suc_element2edge[suc.element], suc_buchi_graph.edges[suc_element2edge[suc.element]]['label']))
         
+def generate_global_poset_graph(primitive_subtasks_with_identifier, primitive_subtasks_partial_order):
+    task_network = nx.DiGraph(type='TaskNetwork')
+    task_network.add_nodes_from(primitive_subtasks_with_identifier)
+    task_network.add_edges_from(primitive_subtasks_partial_order)
+    reduced_task_network = nx.transitive_reduction(task_network)
+    print(list(task_network.edges()))
+    print(list(reduced_task_network.edges()))
+
+def main():
+    task_specification = get_task_specification()
+    task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification)
+    print_subtask_info(task_hierarchy, primitive_subtasks, composite_subtasks)
+    primitive_subtasks_with_identifier, primitive_subtasks_partial_order = produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks)
+    print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
+    print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
+    generate_global_poset_graph(primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
 
 if __builtins__:
     main()
