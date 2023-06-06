@@ -36,23 +36,23 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 def get_task_specification():
     hierarchy = []
     # ------------------------ task 1 -------------------------
-    level_one = dict()
-    level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
-    hierarchy.append(level_one)
-
-    level_two = dict()
-    level_two["l100"] = "<> l2_1_1_0"
-    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    hierarchy.append(level_two)
-    # ------------------------ task 2 -------------------------
     # level_one = dict()
-    # level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
+    # level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
     # hierarchy.append(level_one)
 
     # level_two = dict()
-    # level_two["l100"] = "<> l2_1_1_0 && <> l4_1_1_0"
-    # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
+    # level_two["l100"] = "<> l2_1_1_0"
+    # # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
     # hierarchy.append(level_two)
+    # ------------------------ task 2 -------------------------
+    level_one = dict()
+    level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
+    hierarchy.append(level_one)
+
+    level_two = dict()
+    level_two["l100"] = "<> l2_1_1_0 && <> l4_2_1_0"
+    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
+    hierarchy.append(level_two)
     # ------------------------ task 3 -------------------------
     # level_one = dict()
     # level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
@@ -431,12 +431,6 @@ def generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifi
     return reduced_task_network
 
 def vis_graph(graph, att, title):
-    labels = nx.get_node_attributes(graph, att) 
-    pos_nodes = nx.spring_layout(graph)
-    pos_attrs = {}
-    for node, coords in pos_nodes.items():
-        pos_attrs[node] = (coords[0], coords[1] + 0.08)
-    
     # write dot file to use with graphviz
     # run "dot -Tpng test.dot >test.png"
     nx.nx_agraph.write_dot(graph, title+'.dot')
@@ -444,6 +438,11 @@ def vis_graph(graph, att, title):
     command = "dot -Tpng {0}.dot >{0}.png".format(title)
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     # same layout using matplotlib with no labels
+    # labels = nx.get_node_attributes(graph, att)     
+    # pos_nodes = nx.spring_layout(graph)
+    # pos_attrs = {}
+    # for node, coords in pos_nodes.items():
+    #     pos_attrs[node] = (coords[0], coords[1] + 0.08)
     # plt.title('draw_networkx')
     # pos=graphviz_layout(reduced_task_network, prog='dot')
     # nx.draw(reduced_task_network, pos=pos_nodes, with_labels=True, node_color='lightblue', edge_color='gray', font_weight='bold')
@@ -467,7 +466,7 @@ def main():
     vis_graph(reduced_task_network, 'label', 'task_network')
     # ----------------- build routing-like graph -----------------
     ts = restricted_weighted_ts.construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace)
-    vis_graph(ts, 'location_type_component_task_element', 'routing_graph')
+    vis_graph(ts, 'label', 'routing_graph')
 if __builtins__:
     main()
 

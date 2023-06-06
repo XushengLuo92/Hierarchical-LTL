@@ -190,10 +190,6 @@ def get_order_info(reduced_task_network, task_hierarchy):
         smaller_task_element[task_element] = sm
         strict_larger_task_element[task_element] = [order[0] for order in reduced_task_network.edges() if order[1] == task_element]
 
-    print('incomparable_task_element: ', incomparable_task_element)
-    print('larger_task_element: ', larger_task_element)
-    print('smaller_task_element: ', smaller_task_element)
-    print('strict_larger_task_element: ', strict_larger_task_element)
     return incomparable_task_element, larger_task_element, smaller_task_element, strict_larger_task_element
 
 def task_element2label2teccl(task_hierarchy, reduced_task_network):
@@ -234,32 +230,37 @@ def task_element2label2teccl_helper(task, element, component, label):
                 label2teccl[region_type] = [(task, element, component, c, l)]
     return label2teccl  
 
-def construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace):
+def construct_graph(task_hierarchy, reduced_ts, primitive_subtasks, workspace):
     """
     build the routing graph from the node and edge set
     """
     incomparable_task_element, larger_task_element, smaller_task_element, strict_larger_task_element = \
-                get_order_info(reduced_task_network, task_hierarchy)
+                get_order_info(reduced_ts, task_hierarchy)
     init_type_robot_node, task_element_component_clause_literal_node, node_location_type_component_task_element, \
-    num_nodes = construct_node_set(reduced_task_network, task_hierarchy, workspace.type_robot_label)
-    
-    print("num_nodes: ", num_nodes)
-    print("task_element_component_clause_literal_node: ", task_element_component_clause_literal_node)
-
-    task_element_component2label2teccl = task_element2label2teccl(task_hierarchy, reduced_task_network)
-    
-    print("task_element_component2label2teccl: ", task_element_component2label2teccl)
-
-    edge_set = construct_edge_set(task_hierarchy, reduced_task_network, task_element_component_clause_literal_node,
+    num_nodes = construct_node_set(reduced_ts, task_hierarchy, workspace.type_robot_label)
+    task_element_component2label2teccl = task_element2label2teccl(task_hierarchy, reduced_ts)
+    edge_set = construct_edge_set(task_hierarchy, reduced_ts, task_element_component_clause_literal_node,
                                                         task_element_component2label2teccl,
                                                         init_type_robot_node, incomparable_task_element,
                                                         strict_larger_task_element,
                                                         larger_task_element)
-    print("edge_set: ", edge_set)
+    # print('incomparable_task_element: ', incomparable_task_element)
+    # print('larger_task_element: ', larger_task_element)
+    # print('smaller_task_element: ', smaller_task_element)
+    # print('strict_larger_task_element: ', strict_larger_task_element)
+    # print("num_nodes: ", num_nodes)
+    # print("task_element_component_clause_literal_node: ", task_element_component_clause_literal_node)
+    # print("task_element_component2label2teccl: ", task_element_component2label2teccl)
+    # print("edge_set: ", edge_set)
     
-    ts = nx.DiGraph()
+    ts = nx.DiGraph(type='routing_graph')
     for node in list(range(num_nodes)):
-        ts.add_node(node, location_type_component_task_element=node_location_type_component_task_element[node])
+        ts.add_node(node, label=node_location_type_component_task_element[node])
     for edge in edge_set:
         ts.add_edge(edge[0], edge[1], weight=1)
+        
+    # TODO further prune the graph to invoke less number of robots
+    # reduced_ts = nx.transitive_reduction(ts)
+    # reduced_ts.add_nodes_from(ts.nodes(data=True))
+    # reduced_ts.add_edges_from((u, v, ts.edges[u, v]) for u, v in reduced_ts.edges())
     return ts
