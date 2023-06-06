@@ -136,6 +136,8 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
         return None, None, None, None, None, None, None, None
 
     goal = 0
+    print(x_vars)
+    print(t_edge_vars)
     for index in x_vars.keys():
         goal += ts.edges[tuple(index[:2])]['weight'] * x_vars[index].x
     if show:
@@ -195,7 +197,6 @@ def create_variables(m, ts, task_network, task_hierarchy, type_num, maximal_elem
         x_vars.update(m.addVars([edge[0]], [edge[1]],
                                 list(range(type_num[ts.nodes[edge[1]]['location_type_component_task_element'][1]])),
                                 vtype=GRB.BINARY))
-    print(x_vars)
     m.update()
 
     # edge time variable (element)
@@ -303,7 +304,7 @@ def network_schedule_constraints(m, ts, x_vars, t_vars, init_type_robot_node, in
                                 t_vars[(p, k, 1)] + (epsilon + ts.edges[(p, i)]['weight']) * x_vars[(p, i, k)] <=
                                 t_vars[(i, k, 1)] + M * (1 - x_vars[(p, i, k)]))
                     # precedent elements, include initial element -1   (8a)
-                    elif p_task_element in larger_task_element[i_task_element] + [-1]:
+                    elif p_task_element in larger_task_element[i_task_element] + [(-1, )]:
                         if ts.nodes[i]['location_type_component_task_element'][2] == 0:
                             m.addConstr(
                                 t_vars[(p, k, 1)] + ts.edges[(p, i)]['weight'] * x_vars[(p, i, k)] <=
@@ -535,7 +536,7 @@ def get_waypoint(x_vars, t_vars, ts, init_type_robot_node, time_axis):
 
     robot_waypoint_axis = dict()
     robot_time_axis = dict()
-
+    print(t_vars)
     for type_robot, node in init_type_robot_node.items():
         path = [node]
         time = [0]

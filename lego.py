@@ -36,14 +36,14 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 def get_task_specification():
     hierarchy = []
     # ------------------------ task 1 -------------------------
-    level_one = dict()
-    level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
-    hierarchy.append(level_one)
+    # level_one = dict()
+    # level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
+    # hierarchy.append(level_one)
 
-    level_two = dict()
-    level_two["l100"] = "<> l2_1_1_0"
-    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    hierarchy.append(level_two)
+    # level_two = dict()
+    # level_two["l100"] = "<> l2_1_1_0"
+    # # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    # hierarchy.append(level_two)
     # ------------------------ task 2 -------------------------
     # level_one = dict()
     # level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
@@ -54,14 +54,14 @@ def get_task_specification():
     # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
     # hierarchy.append(level_two)
     # ------------------------ task 3 -------------------------
-    # level_one = dict()
-    # level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
-    # hierarchy.append(level_one)
+    level_one = dict()
+    level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
+    hierarchy.append(level_one)
 
-    # level_two = dict()
-    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0)) && <> l6_1_1_0 && <> !l6_1_1_0 U l3_1_1_0"
-    # hierarchy.append(level_two)
+    level_two = dict()
+    level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0)) && <> l6_1_1_0 && <> !l6_1_1_0 U l3_1_1_0"
+    hierarchy.append(level_two)
     return hierarchy
 
 def get_ordered_subtasks(task, workspace):
