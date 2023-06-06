@@ -1,6 +1,6 @@
 import itertools
 import networkx as nx
-
+import restricted_milp
 
 def construct_node_set(reduced_task_network, task_hierarchy, type_robot_label):
     """
@@ -230,16 +230,52 @@ def task_element2label2teccl_helper(task, element, component, label):
                 label2teccl[region_type] = [(task, element, component, c, l)]
     return label2teccl  
 
-def construct_graph(task_hierarchy, reduced_ts, primitive_subtasks, workspace):
+def task_element2robot2eccl(reduced_task_network, task_hierarchy):
+    """
+    map each indicator to specific literals
+    """
+    # the robots involved in the component of the element and the corresponding label
+    robot2teccl = dict()
+    # iterate over all elements and all literals
+    for (task, element) in reduced_task_network:
+        pruned_subgraph = task_hierarchy[task].buchi_graph
+        element2edge = task_hierarchy[task].element2edge
+        edge_label = pruned_subgraph.edges[element2edge[element]]['label']
+        if edge_label != '1':
+            for c, clause in enumerate(edge_label):
+                for l, literal in enumerate(clause):
+                    robot = literal[-1]
+                    if robot == 0:
+                        continue
+                    # non-zero indicator, keep track
+                    if robot in robot2teccl.keys():
+                        robot2teccl[robot].append((task, element, 1, c, l))
+                    else:
+                        robot2teccl[robot] = [(task, element, 1, c, l)]
+        # same for the vertex label
+        self_loop_label = pruned_subgraph.nodes[element2edge[element][0]]['label']
+        if self_loop_label and self_loop_label != '1':
+            for c, clause in enumerate(self_loop_label):
+                for l, literal in enumerate(clause):
+                    robot = literal[-1]
+                    if robot == 0:
+                        continue
+                    if robot in robot2teccl.keys():
+                        robot2teccl[robot].append((task, element, 0, c, l))
+                    else:
+                        robot2teccl[robot] = [(task, element, 0, c, l)]
+    return robot2teccl
+
+def construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace, show=False):
     """
     build the routing graph from the node and edge set
     """
     incomparable_task_element, larger_task_element, smaller_task_element, strict_larger_task_element = \
-                get_order_info(reduced_ts, task_hierarchy)
+                get_order_info(reduced_task_network, task_hierarchy)
     init_type_robot_node, task_element_component_clause_literal_node, node_location_type_component_task_element, \
-    num_nodes = construct_node_set(reduced_ts, task_hierarchy, workspace.type_robot_label)
-    task_element_component2label2teccl = task_element2label2teccl(task_hierarchy, reduced_ts)
-    edge_set = construct_edge_set(task_hierarchy, reduced_ts, task_element_component_clause_literal_node,
+    num_nodes = construct_node_set(reduced_task_network, task_hierarchy, workspace.type_robot_label)
+    task_element_component2label2teccl = task_element2label2teccl(task_hierarchy, reduced_task_network)
+    edge_set = construct_edge_set(task_hierarchy, reduced_task_network, task_element_component_clause_literal_node,
                                                         task_element_component2label2teccl,
                                                         init_type_robot_node, incomparable_task_element,
                                                         strict_larger_task_element,
@@ -255,12 +291,67 @@ def construct_graph(task_hierarchy, reduced_ts, primitive_subtasks, workspace):
     
     ts = nx.DiGraph(type='routing_graph')
     for node in list(range(num_nodes)):
-        ts.add_node(node, label=node_location_type_component_task_element[node])
+        ts.add_node(node, location_type_component_task_element=node_location_type_component_task_element[node])
     for edge in edge_set:
-        ts.add_edge(edge[0], edge[1], weight=1)
+        if (ts.nodes[edge[0]]['location_type_component_task_element'][3] == ts.nodes[edge[1]]['location_type_component_task_element'][3]):
+            ts.add_edge(edge[0], edge[1], weight=1)
+        else:
+            ts.add_edge(edge[0], edge[1], weight=10)
+
         
     # TODO further prune the graph to invoke less number of robots
     # reduced_ts = nx.transitive_reduction(ts)
     # reduced_ts.add_nodes_from(ts.nodes(data=True))
     # reduced_ts.add_edges_from((u, v, ts.edges[u, v]) for u, v in reduced_ts.edges())
+    
+    maximal_task_element = [node for node in reduced_task_network.nodes() if reduced_task_network.in_degree(node) == 0]
+    robot2teccl = task_element2robot2eccl(reduced_task_network, task_hierarchy)
+    
+    robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
+           time_axis = restricted_milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
+                                                task_hierarchy,
+                                                task_element_component_clause_literal_node,
+                                                init_type_robot_node,
+                                                strict_larger_task_element,
+                                                incomparable_task_element,
+                                                larger_task_element,
+                                                maximal_task_element, robot2teccl)
+    
+    print(robot_waypoint)
+
+    if not robot_waypoint:
+        return
+
+    for robot, time in list(robot_time.items()):
+        #  delete such robots that did not participate (the initial location of robots may just satisfies)
+        if time[-1] == 0 and len(time) == 1:
+            del robot_time[robot]
+            del robot_waypoint[robot]
+
+    if show:
+        print('----------------------------------------------')
+        for type_robot, waypoint in robot_waypoint.items():
+            print("waypoint (type, robot): ", type_robot, " : ", waypoint)
+            print("time (type, robot): ", type_robot, " : ", robot_time[type_robot])
+            print("component (type, robot): ", type_robot, " : ", robot_label[type_robot])
+        print('----------------------------------------------')
+
+        print('time axis: ', time_axis)
+
+    for robot, time in list(robot_time_axis.items()):
+        #  delete such robots that did not participate (the initial location of robots may just satisfies)
+        if not time:
+            del robot_time_axis[robot]
+            del robot_waypoint_axis[robot]
+
+    if show:
+        for type_robot, waypoint in robot_waypoint_axis.items():
+            print("waypoint (type, robot): ", type_robot, " : ", waypoint)
+            print("time axis (type, robot): ", type_robot, " : ", robot_time_axis[type_robot])
+
+        print('----------------------------------------------')
+
+        # for stage in acpt_run:
+        #     print(stage)
+        print('----------------------------------------------')
     return ts

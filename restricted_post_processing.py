@@ -10,8 +10,8 @@ def isEquivalent(expr1, expr2):
 
 
 # ------------- get accepted runs using the waypoint only ----------------
-def run(graph, time_axis, initial, element2edge, var, element_component_clause_literal_node, ts, type_num,
-        type_robot_label, buchi, show, last_subtask=None, loop=False):
+def run(task_hierarchy, time_axis, initial, var, element_component_clause_literal_node, ts, type_num,
+        type_robot_label, show, last_subtask=None, loop=False):
     """
     the accepting run incurred by the path
     """

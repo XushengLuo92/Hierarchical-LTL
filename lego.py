@@ -36,23 +36,23 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 def get_task_specification():
     hierarchy = []
     # ------------------------ task 1 -------------------------
-    # level_one = dict()
-    # level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
-    # hierarchy.append(level_one)
-
-    # level_two = dict()
-    # level_two["l100"] = "<> l2_1_1_0"
-    # # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    # hierarchy.append(level_two)
-    # ------------------------ task 2 -------------------------
     level_one = dict()
-    level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
+    level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
     hierarchy.append(level_one)
 
     level_two = dict()
-    level_two["l100"] = "<> l2_1_1_0 && <> l4_2_1_0"
-    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
+    level_two["l100"] = "<> l2_1_1_0"
+    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
     hierarchy.append(level_two)
+    # ------------------------ task 2 -------------------------
+    # level_one = dict()
+    # level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
+    # hierarchy.append(level_one)
+
+    # level_two = dict()
+    # level_two["l100"] = "<> l2_1_1_0 && <> l4_1_1_0"
+    # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
+    # hierarchy.append(level_two)
     # ------------------------ task 3 -------------------------
     # level_one = dict()
     # level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
@@ -465,134 +465,9 @@ def main():
     reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
     vis_graph(reduced_task_network, 'label', 'task_network')
     # ----------------- build routing-like graph -----------------
-    ts = restricted_weighted_ts.construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace)
+    ts = restricted_weighted_ts.construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace, True)
     vis_graph(ts, 'label', 'routing_graph')
+    # ----------------- generate MILP -------------------------
+
 if __builtins__:
     main()
-
-# ----------- log --------------
-
-
-# for seqsim in ['simultaneous', 'sequential']:
-#     best_cost = []
-#     best_path = dict()
-
-#     for pair, _ in init_acpt:
-#         workspace.type_robot_location = type_robot_location.copy()
-#         workspace.update_after_prefix()
-#         buchi.atomic_prop = workspace.atomic_prop
-#         buchi.regions = workspace.regions
-
-#         init_state, accept_state = pair[0], pair[1]
-
-#         # ======================================= prefix part =================================================#
-#         #                                                                                                      #
-#         #                                                                                                      #
-#         #                                                                                                      #
-#         # ======================================= prefix part =================================================#
-
-#         # ----------------- infer the poset -----------------------
-#         pruned_subgraph, unpruned_subgraph, paths = buchi.get_subgraph(init_state, accept_state, 'prefix')
-#         edge2element, element2edge = buchi.get_element(pruned_subgraph)
-#         if not edge2element:
-#             continue
-
-#         element_component2label = buchi.element2label2eccl(element2edge, pruned_subgraph)
-
-#         hasse_graphs = buchi.map_path_to_element_sequence(edge2element, paths)
-#         # loop over all posets
-#         for _, poset_relation, pos, hasse_diagram in hasse_graphs:
-#             if show:
-#                 print_red_on_cyan('================ prefix part ================')
-
-#             # ----------------- restore after the suffix if not succeed -----------------
-#             workspace.type_robot_location = type_robot_location.copy()
-#             workspace.update_after_prefix()
-#             buchi.atomic_prop = workspace.atomic_prop
-#             buchi.regions = workspace.regions
-
-#             robot2eccl = restricted_poset.element2robot2eccl(pos, element2edge, pruned_subgraph)
-
-#             # print('partial time to poset: {0}'.format((datetime.now() - start).total_seconds()))
-
-#             if show:
-#                 for order in poset_relation:
-#                     print("pairwise order: ", pruned_subgraph.edges[element2edge[order[0]]]['formula'], ' -> ',
-#                           pruned_subgraph.edges[element2edge[order[1]]]['formula'])
-#                 print('----------------------------------------------')
-
-#             incomparable_element, larger_element, smaller_element, strict_larger_element = \
-#                 restricted_poset.incomparable_larger(pos, poset_relation, hasse_diagram)
-
-#             # --------------- construct the routing graph ---------------
-#             init_type_robot_node, element_component_clause_literal_node, node_location_type_component_element, \
-#             num_nodes = restricted_weighted_ts.construct_node_set(pos, element2edge, pruned_subgraph,
-#                                                                   workspace.type_robot_label)
-
-#             edge_set = restricted_weighted_ts.construct_edge_set(pos, element_component_clause_literal_node,
-#                                                                  element2edge, pruned_subgraph,
-#                                                                  element_component2label,
-#                                                                  init_type_robot_node, incomparable_element,
-#                                                                  strict_larger_element,
-#                                                                  larger_element, buchi.imply)
-
-#             ts = restricted_weighted_ts.construct_graph(num_nodes, node_location_type_component_element, edge_set,
-#                                                         workspace.p2p)
-
-#             if show:
-#                 print('partial time before milp: {0}'.format((datetime.now() - start).total_seconds()))
-
-#             # --------------------- MILP -------------------------
-#             maximal_element = [node for node in hasse_diagram.nodes() if hasse_diagram.in_degree(node) == 0]
-
-#             robot_waypoint_pre, robot_time_pre, id2robots, robot_label_pre, \
-#             robot_waypoint_axis, robot_time_axis, time_axis, acpt_run, \
-#                 = restricted_milp.construct_milp_constraint(ts, workspace.type_num, pos,
-#                                                             pruned_subgraph,
-#                                                             element2edge,
-#                                                             element_component_clause_literal_node,
-#                                                             poset_relation,
-#                                                             init_type_robot_node,
-#                                                             strict_larger_element,
-#                                                             incomparable_element,
-#                                                             larger_element,
-#                                                             robot2eccl, init_state,
-#                                                             buchi, maximal_element, show)
-#             if not robot_waypoint_pre:
-#                 continue
-
-#             for robot, time in list(robot_time_pre.items()):
-#                 #  delete such robots that did not participate (the initial location of robots may just satisfies)
-#                 if time[-1] == 0 and len(time) == 1:
-#                     del robot_time_pre[robot]
-#                     del robot_waypoint_pre[robot]
-
-#             if show:
-#                 print('----------------------------------------------')
-#                 for type_robot, waypoint in robot_waypoint_pre.items():
-#                     print("waypoint (type, robot): ", type_robot, " : ", waypoint)
-#                     print("time (type, robot): ", type_robot, " : ", robot_time_pre[type_robot])
-#                     print("component (type, robot): ", type_robot, " : ", robot_label_pre[type_robot])
-#                 print('----------------------------------------------')
-
-#                 print('time axis: ', time_axis)
-
-#             for robot, time in list(robot_time_axis.items()):
-#                 #  delete such robots that did not participate (the initial location of robots may just satisfies)
-#                 if not time:
-#                     del robot_time_axis[robot]
-#                     del robot_waypoint_axis[robot]
-
-#             if show:
-#                 for type_robot, waypoint in robot_waypoint_axis.items():
-#                     print("waypoint (type, robot): ", type_robot, " : ", waypoint)
-#                     print("time axis (type, robot): ", type_robot, " : ", robot_time_axis[type_robot])
-
-#                 print('----------------------------------------------')
-
-#                 for stage in acpt_run:
-#                     print(stage)
-#                 print('----------------------------------------------')
-            
-#             if one_time:
-#                 exit()
