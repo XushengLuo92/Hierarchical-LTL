@@ -298,60 +298,10 @@ def construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, wo
         else:
             ts.add_edge(edge[0], edge[1], weight=10)
 
-        
     # TODO further prune the graph to invoke less number of robots
     # reduced_ts = nx.transitive_reduction(ts)
     # reduced_ts.add_nodes_from(ts.nodes(data=True))
     # reduced_ts.add_edges_from((u, v, ts.edges[u, v]) for u, v in reduced_ts.edges())
-    
-    maximal_task_element = [node for node in reduced_task_network.nodes() if reduced_task_network.in_degree(node) == 0]
-    robot2teccl = task_element2robot2eccl(reduced_task_network, task_hierarchy)
-    
-    robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
-           time_axis = restricted_milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
-                                                task_hierarchy,
-                                                task_element_component_clause_literal_node,
-                                                init_type_robot_node,
-                                                strict_larger_task_element,
-                                                incomparable_task_element,
-                                                larger_task_element,
-                                                maximal_task_element, robot2teccl)
-    
-    print(robot_waypoint)
 
-    if not robot_waypoint:
-        return
-
-    for robot, time in list(robot_time.items()):
-        #  delete such robots that did not participate (the initial location of robots may just satisfies)
-        if time[-1] == 0 and len(time) == 1:
-            del robot_time[robot]
-            del robot_waypoint[robot]
-
-    if show:
-        print('----------------------------------------------')
-        for type_robot, waypoint in robot_waypoint.items():
-            print("waypoint (type, robot): ", type_robot, " : ", waypoint)
-            print("time (type, robot): ", type_robot, " : ", robot_time[type_robot])
-            print("component (type, robot): ", type_robot, " : ", robot_label[type_robot])
-        print('----------------------------------------------')
-
-        print('time axis: ', time_axis)
-
-    for robot, time in list(robot_time_axis.items()):
-        #  delete such robots that did not participate (the initial location of robots may just satisfies)
-        if not time:
-            del robot_time_axis[robot]
-            del robot_waypoint_axis[robot]
-
-    if show:
-        for type_robot, waypoint in robot_waypoint_axis.items():
-            print("waypoint (type, robot): ", type_robot, " : ", waypoint)
-            print("time axis (type, robot): ", type_robot, " : ", robot_time_axis[type_robot])
-
-        print('----------------------------------------------')
-
-        # for stage in acpt_run:
-        #     print(stage)
-        print('----------------------------------------------')
-    return ts
+    return ts, task_element_component_clause_literal_node, init_type_robot_node, \
+        strict_larger_task_element, incomparable_task_element, larger_task_element

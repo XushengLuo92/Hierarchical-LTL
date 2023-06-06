@@ -136,8 +136,6 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
         return None, None, None, None, None, None, None, None
 
     goal = 0
-    print(x_vars)
-    print(t_edge_vars)
     for index in x_vars.keys():
         goal += ts.edges[tuple(index[:2])]['weight'] * x_vars[index].x
     if show:
@@ -536,7 +534,6 @@ def get_waypoint(x_vars, t_vars, ts, init_type_robot_node, time_axis):
 
     robot_waypoint_axis = dict()
     robot_time_axis = dict()
-    print(t_vars)
     for type_robot, node in init_type_robot_node.items():
         path = [node]
         time = [0]
