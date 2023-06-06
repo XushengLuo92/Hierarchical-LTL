@@ -41,7 +41,8 @@ def get_task_specification():
     hierarchy.append(level_one)
 
     level_two = dict()
-    level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    level_two["l100"] = "<> l2_1_1_0"
+    # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
     hierarchy.append(level_two)
     # ------------------------ task 2 -------------------------
     # level_one = dict()
@@ -63,17 +64,11 @@ def get_task_specification():
     # hierarchy.append(level_two)
     return hierarchy
 
-def get_ordered_subtasks(task):
-    workspace = Workspace()
-    with open('data/workspace', 'wb') as filehandle:
-        pickle.dump(workspace, filehandle)
-    type_robot_location = workspace.type_robot_location.copy()
+def get_ordered_subtasks(task, workspace):
     buchi = Buchi(task, workspace)
     buchi.construct_buchi_graph()
     init_acpt = buchi.get_init_accept()
     for pair, _ in init_acpt:
-        workspace.type_robot_location = type_robot_location.copy()
-        workspace.update_after_prefix()
         buchi.atomic_prop = workspace.atomic_prop
         buchi.regions = workspace.regions
 
@@ -138,7 +133,7 @@ def print_composite_subtasks(pruned_subgraph, element2edge, composite_subtasks_d
         for element in elements:
             print("composite subtask {0}, element {1}, label {2}".format(subtask, element, pruned_subgraph.edges[element2edge[element]]["label"]))
 
-def build_buchi_graph_and_poset(task_specification):
+def build_buchi_graph_and_poset(task_specification, workspace):
     primitive_subtasks = dict()
     composite_subtasks = dict()
     task_hierarchy = dict()
@@ -146,7 +141,7 @@ def build_buchi_graph_and_poset(task_specification):
         for (subtask, formula) in level.items():
             task = Task()
             task.update_task(formula)
-            pruned_subgraph, hasse_graphs, element2edge = get_ordered_subtasks(task)
+            pruned_subgraph, hasse_graphs, element2edge = get_ordered_subtasks(task, workspace)
             task_hierarchy[subtask] = Hierarchy(level=index+1, formula=formula, buchi_graph=pruned_subgraph, hass_graphs=hasse_graphs, element2edge=element2edge)
             primitive_elements, composite_element, composite_subtask_element_dict = get_primitive_and_composite_subtask(pruned_subgraph, hasse_graphs, element2edge)
             primitive_subtasks[subtask] = PrimitiveSubtask(element_in_poset=primitive_elements)
@@ -435,18 +430,18 @@ def generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifi
     reduced_task_network.add_edges_from((u, v, task_network.edges[u, v]) for u, v in reduced_task_network.edges)
     return reduced_task_network
 
-def vis_poset_graph(reduced_task_network):
-    labels = nx.get_node_attributes(reduced_task_network, 'label') 
-    pos_nodes = nx.spring_layout(reduced_task_network)
+def vis_graph(graph, att, title):
+    labels = nx.get_node_attributes(graph, att) 
+    pos_nodes = nx.spring_layout(graph)
     pos_attrs = {}
     for node, coords in pos_nodes.items():
         pos_attrs[node] = (coords[0], coords[1] + 0.08)
     
     # write dot file to use with graphviz
     # run "dot -Tpng test.dot >test.png"
-    nx.nx_agraph.write_dot(reduced_task_network,'task_network.dot')
+    nx.nx_agraph.write_dot(graph, title+'.dot')
     # Run a Linux command
-    command = "dot -Tpng task_network.dot >task_network.png"
+    command = "dot -Tpng {0}.dot >{0}.png".format(title)
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     # same layout using matplotlib with no labels
     # plt.title('draw_networkx')
@@ -456,17 +451,23 @@ def vis_poset_graph(reduced_task_network):
     # Save the plot as an image
     # plt.tight_layout()
     # plt.savefig('nx_test.png', bbox_inches='tight')
-
+  
 def main():
+    # ----------------- task -----------------
     task_specification = get_task_specification()
-    task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification)
+    workspace = Workspace()
+    # ----------------- individual partial order set  -----------------
+    task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification, workspace)
     print_subtask_info(task_hierarchy, primitive_subtasks, composite_subtasks)
+    # ----------------- partial global order set -----------------
     primitive_subtasks_with_identifier, primitive_subtasks_partial_order = produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks)
     print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
     print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
     reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
-    vis_poset_graph(reduced_task_network)
-    
+    vis_graph(reduced_task_network, 'label', 'task_network')
+    # ----------------- build routing-like graph -----------------
+    ts = restricted_weighted_ts.construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace)
+    vis_graph(ts, 'location_type_component_task_element', 'routing_graph')
 if __builtins__:
     main()
 

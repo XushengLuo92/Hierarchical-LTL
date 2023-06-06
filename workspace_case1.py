@@ -24,7 +24,7 @@ class Workspace(object):
         self.length = 10 # 9   # length
         self.width = 10 # 9   # width
         # n = 4
-        self.type_num = {1: 3, 2: 2}   # single-task robot
+        self.type_num = {1: 1, 2: 1}   # single-task robot
         self.workspace = (self.length, self.width)
         self.num_of_regions = 10
         self.num_of_obstacles = 10
