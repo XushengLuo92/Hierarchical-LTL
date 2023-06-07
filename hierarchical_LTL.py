@@ -37,31 +37,43 @@ def get_task_specification():
     hierarchy = []
     # ------------------------ task 1 -------------------------
     # level_one = dict()
-    # level_one["l0"] = "<> (l100_1_1_0 && <> l1_1_1_0)"
+    # level_one["p0"] = "<> (p100_1_1_0 && <> p1_2_1_0)"
     # hierarchy.append(level_one)
 
     # level_two = dict()
-    # level_two["l100"] = "<> l2_1_1_0"
-    # # level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
+    # # level_two["l100"] = "<> l2_1_1_0"
+    # level_two["p100"] = "<> (p2_1_1_0 && <> p4_1_1_0)"
     # hierarchy.append(level_two)
     # ------------------------ task 2 -------------------------
-    # level_one = dict()
-    # level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
-    # hierarchy.append(level_one)
-
-    # level_two = dict()
-    # level_two["l100"] = "<> l2_1_1_0 && <> l4_1_1_0"
-    # level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
-    # hierarchy.append(level_two)
-    # ------------------------ task 3 -------------------------
     level_one = dict()
-    level_one["l0"] = "<> (l100_1_1_0 && <> (l200_1_1_0 && <> l7_1_1_0))"
+    level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
     hierarchy.append(level_one)
 
     level_two = dict()
-    level_two["l100"] = "<> (l2_1_1_0 && <> l4_1_1_0)"
-    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0)) && <> l6_1_1_0 && <> !l6_1_1_0 U l3_1_1_0"
+    level_two["l100"] = "<> l2_1_1_0 && <> l4_1_1_0"
+    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
     hierarchy.append(level_two)
+    # ------------------------ task 3 -------------------------
+    # level_one = dict()
+    # level_one["p0"] = "<> (p100_1_1_0 && <> (p200_1_1_0 && <> p7_1_1_0))"
+    # hierarchy.append(level_one)
+
+    # level_two = dict()
+    # level_two["p100"] = "<> (p2_2_1_0 && <> p4_1_1_0)"
+    # level_two["p200"] = "<> (p3_2_1_0 && <> (p5_1_1_0 || p1_1_1_0)) && <> p6_1_1_0 && <> !p6_1_1_0 U p3_2_1_0"
+    # hierarchy.append(level_two)
+    # ------------------------ task 4 -------------------------
+    # level_one = dict()
+    # level_one["p0"] = "<> (p100_1_1_0 && <> p7_1_1_0))"
+    # hierarchy.append(level_one)
+
+    # level_two = dict()
+    # level_two["p100"] = "<> (p200_1_1_0 && <> p4_1_1_0)"
+    # hierarchy.append(level_two)
+    
+    # level_three = dict()
+    # level_three["p200"] = "<> p3_2_1_0"
+    # hierarchy.append(level_three)
     return hierarchy
 
 def get_ordered_subtasks(task, workspace):
@@ -275,7 +287,7 @@ def produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_s
                 child = subtask_pair[1]
                 parent_of_child = parents.parent_back
             for primitive_element in primitive_subtasks[parents.common_parent].element_in_poset:
-                composite_element = composite_subtasks[parents.common_parent].subtask2element[child][0]
+                composite_element = composite_subtasks[parents.common_parent].subtask2element[parent_of_child][0]
                 # all child tasks of a task inherit the parital order w.r.t. all child tasks of a nother task
                 if (primitive_element, composite_element) in poset_relation:
                     primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=parents.common_parent, element=primitive_element), PrimitiveSubtaskId(parent=child, element=suc)) \
