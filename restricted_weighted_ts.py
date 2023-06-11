@@ -164,10 +164,15 @@ def construct_edge_set_for_node_helper(task, element, task_hierarchy, task_eleme
                     edge_set += [(from_node[i], to_node[i]) for i in range(len(to_node))]
 
 
-def get_order_info(reduced_task_network, task_hierarchy):
+def get_order_info(reduced_task_network, composite_subtasks):
     """
         elements that are larger or imcomparable to a certain element
     """
+    pairwise_or_relation_composite_subtasks = set()
+    for (_, or_subtasks) in composite_subtasks.items():
+        for subtasks in or_subtasks.or_composite_subtasks:
+                pairwise_or_relation_composite_subtasks.update({pair for pair in itertools.combinations(subtasks, 2)})
+                
     incomparable_task_element = dict()
     larger_task_element = dict()  # prior to
     smaller_task_element = dict()  # after
@@ -183,14 +188,16 @@ def get_order_info(reduced_task_network, task_hierarchy):
                     lg.append(another_task_element)
                 elif nx.has_path(reduced_task_network, source=task_element, target=another_task_element):
                     sm.append(another_task_element)
-                else:
+                elif (task_element[0], another_task_element[0]) not in pairwise_or_relation_composite_subtasks and \
+                    (another_task_element[0], task_element[0]) not in pairwise_or_relation_composite_subtasks:
                     incmp.append(another_task_element)
         incomparable_task_element[task_element] = incmp
         larger_task_element[task_element] = lg
         smaller_task_element[task_element] = sm
         strict_larger_task_element[task_element] = [order[0] for order in reduced_task_network.edges() if order[1] == task_element]
 
-    return incomparable_task_element, larger_task_element, smaller_task_element, strict_larger_task_element
+    return incomparable_task_element, larger_task_element, smaller_task_element, \
+        strict_larger_task_element, pairwise_or_relation_composite_subtasks
 
 def task_element2label2teccl(task_hierarchy, reduced_task_network):
     """
@@ -266,12 +273,12 @@ def task_element2robot2eccl(reduced_task_network, task_hierarchy):
                         robot2teccl[robot] = [(task, element, 0, c, l)]
     return robot2teccl
 
-def construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace, show=False):
+def construct_graph(task_hierarchy, reduced_task_network, composite_subtasks, workspace, show=False):
     """
     build the routing graph from the node and edge set
     """
-    incomparable_task_element, larger_task_element, smaller_task_element, strict_larger_task_element = \
-                get_order_info(reduced_task_network, task_hierarchy)
+    incomparable_task_element, larger_task_element, smaller_task_element, strict_larger_task_element, \
+        pairwise_or_relation_composite_subtasks = get_order_info(reduced_task_network, composite_subtasks)
     init_type_robot_node, task_element_component_clause_literal_node, node_location_type_component_task_element, \
     num_nodes = construct_node_set(reduced_task_network, task_hierarchy, workspace.type_robot_label)
     task_element_component2label2teccl = task_element2label2teccl(task_hierarchy, reduced_task_network)
@@ -304,4 +311,4 @@ def construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, wo
     # reduced_ts.add_edges_from((u, v, ts.edges[u, v]) for u, v in reduced_ts.edges())
 
     return ts, task_element_component_clause_literal_node, init_type_robot_node, \
-        strict_larger_task_element, incomparable_task_element, larger_task_element
+        strict_larger_task_element, incomparable_task_element, larger_task_element, pairwise_or_relation_composite_subtasks

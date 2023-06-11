@@ -9,15 +9,18 @@ print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
 
 def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy, task_element_component_clause_literal_node, \
     init_type_robot_node, strict_larger_task_element, incomparable_task_element, 
-    larger_task_element, maximal_task_element, robot2teccl, show=True):
+    larger_task_element, maximal_task_element, robot2teccl, composite_subtasks, pairwise_or_relation_composite_subtasks, show=True):
     M = 1e5
     epsilon = 1  # edge and previous edge
     m = Model()
     # create variables
-    x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars, b_maximal_element_vars \
-        = create_variables(m, ts, reduced_task_network, task_hierarchy, type_num, maximal_task_element)
+    task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars, b_maximal_element_vars \
+        = create_variables(m, ts, reduced_task_network, task_hierarchy, type_num, maximal_task_element, composite_subtasks)
+
     # # create initial constraints
     initial_constraints(m, x_vars, t_vars, ts, init_type_robot_node, type_num)
+    
+    task_constraints(m, task_vars, composite_subtasks)
 
     # network and schedule constraints
     network_schedule_constraints(m, ts, x_vars, t_vars, init_type_robot_node, incomparable_task_element, larger_task_element,
@@ -39,9 +42,11 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
 
     # binary relation between edge time -- eq (19)
     # no matter the edge label is '1' or not
+
     for pair in itertools.combinations(reduced_task_network, 2):
         # no subtasks are completed at the same time -- eq (19a)
-        m.addConstr(b_element_vars[pair[0]+ pair[1]] + b_element_vars[pair[1] + pair[0]] == 1)
+        if (pair[0][0], pair[1][0]) not in pairwise_or_relation_composite_subtasks and (pair[1][0], pair[0][0]) not in pairwise_or_relation_composite_subtasks:
+            m.addConstr(b_element_vars[pair[0]+ pair[1]] + b_element_vars[pair[1] + pair[0]] == 1)
 
     for task_element in reduced_task_network:
         for another_task_element in reduced_task_network:
@@ -49,11 +54,13 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
                 # # no subtasks are completed at the same time -- eq (19a)
                 # m.addConstr(b_element_vars[(element, another_element)] + b_element_vars[(another_element, element)] == 1)
                 # -- eq (19b)
-                m.addConstr(M * (b_element_vars[task_element + another_task_element] - 1) <=
-                            t_edge_vars[task_element] - t_edge_vars[another_task_element])
+                if (task_element[0], another_task_element[0]) not in pairwise_or_relation_composite_subtasks and \
+                    (another_task_element[0], task_element[0]) not in pairwise_or_relation_composite_subtasks:
+                    m.addConstr(M * (b_element_vars[task_element + another_task_element] - 1) <=
+                                t_edge_vars[task_element] - t_edge_vars[another_task_element])
 
-                m.addConstr(t_edge_vars[task_element] - t_edge_vars[another_task_element] <=
-                            M * b_element_vars[task_element + another_task_element] - epsilon)
+                    m.addConstr(t_edge_vars[task_element] - t_edge_vars[another_task_element] <=
+                                M * b_element_vars[task_element + another_task_element] - epsilon)
     m.update()
 
     # using same robot (26a) and (26b)
@@ -87,7 +94,7 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
         self_loop_label = pruned_subgraph.nodes[element2edge[element][0]]['label']
         edge_label = pruned_subgraph.edges[element2edge[element]]['label']
 
-        edge_constraints(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, task, element, self_loop_label,
+        edge_constraints(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, task, element, self_loop_label,
                          edge_label, task_element_component_clause_literal_node, type_num, M, epsilon,
                          pruned_subgraph, strict_larger_task_element, incomparable_task_element)
 
@@ -98,9 +105,9 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
     #                               element2edge)
 
         # activation of the next subtask
-        activate_next(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
+        activate_next(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
                       task, element, self_loop_label, strict_larger_task_element, incomparable_task_element, reduced_task_network,
-                      task_element_component_clause_literal_node, type_num, M, task_hierarchy)
+                      task_element_component_clause_literal_node, type_num, M, task_hierarchy, composite_subtasks)
     # activation of the first subtask
     activation_first(m, ts, x_vars, t_vars, c_vars, b_element_vars,
                      task_element_component_clause_literal_node, type_num, M, task_hierarchy,
@@ -146,20 +153,30 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
     get_same_robot(id2robots, robot2teccl, x_vars, task_element_component_clause_literal_node, type_num, ts)
 
     # obtain the time axis
-    time_axis = get_axis(t_edge_vars)
+    time_task_element_axis = get_axis(t_edge_vars)
 
     robot_waypoint, robot_time, robot_label, robot_waypoint_axis, robot_time_axis \
-        = get_waypoint(x_vars, t_vars, ts, init_type_robot_node, time_axis)
+        = get_waypoint(x_vars, t_vars, ts, init_type_robot_node, time_task_element_axis)
 
     # extract the run
-    # acpt_run = run(task_hierarchy, time_axis, init_state, {'x': x_vars, 'c': c_vars, 't': t_edge_vars},
-    #                task_element_component_clause_literal_node, ts, type_num, dict(), show)
-
+    
+    # acpt_run = run(task_hierarchy, time_task_element_axis, composite_subtasks, \
+    #     {'x': x_vars, 'c': c_vars, 't': t_edge_vars}, task_element_component_clause_literal_node, ts, type_num,
+    #     dict())
+    acpt_run = dict()
+    for (task, var) in t_edge_vars.items():
+        print("{0}: {1}".format(task, var.x))
     return robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
-           time_axis
+           time_task_element_axis, acpt_run
 
 
-def create_variables(m, ts, task_network, task_hierarchy, type_num, maximal_element):
+def create_variables(m, ts, task_network, task_hierarchy, type_num, maximal_element, composite_subtasks):
+    # task variable 
+    task_vars = {}
+    for task in composite_subtasks.keys():
+        task_vars.update(m.addVars([task], vtype=GRB.BINARY))
+    m.update()
+
     # clause variable, (element, 0|1, clause_index)
     c_vars = {}
     for (task, element) in task_network:
@@ -225,7 +242,7 @@ def create_variables(m, ts, task_network, task_hierarchy, type_num, maximal_elem
         b_maximal_element_vars.update(m.addVars([task_element], vtype=GRB.INTEGER))
     m.update()
 
-    return x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars, b_maximal_element_vars
+    return task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars, b_maximal_element_vars
 
 
 def initial_constraints(m, x_vars, t_vars, ts, init_type_robot_node, type_num):
@@ -241,8 +258,27 @@ def initial_constraints(m, x_vars, t_vars, ts, init_type_robot_node, type_num):
             m.addConstr(t_vars[(node, k, 1)] == 0)
     m.update()
 
+def task_constraints(m, task_vars, composite_subtasks):
+    for (_, or_subtasks) in composite_subtasks.items():
+        for subtasks in or_subtasks.or_composite_subtasks:
+            print(subtasks)
+            m.addConstr(quicksum([task_vars[subtask] for subtask in subtasks]) == 1)
+    for task in composite_subtasks.keys():
+        exist_or_relation = False        
+        for (_, or_subtasks) in composite_subtasks.items():
+            for subtasks in or_subtasks.or_composite_subtasks:
+                if task in subtasks:
+                    exist_or_relation = True
+                    break
+            if exist_or_relation:
+                break
+        if not exist_or_relation:
+            print(task)
+            m.addConstr(task_vars[task] == 1)
+            
+    m.update()
 
-def one_clause_true(m, c_vars, task, element, component, label, strict_larger_task_element, incomparable_task_element, buchi):
+def one_clause_true(m, task_vars, c_vars, task, element, component, label, strict_larger_task_element, incomparable_task_element, buchi):
     """
     only one clause is true
     """
@@ -253,7 +289,7 @@ def one_clause_true(m, c_vars, task, element, component, label, strict_larger_ta
         m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(label))) == 0)
         m.update()
         return
-    m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(label))) == 1)
+    m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(label))) == task_vars[task])
     m.update()
 
 
@@ -320,13 +356,13 @@ def network_schedule_constraints(m, ts, x_vars, t_vars, init_type_robot_node, in
     m.update()
 
 
-def edge_constraints(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, task, element, self_loop_label, edge_label,
+def edge_constraints(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, task, element, self_loop_label, edge_label,
                      task_element_component_clause_literal_node, type_num, M, epsilon, buchi,
                      strict_larger_task_element, incomparable_task_element):
     # one and only one clause is true -- eq (9)
     if edge_label != '1':
 
-        one_clause_true(m, c_vars, task, element, 1, edge_label, strict_larger_task_element, incomparable_task_element, buchi)
+        one_clause_true(m, task_vars, c_vars, task, element, 1, edge_label, strict_larger_task_element, incomparable_task_element, buchi)
 
         for c in range(len(edge_label)):
             # the nodes corresponding to each clause
@@ -373,17 +409,17 @@ def edge_constraints(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars,
 
     # precedence timing constraints, between edge and previous edge, with vertex label, covered by -- eq (15)
     for another_task_element in strict_larger_task_element[(task, element)]:
-        m.addConstr(t_edge_vars[another_task_element] + epsilon <= t_edge_vars[(task, element)])
+        m.addConstr(t_edge_vars[another_task_element] + epsilon <= t_edge_vars[(task, element)] + M * (1 - task_vars[task]))
 
     m.update()
 
 
-def self_loop_constraints(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
+def self_loop_constraints(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
                           element, self_loop_label,
                           strict_larger_element, incomparable_element, poset_relation,
                           element_component_clause_literal_node, type_num, M, buchi, pruned_subgraph, element2edge):
     # one and only one clause is true, -- eq (9)
-    one_clause_true(m, c_vars, element, 0, self_loop_label, strict_larger_element, incomparable_element, buchi)
+    one_clause_true(m, task_vars, c_vars, element, 0, self_loop_label, strict_larger_element, incomparable_element, buchi)
 
     for c in range(len(self_loop_label)):
         # the nodes corresponding to each clause
@@ -396,10 +432,10 @@ def self_loop_constraints(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_
     m.update()
 
 
-def activate_next(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
+def activate_next(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
                   task, element, self_loop_label,
                   strict_larger_task_element, incomparable_task_element, reduced_task_network,
-                  task_element_component_clause_literal_node, type_num, M, task_hierarchy):
+                  task_element_component_clause_literal_node, type_num, M, task_hierarchy, composite_subtasks):
     # only one subtask
     if not b_immediate_element_vars:
         return
@@ -410,7 +446,7 @@ def activate_next(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_
     if strict_smaller_task_element:
         # there exists a subtask that occurs immediately after it -- eq (16)
         m.addConstr(quicksum(b_immediate_element_vars[task_element + another_task_element]
-                             for another_task_element in strict_smaller_task_element + incomparable_task_element[task_element]) == 1)
+                             for another_task_element in strict_smaller_task_element + incomparable_task_element[task_element]) == task_vars[task])
     # subtask can be the last one -- eq (20)
     else:
         z = len(incomparable_task_element[task_element])
@@ -431,9 +467,9 @@ def activate_next(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_
     if strict_larger_task_element[task_element]:
         m.addConstr(quicksum(b_immediate_element_vars[another_task_element + task_element]
                              for another_task_element in
-                             strict_larger_task_element[task_element] + incomparable_task_element[task_element]) == 1)
-
+                             strict_larger_task_element[task_element] + incomparable_task_element[task_element]) == task_vars[task])
     else:
+        # subtask can be the first one -- eq (22)
         m.addConstr(quicksum(b_immediate_element_vars[another_task_element + task_element]
                              for another_task_element in incomparable_task_element[task_element]) <= 1)
 
@@ -452,20 +488,20 @@ def activate_next(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_
         m.addConstr(t_edge_vars[task_element] + 1 <= t_edge_vars[another_task_element] +
                     M * (1 - b_immediate_element_vars[task_element + another_task_element]))
 
-        # at most one time instant later than the completion of the current subtask -- eq (18)
-        another_pruned_subgraph = task_hierarchy[another_task_element[0]].buchi_graph
-        another_element2edge = task_hierarchy[another_task_element[0]].element2edge
-        self_loop_label_another_ele = another_pruned_subgraph.nodes[another_element2edge[another_task_element[1]][0]]['label']
-        if self_loop_label_another_ele and self_loop_label_another_ele != '1':
-            for c_self_loop in range(len(self_loop_label_another_ele)):
-                for l_self_loop in range(len(self_loop_label_another_ele[c_self_loop])):
-                    for i in task_element_component_clause_literal_node[another_task_element + (0, c_self_loop, l_self_loop)]:
-                        m.addConstr(quicksum(t_vars[(i, k, 0)] for k in
-                                             range(type_num[ts.nodes[i]['location_type_component_task_element'][1]]))
-                                    <= t_edge_vars[task_element] + 1
-                                    + M * (1 - b_immediate_element_vars[task_element + another_task_element]))
+    #     # at most one time instant later than the completion of the current subtask -- eq (18)
+    #     another_pruned_subgraph = task_hierarchy[another_task_element[0]].buchi_graph
+    #     another_element2edge = task_hierarchy[another_task_element[0]].element2edge
+    #     self_loop_label_another_ele = another_pruned_subgraph.nodes[another_element2edge[another_task_element[1]][0]]['label']
+    #     if self_loop_label_another_ele and self_loop_label_another_ele != '1':
+    #         for c_self_loop in range(len(self_loop_label_another_ele)):
+    #             for l_self_loop in range(len(self_loop_label_another_ele[c_self_loop])):
+    #                 for i in task_element_component_clause_literal_node[another_task_element + (0, c_self_loop, l_self_loop)]:
+    #                     m.addConstr(quicksum(t_vars[(i, k, 0)] for k in
+    #                                          range(type_num[ts.nodes[i]['location_type_component_task_element'][1]]))
+    #                                 <= t_edge_vars[task_element] + 1
+    #                                 + M * (1 - b_immediate_element_vars[task_element + another_task_element]))
 
-    m.update()
+    # m.update()
 
 
 def activation_first(m, ts, x_vars, t_vars, c_vars, b_element_vars,
@@ -601,6 +637,9 @@ def get_axis(t_edge_vars):
     offset = 0
     value = time_axis[0][0]
     for i in range(1, len(time_axis)):
+        # skip for subtasks for which time is 0.0 due to there eixsts subtasks that have or relation to them
+        if (time_axis[i][0] == 0.0):
+            continue
         if time_axis[i][0] == value:
             offset += 1
             time_axis[i][0] = time_axis[i][0] + offset

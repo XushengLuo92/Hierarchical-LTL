@@ -25,34 +25,47 @@ import numpy as np
 from collections import namedtuple
 from networkx.drawing.nx_agraph import graphviz_layout
 import subprocess
+from itertools import combinations
+
 
 print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
 
 PrimitiveSubtask = namedtuple('PrimitiveSubtask', ['element_in_poset'])
-CompositeSubtask = namedtuple('CompositeSubtask', ['subtask2element'])
+CompositeSubtask = namedtuple('CompositeSubtask', ['subtask2element', 'or_composite_subtasks'])
 Hierarchy = namedtuple('Hierarchy', ['level', 'formula', 'buchi_graph', 'hass_graphs', 'element2edge'])
 PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
 def get_task_specification():
     hierarchy = []
+     # ------------------------ task 0 -------------------------
+    level_one = dict()
+    level_one["p0"] = "<> (p1_1_1_0 && <> (p100_1_1_0 || p200_1_1_0)) && <> p300_1_1_0"
+    hierarchy.append(level_one)
+
+    level_two = dict()
+    level_two["p100"] = "<> p2_1_1_0"
+    level_two["p200"] = "<> p4_1_1_0"
+    level_two["p300"] = "<> p5_1_1_0"
+    # level_two["p300"] = "<> p1_1_1_0"
+    hierarchy.append(level_two)
     # ------------------------ task 1 -------------------------
     # level_one = dict()
     # level_one["p0"] = "<> (p100_1_1_0 && <> p1_2_1_0)"
     # hierarchy.append(level_one)
 
     # level_two = dict()
-    # # level_two["l100"] = "<> l2_1_1_0"
+    # # level_two["p100"] = "<> p2_1_1_0"
     # level_two["p100"] = "<> (p2_1_1_0 && <> p4_1_1_0)"
     # hierarchy.append(level_two)
     # ------------------------ task 2 -------------------------
-    level_one = dict()
-    level_one["l0"] = "<> (l100_1_1_0 && <> l200_1_1_0)"
-    hierarchy.append(level_one)
+    # level_one = dict()
+    # level_one["p0"] = "<> (p100_1_1_0 && <> p200_1_1_0)"
+    # hierarchy.append(level_one)
 
-    level_two = dict()
-    level_two["l100"] = "<> l2_1_1_0 && <> l4_1_1_0"
-    level_two["l200"] = "<> (l3_1_1_0 && <> (l5_1_1_0 || l1_1_1_0))"
-    hierarchy.append(level_two)
+    # level_two = dict()
+    # level_two["p100"] = "<> p2_1_1_0 && <> p4_1_1_0"
+    # level_two["p200"] = "<> (p3_1_1_0 && <> (p5_1_1_0 || p1_1_1_0))"
+    # hierarchy.append(level_two)
     # ------------------------ task 3 -------------------------
     # level_one = dict()
     # level_one["p0"] = "<> (p100_1_1_0 && <> (p200_1_1_0 && <> p7_1_1_0))"
@@ -90,7 +103,6 @@ def get_ordered_subtasks(task, workspace):
         edge2element, element2edge = buchi.get_element(pruned_subgraph)
         if not edge2element:
             continue
-        element_component2label = buchi.element2label2eccl(element2edge, pruned_subgraph)
         hasse_graphs = buchi.map_path_to_element_sequence(edge2element, paths)
         return pruned_subgraph, hasse_graphs, element2edge
 
@@ -108,12 +120,14 @@ def get_primitive_and_composite_subtask(pruned_subgraph, hasse_graphs, element2e
     primitive_elements = set()
     composite_elements = set()
     composite_subtask_element_dict = dict()
+    or_composite_subtasks = set()
     for element in element2edge:
         task_label = pruned_subgraph.edges[element2edge[element]]['label']
         if is_primitive(task_label):
             primitive_elements.add(element)
         elif task_label != "1":
             composite_elements.add(element)
+            or_composite_subtasks.add(tuple([clause[0][0] for clause in task_label]))
             for clause in task_label:
                 subtask  = clause[0][0]
                 if subtask not in composite_subtask_element_dict.keys():
@@ -121,11 +135,12 @@ def get_primitive_and_composite_subtask(pruned_subgraph, hasse_graphs, element2e
                 else:
                     composite_subtask_element_dict[subtask].append(element)
 
-    return primitive_elements, composite_elements, composite_subtask_element_dict
+    return primitive_elements, composite_elements, composite_subtask_element_dict, or_composite_subtasks
 
 def is_primitive(label):
     # task is primitive if exist literal with "location" smaller than 100
     # TODO what if a disjunctive of composite subtask | primitive subtask
+    # TODO make primitive subtask as a composite subtask
     if label != '1':
         for clause in label:
             assert(len(clause) == 1)
@@ -155,9 +170,11 @@ def build_buchi_graph_and_poset(task_specification, workspace):
             task.update_task(formula)
             pruned_subgraph, hasse_graphs, element2edge = get_ordered_subtasks(task, workspace)
             task_hierarchy[subtask] = Hierarchy(level=index+1, formula=formula, buchi_graph=pruned_subgraph, hass_graphs=hasse_graphs, element2edge=element2edge)
-            primitive_elements, composite_element, composite_subtask_element_dict = get_primitive_and_composite_subtask(pruned_subgraph, hasse_graphs, element2edge)
+            primitive_elements, composite_element, composite_subtask_element_dict, or_composite_subtasks = \
+                get_primitive_and_composite_subtask(pruned_subgraph, hasse_graphs, element2edge)
             primitive_subtasks[subtask] = PrimitiveSubtask(element_in_poset=primitive_elements)
-            composite_subtasks[subtask] = CompositeSubtask(subtask2element=composite_subtask_element_dict)
+            composite_subtasks[subtask] = CompositeSubtask(subtask2element=composite_subtask_element_dict, \
+                or_composite_subtasks=or_composite_subtasks)
     return task_hierarchy, primitive_subtasks, composite_subtasks
 
 def print_subtask_info(task_hierarchy, primitive_subtasks, composite_subtasks):
@@ -464,7 +481,7 @@ def vis_graph(graph, att, title):
     # plt.savefig('nx_test.png', bbox_inches='tight')
 
 
-def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis):
+def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis, acpt_run):
     for robot, time in list(robot_time.items()):
         #  delete such robots that did not participate (the initial location of robots may just satisfies)
         if time[-1] == 0 and len(time) == 1:
@@ -493,8 +510,8 @@ def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_t
 
     print('----------------------------------------------')
 
-    # for stage in acpt_run:
-    #     print(stage)
+    for stage in acpt_run.items():
+        print(stage)
     print('----------------------------------------------')
 
 def main():
@@ -512,25 +529,24 @@ def main():
     vis_graph(reduced_task_network, 'label', 'task_network')
     # ----------------- build routing-like graph -----------------
     ts, task_element_component_clause_literal_node, init_type_robot_node, \
-        strict_larger_task_element, incomparable_task_element, larger_task_element = \
-            restricted_weighted_ts.construct_graph(task_hierarchy, reduced_task_network, primitive_subtasks, workspace, True)
+        strict_larger_task_element, incomparable_task_element, larger_task_element, pairwise_or_relation_composite_subtasks = \
+            restricted_weighted_ts.construct_graph(task_hierarchy, reduced_task_network, composite_subtasks, workspace, True)
     vis_graph(ts, 'label', 'routing_graph')
     # ----------------- form MILP to generate timed plan -----------------
     maximal_task_element = [node for node in reduced_task_network.nodes() if reduced_task_network.in_degree(node) == 0]
     robot2teccl = restricted_weighted_ts.task_element2robot2eccl(reduced_task_network, task_hierarchy)
     robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
-           time_axis = restricted_milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
+           time_axis, acpt_run = restricted_milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
                                                 task_hierarchy,
                                                 task_element_component_clause_literal_node,
                                                 init_type_robot_node,
                                                 strict_larger_task_element,
                                                 incomparable_task_element,
                                                 larger_task_element,
-                                                maximal_task_element, robot2teccl)
+                                                maximal_task_element, robot2teccl, composite_subtasks, pairwise_or_relation_composite_subtasks)
 
     if not robot_waypoint:
         return
-    print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis)
-
+    print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis, acpt_run)
 if __builtins__:
     main()

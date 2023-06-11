@@ -732,15 +732,19 @@ class Buchi(object):
                         except KeyError:
                             continue
         
-        # for manipulation tasks
+        # for manipulation tasks, remove clause that requires two subtasks to be finished at the same time
         for edge in subgraph.edges():
             if (subgraph.edges[edge]['label'] == "1"):
                 continue
             label = subgraph.edges[edge]['label']
+            remain_clause = []
             for clause in label:
-                if len(clause) > 1:
-                    removed_edge.append(edge)
-                    break
+                if len(clause) == 1:
+                    remain_clause.append(clause)
+            if len(remain_clause) == 0:
+                removed_edge.append(edge)
+            else:
+                subgraph.edges[edge]['label'] = remain_clause
         subgraph.remove_edges_from(removed_edge)
 
     def prune_subgraph(self, subgraph):
