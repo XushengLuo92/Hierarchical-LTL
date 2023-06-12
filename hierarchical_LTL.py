@@ -1,31 +1,20 @@
 from workspace_case1 import Workspace
-import itertools
 import networkx as nx
-import pickle
 from task import Task
 from restricted_buchi_parse import Buchi
 from datetime import datetime
-import restricted_poset
 from workspace_case1 import Workspace
 
-import matplotlib.pyplot as plt
 import restricted_weighted_ts
-import restricted_weighted_ts_suffix
 import restricted_milp
-import restricted_milp_suf
-import pickle
 from vis import plot_workspace
-import numpy
 from post_processing import run
 from vis import vis
-import sys
 from termcolor import colored, cprint
 from sympy.logic.boolalg import to_dnf
-import numpy as np
 from collections import namedtuple
 from networkx.drawing.nx_agraph import graphviz_layout
 import subprocess
-from itertools import combinations
 
 
 print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
@@ -37,56 +26,62 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
 def get_task_specification():
     hierarchy = []
-     # ------------------------ task 0 -------------------------
-    level_one = dict()
-    level_one["p0"] = "<> (p1_1_1_0 && <> (p100_1_1_0 || p200_1_1_0)) && <> p300_1_1_0"
-    hierarchy.append(level_one)
+    task = 0
+    if task == 0:
+        # ------------------------ task 0 -------------------------
+        level_one = dict()
+        level_one["p0"] = "(<> p100_2_1_0 || <> p200_1_1_0) && <> p300_1_1_0"
+        hierarchy.append(level_one)
 
-    level_two = dict()
-    level_two["p100"] = "<> p2_1_1_0"
-    level_two["p200"] = "<> p4_1_1_0"
-    level_two["p300"] = "<> p5_1_1_0"
-    # level_two["p300"] = "<> p1_1_1_0"
-    hierarchy.append(level_two)
-    # ------------------------ task 1 -------------------------
-    # level_one = dict()
-    # level_one["p0"] = "<> (p100_1_1_0 && <> p1_2_1_0)"
-    # hierarchy.append(level_one)
+        level_two = dict()
+        level_two["p100"] = "<> (p2_2_1_0 && <> p3_1_1_0)"
+        level_two["p200"] = "<> p4_1_1_0"
+        level_two["p300"] = "<> p5_1_1_0"
+        # level_two["p300"] = "<> p1_1_1_0"
+        hierarchy.append(level_two)
+    elif task == 1: 
+        # ------------------------ task 1 -------------------------
+        level_one = dict()
+        level_one["p0"] = "<> (p100_1_1_0 && <> p1_2_1_0)"
+        hierarchy.append(level_one)
 
-    # level_two = dict()
-    # # level_two["p100"] = "<> p2_1_1_0"
-    # level_two["p100"] = "<> (p2_1_1_0 && <> p4_1_1_0)"
-    # hierarchy.append(level_two)
-    # ------------------------ task 2 -------------------------
-    # level_one = dict()
-    # level_one["p0"] = "<> (p100_1_1_0 && <> p200_1_1_0)"
-    # hierarchy.append(level_one)
+        level_two = dict()
+        # level_two["p100"] = "<> p2_1_1_0"
+        level_two["p100"] = "<> (p2_1_1_0 && <> p4_1_1_0)"
+        hierarchy.append(level_two)
+    elif task == 2: 
+        # ------------------------ task 2 -------------------------
+        level_one = dict()
+        level_one["p0"] = "<> (p100_1_1_0 && <> p200_1_1_0)"
+        hierarchy.append(level_one)
 
-    # level_two = dict()
-    # level_two["p100"] = "<> p2_1_1_0 && <> p4_1_1_0"
-    # level_two["p200"] = "<> (p3_1_1_0 && <> (p5_1_1_0 || p1_1_1_0))"
-    # hierarchy.append(level_two)
-    # ------------------------ task 3 -------------------------
-    # level_one = dict()
-    # level_one["p0"] = "<> (p100_1_1_0 && <> (p200_1_1_0 && <> p7_1_1_0))"
-    # hierarchy.append(level_one)
+        level_two = dict()
+        level_two["p100"] = "<> p2_1_1_0 && <> p4_1_1_0"
+        level_two["p200"] = "<> (p3_1_1_0 && <> (p5_1_1_0 || p1_1_1_0))"
+        hierarchy.append(level_two)
+    elif task == 3: 
+        # ------------------------ task 3 -------------------------
+        level_one = dict()
+        level_one["p0"] = "<> (p100_1_1_0 && <> (p200_1_1_0 && <> p7_1_1_0))"
+        hierarchy.append(level_one)
 
-    # level_two = dict()
-    # level_two["p100"] = "<> (p2_2_1_0 && <> p4_1_1_0)"
-    # level_two["p200"] = "<> (p3_2_1_0 && <> (p5_1_1_0 || p1_1_1_0)) && <> p6_1_1_0 && <> !p6_1_1_0 U p3_2_1_0"
-    # hierarchy.append(level_two)
-    # ------------------------ task 4 -------------------------
-    # level_one = dict()
-    # level_one["p0"] = "<> (p100_1_1_0 && <> p7_1_1_0))"
-    # hierarchy.append(level_one)
+        level_two = dict()
+        level_two["p100"] = "<> (p2_2_1_0 && <> p4_1_1_0)"
+        level_two["p200"] = "<> (p3_2_1_0 && <> (p5_1_1_0 || p1_1_1_0)) && <> p6_1_1_0 && <> !p6_1_1_0 U p3_2_1_0"
+        hierarchy.append(level_two)
+    elif task == 4: 
+        # ------------------------ task 4 -------------------------
+        level_one = dict()
+        level_one["p0"] = "<> (p100_1_1_0 && <> p7_1_1_0))"
+        hierarchy.append(level_one)
 
-    # level_two = dict()
-    # level_two["p100"] = "<> (p200_1_1_0 && <> p4_1_1_0)"
-    # hierarchy.append(level_two)
-    
-    # level_three = dict()
-    # level_three["p200"] = "<> p3_2_1_0"
-    # hierarchy.append(level_three)
+        level_two = dict()
+        level_two["p100"] = "<> (p200_1_1_0 && <> p4_1_1_0)"
+        hierarchy.append(level_two)
+        
+        level_three = dict()
+        level_three["p200"] = "<> p3_2_1_0"
+        hierarchy.append(level_three)
     return hierarchy
 
 def get_ordered_subtasks(task, workspace):
