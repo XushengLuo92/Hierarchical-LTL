@@ -26,7 +26,7 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
 def get_task_specification():
     hierarchy = []
-    task = 0
+    task = 1
     if task == 0:
         # ------------------------ task 0 -------------------------
         level_one = dict()
@@ -508,6 +508,63 @@ def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_t
     for stage in acpt_run.items():
         print(stage)
     print('----------------------------------------------')
+    
+def get_finished_task():
+    return -1
+
+def task_execution(time_task_element_type_robot_axis, reduced_task_network, type_robots):
+    finished_tasks = []
+    current_exec_tasks = []
+    current_exec_robots = []
+    candidate_tasks = set()
+    
+    task_element2type_robot = {time_task_element_type_robot[1] : time_task_element_type_robot[2] \
+        for time_task_element_type_robot in time_task_element_type_robot_axis if len(time_task_element_type_robot) == 3}
+    task_element2time =  {time_task_element_type_robot[1] : time_task_element_type_robot[0] \
+        for time_task_element_type_robot in time_task_element_type_robot_axis if len(time_task_element_type_robot) == 3}
+    print("task_element2type_robot: ", task_element2type_robot)
+    print("task_element2time: ", task_element2time)
+    executing_task_network = reduced_task_network.copy()
+    
+    invalid_str = "-1"
+    finished_task_str = invalid_str
+    finished = False
+    while  executing_task_network.nodes():
+        # candidate tasks: 1. no parent in updated task network 2. no parent in executing tasks
+        candidate_tasks = set(node for node in executing_task_network.nodes() \
+            if executing_task_network.in_degree(node) == 0)
+        removed_candidate_tasks = set(task for task in candidate_tasks for exec_task in current_exec_tasks \
+            if (exec_task, task) in executing_task_network.edges())
+        candidate_tasks.difference_update(removed_candidate_tasks)
+        for type_robot in type_robots:
+            if type_robot in current_exec_robots:
+                continue
+            candidate_tasks_for_robot = [task_element for task_element in candidate_tasks \
+                if task_element2type_robot[task_element] == type_robot]
+            if not candidate_tasks_for_robot:
+                continue
+            # if there are several candiate tasks for a robot, sort according to task plan
+            ordered_candidata_tasks = [task_element2time[task_element] for task_element in candidate_tasks_for_robot]
+            task_index = ordered_candidata_tasks.index(min(ordered_candidata_tasks))
+
+            current_exec_robots.append(type_robot)
+            current_exec_tasks.append(candidate_tasks_for_robot[task_index])
+        
+        executing_task_network.remove_nodes_from(current_exec_tasks)
+        print("current_exec_robots: ", current_exec_robots)
+        print("current_exec_tasks: ", current_exec_tasks)
+        
+        if finished_task_str == invalid_str:
+            finished_task_str = input("Finished task: ")
+            finished_task_split = finished_task_str.split()     
+            finished_task_str = invalid_str
+            # update when some tasks are finished
+            finished_task = (finished_task_split[0], int(finished_task_split[1]))
+            finished_tasks.append(finished_task)
+            print("finished_task: ", finished_task)
+            current_exec_tasks.remove(finished_task)
+            current_exec_robots.remove(task_element2type_robot[finished_task])
+            executing_task_network.remove_nodes_from(finished_tasks)
 
 def main():
     # ----------------- task -----------------
@@ -531,7 +588,7 @@ def main():
     maximal_task_element = [node for node in reduced_task_network.nodes() if reduced_task_network.in_degree(node) == 0]
     robot2teccl = restricted_weighted_ts.task_element2robot2eccl(reduced_task_network, task_hierarchy)
     robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
-           time_axis, acpt_run = restricted_milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
+           time_task_element_type_robot_axis, acpt_run = restricted_milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
                                                 task_hierarchy,
                                                 task_element_component_clause_literal_node,
                                                 init_type_robot_node,
@@ -542,6 +599,8 @@ def main():
 
     if not robot_waypoint:
         return
-    print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis, acpt_run)
+    print_timed_plan(robot_time, robot_waypoint, robot_label, time_task_element_type_robot_axis, robot_time_axis, robot_waypoint_axis, acpt_run)
+    
+    task_execution(time_task_element_type_robot_axis, reduced_task_network, workspace.type_robot_location.keys())
 if __builtins__:
     main()

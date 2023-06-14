@@ -560,7 +560,7 @@ def activation_first(m, ts, x_vars, t_vars, c_vars, b_element_vars,
         m.update()
 
 
-def get_waypoint(x_vars, t_vars, ts, init_type_robot_node, time_axis):
+def get_waypoint(x_vars, t_vars, ts, init_type_robot_node, time_task_element_type_robot_axis):
     """
     extract the high-level plan
     """
@@ -601,11 +601,19 @@ def get_waypoint(x_vars, t_vars, ts, init_type_robot_node, time_axis):
                                            if ts.nodes[point]['location_type_component_task_element'][2] == 1
                                            and len(ts.nodes[point]['location_type_component_task_element']) > 4]
 
-        robot_time_axis[type_robot] = [time_element[0]
-                                       for point in path for time_element in time_axis
+        robot_time_axis[type_robot] = [time_task_element[0]
+                                       for point in path for time_task_element in time_task_element_type_robot_axis
                                        if ts.nodes[point]['location_type_component_task_element'][2] == 1
-                                       and time_element[1] == tuple(ts.nodes[point]['location_type_component_task_element'][3:])]
-
+                                       and time_task_element[1] == tuple(ts.nodes[point]['location_type_component_task_element'][3:])]
+        
+        robot_task_element = [time_task_element[1]
+                                       for point in path for time_task_element in time_task_element_type_robot_axis
+                                       if ts.nodes[point]['location_type_component_task_element'][2] == 1
+                                       and time_task_element[1] == tuple(ts.nodes[point]['location_type_component_task_element'][3:])]
+        for time_task_element_type_robot in time_task_element_type_robot_axis:
+            if time_task_element_type_robot[1] in robot_task_element:
+                time_task_element_type_robot.append(type_robot)
+        
     return robot_waypoint, robot_time, robot_label, robot_waypoint_axis, robot_time_axis
 
 
