@@ -26,7 +26,7 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
 def get_task_specification():
     hierarchy = []
-    task = 1
+    task = 0
     if task == 0:
         # ------------------------ task 0 -------------------------
         level_one = dict()
@@ -528,14 +528,19 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
     
     invalid_str = "-1"
     finished_task_str = invalid_str
-    finished = False
-    while  executing_task_network.nodes():
+    while executing_task_network.nodes():
         # candidate tasks: 1. no parent in updated task network 2. no parent in executing tasks
         candidate_tasks = set(node for node in executing_task_network.nodes() \
             if executing_task_network.in_degree(node) == 0)
         removed_candidate_tasks = set(task for task in candidate_tasks for exec_task in current_exec_tasks \
             if (exec_task, task) in executing_task_network.edges())
+        removed_candidate_tasks.update(removed_candidate_tasks)
         candidate_tasks.difference_update(removed_candidate_tasks)
+        # deal with subtasks that are ignored due to or relation
+        remove_task_element_from_network = set(task for task in candidate_tasks if task not in task_element2type_robot.keys())
+        candidate_tasks.difference_update(remove_task_element_from_network)
+        executing_task_network.remove_nodes_from(remove_task_element_from_network)
+        
         for type_robot in type_robots:
             if type_robot in current_exec_robots:
                 continue
@@ -549,10 +554,11 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
 
             current_exec_robots.append(type_robot)
             current_exec_tasks.append(candidate_tasks_for_robot[task_index])
-        
+        # remove current subtasks
         executing_task_network.remove_nodes_from(current_exec_tasks)
         print("current_exec_robots: ", current_exec_robots)
-        print("current_exec_tasks: ", current_exec_tasks)
+        for task in current_exec_tasks:
+            print("current_exec_tasks: ", task, reduced_task_network.nodes[task]['label'])
         
         if finished_task_str == invalid_str:
             finished_task_str = input("Finished task: ")
@@ -564,7 +570,6 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
             print("finished_task: ", finished_task)
             current_exec_tasks.remove(finished_task)
             current_exec_robots.remove(task_element2type_robot[finished_task])
-            executing_task_network.remove_nodes_from(finished_tasks)
 
 def main():
     # ----------------- task -----------------
