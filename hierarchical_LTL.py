@@ -26,7 +26,7 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
 def get_task_specification():
     hierarchy = []
-    task = 0
+    task = 4
     if task == 0:
         # ------------------------ task 0 -------------------------
         level_one = dict()
@@ -184,7 +184,7 @@ def get_task_seq(target_task, task_hierarchy, composite_subtasks):
     level = task_hierarchy[target_task].level
     while level > 1:
         for (task, hierarchy) in task_hierarchy.items():
-            if hierarchy.level == level - 1 and target_task in composite_subtasks.keys():
+            if hierarchy.level == level - 1 and task_seq[-1] in hierarchy.buchi_graph.graph['formula']:
                 task_seq.append(task)
                 level = level - 1
                 break

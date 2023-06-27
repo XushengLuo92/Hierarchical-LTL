@@ -34,7 +34,7 @@ class Buchi(object):
         self.remove_init_attr = dict()
         self.size = [0, 0]
         # graph of buchi automaton
-        self.buchi_graph = DiGraph(type='buchi', init=[], accept=[])
+        self.buchi_graph = DiGraph(type='buchi', formula=task.formula, init=[], accept=[])
 
     def construct_buchi_graph(self):
         """
