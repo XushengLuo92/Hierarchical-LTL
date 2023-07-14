@@ -26,11 +26,12 @@ PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
 def get_task_specification():
     hierarchy = []
-    task = 4
+    task = 0
+    task_type = "Man"
     if task == 0:
         # ------------------------ task 0 -------------------------
         level_one = dict()
-        level_one["p0"] = "(<> p100_2_1_0 || <> p200_1_1_0) && <> p300_1_1_0"
+        level_one["p0"] = "<> (p100_2_1_0 || p200_1_1_0) && <> p300_1_1_0"
         hierarchy.append(level_one)
 
         level_two = dict()
@@ -67,7 +68,7 @@ def get_task_specification():
 
         level_two = dict()
         level_two["p100"] = "<> (p2_2_1_0 && <> p4_1_1_0)"
-        level_two["p200"] = "<> (p3_2_1_0 && <> (p5_1_1_0 || p1_1_1_0)) && <> p6_1_1_0 && <> !p6_1_1_0 U p3_2_1_0"
+        level_two["p200"] = "<> (p3_2_1_0 && <> (p5_1_1_0 || p1_1_1_0)) && <> p6_1_1_0 && !p6_1_1_0 U p3_2_1_0"
         hierarchy.append(level_two)
     elif task == 4: 
         # ------------------------ task 4 -------------------------
@@ -82,7 +83,8 @@ def get_task_specification():
         level_three = dict()
         level_three["p200"] = "<> p3_2_1_0"
         hierarchy.append(level_three)
-    return hierarchy
+
+    return hierarchy, task_type
 
 def get_ordered_subtasks(task, workspace):
     buchi = Buchi(task, workspace)
@@ -300,7 +302,7 @@ def produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_s
                 parent_of_child = parents.parent_back
             for primitive_element in primitive_subtasks[parents.common_parent].element_in_poset:
                 composite_element = composite_subtasks[parents.common_parent].subtask2element[parent_of_child][0]
-                # all child tasks of a task inherit the parital order w.r.t. all child tasks of a nother task
+                # all child tasks of a task inherit the parital order w.r.t. all child tasks of another task
                 if (primitive_element, composite_element) in poset_relation:
                     primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=parents.common_parent, element=primitive_element), PrimitiveSubtaskId(parent=child, element=suc)) \
                     for suc in primitive_subtasks[child].element_in_poset])
@@ -573,7 +575,7 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
 
 def main():
     # ----------------- task -----------------
-    task_specification = get_task_specification()
+    task_specification, task_type = get_task_specification()
     workspace = Workspace()
     # ----------------- individual partial order set  -----------------
     task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification, workspace)
@@ -583,6 +585,7 @@ def main():
     print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
     print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
     reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
+    reduced_task_network.graph["task"] = task_type
     vis_graph(reduced_task_network, 'label', 'task_network')
     # ----------------- build routing-like graph -----------------
     ts, task_element_component_clause_literal_node, init_type_robot_node, \

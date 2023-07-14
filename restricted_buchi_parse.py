@@ -45,7 +45,6 @@ class Buchi(object):
         # output of the program ltl2ba
         output = subprocess.check_output(dirname + "/./ltl2ba -f \"" + self.formula + "\"", shell=True).decode(
             "utf-8")
-
         # find all states/nodes in the buchi automaton
         state_re = re.compile(r'\n(\w+):\n\t')
         state_group = re.findall(state_re, output)
@@ -57,7 +56,7 @@ class Buchi(object):
         # finish the inilization of the graph of the buchi automaton
         self.buchi_graph.graph['init'] = init
         self.buchi_graph.graph['accept'] = accept
-
+        # print("state %d, edge %d" % (len(state_group), output.count("::")))
         # for each state/node, find it transition relations
         for state in state_group:
             # add node
@@ -91,7 +90,6 @@ class Buchi(object):
                     self.buchi_graph.nodes[state]['label'] = '1'
                     self.buchi_graph.nodes[state]['neg_label'] = []
                     self.buchi_graph.nodes[state]['formula'] = to_dnf('1')
-
         # delete vertices without selfloop
         self.delete_node_no_selfloop_except_init_accept()
         # delete edges which do not strongly imply its vertex

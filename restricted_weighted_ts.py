@@ -299,11 +299,19 @@ def construct_graph(task_hierarchy, reduced_task_network, composite_subtasks, wo
     ts = nx.DiGraph(type='routing_graph')
     for node in list(range(num_nodes)):
         ts.add_node(node, location_type_component_task_element=node_location_type_component_task_element[node])
-    for edge in edge_set:
-        if (ts.nodes[edge[0]]['location_type_component_task_element'][3] == ts.nodes[edge[1]]['location_type_component_task_element'][3]):
-            ts.add_edge(edge[0], edge[1], weight=1)
-        else:
-            ts.add_edge(edge[0], edge[1], weight=10)
+    if reduced_task_network.graph["task"] == "Man":
+        for edge in edge_set:
+            if (ts.nodes[edge[0]]['location_type_component_task_element'][3] == ts.nodes[edge[1]]['location_type_component_task_element'][3]):
+                ts.add_edge(edge[0], edge[1], weight=1)
+            else:
+                ts.add_edge(edge[0], edge[1], weight=10)
+    else:
+        # manipulation
+        for edge in edge_set:
+            ts.add_edge(edge[0], edge[1], weight=workspace.p2p[(ts.nodes[edge[0]]['location_type_component_element'][0],
+                                                                ts.nodes[edge[1]]['location_type_component_element'][0])])
+        
+
 
     # TODO further prune the graph to invoke less number of robots
     # reduced_ts = nx.transitive_reduction(ts)

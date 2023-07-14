@@ -29,7 +29,7 @@ class Workspace(object):
         self.num_of_regions = 10
         self.num_of_obstacles = 10
         self.occupied = []
-        self.regions = {'l{0}'.format(i): j for i, j in enumerate(self.allocate_region_dars())}
+        self.regions = {'p{0}'.format(i): j for i, j in enumerate(self.allocate_region_dars())}
         self.obstacles = {'o{0}'.format(i+1): j for i, j in enumerate(self.allocate_obstacle_dars())}
         self.type_robot_location = self.initialize()
         # region and corresponding locations
@@ -236,7 +236,7 @@ class Workspace(object):
         for k in range(1, 10):
             obs += self.obstacles['o'+str(k)]
         for k in range(0, 6):
-            region += self.regions['l'+str(k)]
+            region += self.regions['p'+str(k)]
         x0 = [(i, j) for i in range(10) for j in range(10)
               if (i, j) not in obs and (i, j) not in region]
         for robot_type in self.type_num.keys():
