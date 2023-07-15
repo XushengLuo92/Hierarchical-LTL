@@ -15,7 +15,7 @@ from sympy.logic.boolalg import to_dnf
 from collections import namedtuple
 from networkx.drawing.nx_agraph import graphviz_layout
 import subprocess
-
+import argparse
 
 print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
 
@@ -24,10 +24,9 @@ CompositeSubtask = namedtuple('CompositeSubtask', ['subtask2element', 'or_compos
 Hierarchy = namedtuple('Hierarchy', ['level', 'formula', 'buchi_graph', 'hass_graphs', 'element2edge'])
 PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
-def get_task_specification():
+def get_task_specification(task):
     hierarchy = []
     task = 0
-    task_type = "Man"
     if task == 0:
         # ------------------------ task 0 -------------------------
         level_one = dict()
@@ -84,7 +83,7 @@ def get_task_specification():
         level_three["p200"] = "<> p3_2_1_0"
         hierarchy.append(level_three)
 
-    return hierarchy, task_type
+    return hierarchy
 
 def get_ordered_subtasks(task, workspace):
     buchi = Buchi(task, workspace)
@@ -573,9 +572,22 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
             current_exec_tasks.remove(finished_task)
             current_exec_robots.remove(task_element2type_robot[finished_task])
 
+def create_parser():
+    """ create parser
+
+    Returns:
+        _type_: _description_
+    """
+    parser = argparse.ArgumentParser(description='FM')
+    parser.add_argument('--task', default="man", type=str)
+    return parser
+  
 def main():
+    parser = create_parser()
+    args = parser.parse_known_args()[0]
+    
     # ----------------- task -----------------
-    task_specification, task_type = get_task_specification()
+    task_specification = get_task_specification(args.task)
     workspace = Workspace()
     # ----------------- individual partial order set  -----------------
     task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification, workspace)
@@ -585,7 +597,7 @@ def main():
     print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
     print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
     reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
-    reduced_task_network.graph["task"] = task_type
+    reduced_task_network.graph["task"] = args.task
     vis_graph(reduced_task_network, 'label', 'task_network')
     # ----------------- build routing-like graph -----------------
     ts, task_element_component_clause_literal_node, init_type_robot_node, \
@@ -609,6 +621,7 @@ def main():
         return
     print_timed_plan(robot_time, robot_waypoint, robot_label, time_task_element_type_robot_axis, robot_time_axis, robot_waypoint_axis, acpt_run)
     
-    task_execution(time_task_element_type_robot_axis, reduced_task_network, workspace.type_robot_location.keys())
+    if reduced_task_network.graph["task"] == "man":
+        task_execution(time_task_element_type_robot_axis, reduced_task_network, workspace.type_robot_location.keys())
 if __builtins__:
     main()

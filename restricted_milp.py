@@ -99,7 +99,7 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
                          pruned_subgraph, strict_larger_task_element, incomparable_task_element)
 
         
-        if reduced_task_network.graph["task"] == "Nav" and self_loop_label and self_loop_label != '1':
+        if reduced_task_network.graph["task"] == "nav" and self_loop_label and self_loop_label != '1':
             self_loop_constraints(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
                                   task, element, self_loop_label, strict_larger_task_element, incomparable_task_element,
                                   task_element_component_clause_literal_node, type_num, M, pruned_subgraph,
@@ -489,7 +489,7 @@ def activate_next(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_eleme
         m.addConstr(t_edge_vars[task_element] + 1 <= t_edge_vars[another_task_element] +
                     M * (1 - b_immediate_element_vars[task_element + another_task_element]))
 
-        if reduced_task_network.graph["task"] == "Nav":
+        if reduced_task_network.graph["task"] == "nav":
             # at most one time instant later than the completion of the current subtask -- eq (18)
             another_pruned_subgraph = task_hierarchy[another_task_element[0]].buchi_graph
             another_element2edge = task_hierarchy[another_task_element[0]].element2edge

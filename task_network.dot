@@ -1,5 +1,5 @@
 strict digraph "" {
-	graph [task=Man];
+	graph [task=man];
 	node [label="\N"];
 	"('p100', 1)"	[label="[[('p2', 2, 1, 0)]]"];
 	"('p100', 2)"	[label="[[('p3', 1, 1, 0)]]"];
