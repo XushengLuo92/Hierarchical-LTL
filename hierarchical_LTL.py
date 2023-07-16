@@ -1,14 +1,12 @@
-from workspace_case1 import Workspace
 import networkx as nx
 from task import Task
 from restricted_buchi_parse import Buchi
 from datetime import datetime
-from workspace_case1 import Workspace
-
+from workspace import Workspace
 import restricted_weighted_ts
 import restricted_milp
+from restricted_GMAPP import mapp
 from vis import plot_workspace
-from post_processing import run
 from vis import vis
 from termcolor import colored, cprint
 from sympy.logic.boolalg import to_dnf
@@ -16,6 +14,7 @@ from collections import namedtuple
 from networkx.drawing.nx_agraph import graphviz_layout
 import subprocess
 import argparse
+import matplotlib.pyplot as plt
 
 print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
 
@@ -24,10 +23,9 @@ CompositeSubtask = namedtuple('CompositeSubtask', ['subtask2element', 'or_compos
 Hierarchy = namedtuple('Hierarchy', ['level', 'formula', 'buchi_graph', 'hass_graphs', 'element2edge'])
 PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
 
-def get_task_specification(task):
+def get_task_specification(task, case):
     hierarchy = []
-    task = 0
-    if task == 0:
+    if case == 0:
         # ------------------------ task 0 -------------------------
         level_one = dict()
         level_one["p0"] = "<> (p100_2_1_0 || p200_1_1_0) && <> p300_1_1_0"
@@ -39,7 +37,7 @@ def get_task_specification(task):
         level_two["p300"] = "<> p5_1_1_0"
         # level_two["p300"] = "<> p1_1_1_0"
         hierarchy.append(level_two)
-    elif task == 1: 
+    elif case == 1: 
         # ------------------------ task 1 -------------------------
         level_one = dict()
         level_one["p0"] = "<> (p100_1_1_0 && <> p1_2_1_0)"
@@ -49,7 +47,7 @@ def get_task_specification(task):
         # level_two["p100"] = "<> p2_1_1_0"
         level_two["p100"] = "<> (p2_1_1_0 && <> p4_1_1_0)"
         hierarchy.append(level_two)
-    elif task == 2: 
+    elif case == 2: 
         # ------------------------ task 2 -------------------------
         level_one = dict()
         level_one["p0"] = "<> (p100_1_1_0 && <> p200_1_1_0)"
@@ -59,7 +57,7 @@ def get_task_specification(task):
         level_two["p100"] = "<> p2_1_1_0 && <> p4_1_1_0"
         level_two["p200"] = "<> (p3_1_1_0 && <> (p5_1_1_0 || p1_1_1_0))"
         hierarchy.append(level_two)
-    elif task == 3: 
+    elif case == 3: 
         # ------------------------ task 3 -------------------------
         level_one = dict()
         level_one["p0"] = "<> (p100_1_1_0 && <> (p200_1_1_0 && <> p7_1_1_0))"
@@ -69,7 +67,7 @@ def get_task_specification(task):
         level_two["p100"] = "<> (p2_2_1_0 && <> p4_1_1_0)"
         level_two["p200"] = "<> (p3_2_1_0 && <> (p5_1_1_0 || p1_1_1_0)) && <> p6_1_1_0 && !p6_1_1_0 U p3_2_1_0"
         hierarchy.append(level_two)
-    elif task == 4: 
+    elif case == 4: 
         # ------------------------ task 4 -------------------------
         level_one = dict()
         level_one["p0"] = "<> (p100_1_1_0 && <> p7_1_1_0))"
@@ -478,12 +476,6 @@ def vis_graph(graph, att, title):
 
 
 def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis, acpt_run):
-    for robot, time in list(robot_time.items()):
-        #  delete such robots that did not participate (the initial location of robots may just satisfies)
-        if time[-1] == 0 and len(time) == 1:
-            del robot_time[robot]
-            del robot_waypoint[robot]
-    
     print("************* timed plan **************")
     for type_robot, waypoint in robot_waypoint.items():
         print("waypoint (type, robot): ", type_robot, " : ", waypoint)
@@ -492,13 +484,6 @@ def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_t
     print('----------------------------------------------')
 
     print('time axis: ', time_axis)
-
-    for robot, time in list(robot_time_axis.items()):
-        #  delete such robots that did not participate (the initial location of robots may just satisfies)
-        if not time:
-            del robot_time_axis[robot]
-            del robot_waypoint_axis[robot]
-
     
     for type_robot, waypoint in robot_waypoint_axis.items():
         print("waypoint (type, robot): ", type_robot, " : ", waypoint)
@@ -506,8 +491,8 @@ def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_t
 
     print('----------------------------------------------')
 
-    for stage in acpt_run.items():
-        print(stage)
+    for stage in acpt_run:
+        print(f"stage: {stage}")
     print('----------------------------------------------')
     
 def get_finished_task():
@@ -572,6 +557,26 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
             current_exec_tasks.remove(finished_task)
             current_exec_robots.remove(task_element2type_robot[finished_task])
 
+def show(workspace, robot_waypoint, robot_time_axis, robot_waypoint_axis, robot_time, robot_label, acpt_run):
+    print('----------------------------------------------')
+    for type_robot, waypoint in robot_waypoint.items():
+        print("waypoint (type, robot): ", type_robot, " : ", waypoint)
+        print("time (type, robot): ", type_robot, " : ", robot_time[type_robot])
+        print("component (type, robot): ", type_robot, " : ", robot_label[type_robot])
+    print('----------------------------------------------')
+
+    print('time axis: ', robot_time_axis)
+    
+    for type_robot, waypoint in robot_waypoint_axis.items():
+        print("waypoint (type, robot): ", type_robot, " : ", waypoint)
+        print("time axis (type, robot): ", type_robot, " : ", robot_time_axis[type_robot])
+
+    print('----------------------------------------------')
+
+    for stage in acpt_run:
+        print(stage)
+    print('----------------------------------------------')
+
 def create_parser():
     """ create parser
 
@@ -580,14 +585,17 @@ def create_parser():
     """
     parser = argparse.ArgumentParser(description='FM')
     parser.add_argument('--task', default="man", type=str)
+    parser.add_argument('--case', default=0, type=int)
+    parser.add_argument('--vis', action='store_true', help='Enable visualization')
+
     return parser
   
 def main():
     parser = create_parser()
     args = parser.parse_known_args()[0]
-    
+
     # ----------------- task -----------------
-    task_specification = get_task_specification(args.task)
+    task_specification = get_task_specification(args.task, args.case)
     workspace = Workspace()
     # ----------------- individual partial order set  -----------------
     task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification, workspace)
@@ -615,13 +623,38 @@ def main():
                                                 strict_larger_task_element,
                                                 incomparable_task_element,
                                                 larger_task_element,
-                                                maximal_task_element, robot2teccl, composite_subtasks, pairwise_or_relation_composite_subtasks)
+                                                maximal_task_element, robot2teccl, composite_subtasks, 
+                                                pairwise_or_relation_composite_subtasks, show=args.vis)
 
     if not robot_waypoint:
         return
-    print_timed_plan(robot_time, robot_waypoint, robot_label, time_task_element_type_robot_axis, robot_time_axis, robot_waypoint_axis, acpt_run)
     
+    # post process 
+    for robot, time in list(robot_time.items()):
+        #  delete such robots that did not participate (the initial location of robots may just satisfies)
+        if time[-1] == 0 and len(time) == 1:
+            del robot_time[robot]
+            del robot_waypoint[robot]
+    for robot, time in list(robot_time_axis.items()):
+        #  delete such robots that did not participate (the initial location of robots may just satisfies)
+        if not time:
+            del robot_time_axis[robot]
+            del robot_waypoint_axis[robot]
+    if args.vis:
+        print_timed_plan(robot_time, robot_waypoint, robot_label, time_task_element_type_robot_axis, robot_time_axis, robot_waypoint_axis, acpt_run)
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        plot_workspace(workspace, ax)
+        # workspace.plot_workspace()
+        plt.savefig('workspace.png') 
+
+
     if reduced_task_network.graph["task"] == "man":
         task_execution(time_task_element_type_robot_axis, reduced_task_network, workspace.type_robot_location.keys())
+    else:
+        # --------------------- GMRPP -------------------------
+        robot_path = mapp(workspace, acpt_run, robot_waypoint_axis, robot_time_axis, args.vis)
+
+        vis(workspace, robot_path, {robot: [len(path)] * 2 for robot, path in robot_path.items()}, [])
 if __builtins__:
     main()

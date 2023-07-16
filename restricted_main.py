@@ -4,7 +4,7 @@ from datetime import datetime
 import restricted_poset
 # from workspace import Workspace
 # from workspace_dars import Workspace
-from workspace_case1 import Workspace
+from workspace import Workspace
 
 import matplotlib.pyplot as plt
 import restricted_weighted_ts

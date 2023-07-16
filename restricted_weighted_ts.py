@@ -306,10 +306,10 @@ def construct_graph(task_hierarchy, reduced_task_network, composite_subtasks, wo
             else:
                 ts.add_edge(edge[0], edge[1], weight=10)
     else:
-        # manipulation
+        # navigation
         for edge in edge_set:
-            ts.add_edge(edge[0], edge[1], weight=workspace.p2p[(ts.nodes[edge[0]]['location_type_component_element'][0],
-                                                                ts.nodes[edge[1]]['location_type_component_element'][0])])
+            ts.add_edge(edge[0], edge[1], weight=workspace.p2p[(ts.nodes[edge[0]]['location_type_component_task_element'][0],
+                                                                ts.nodes[edge[1]]['location_type_component_task_element'][0])])
         
 
 

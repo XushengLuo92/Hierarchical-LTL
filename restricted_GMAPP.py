@@ -1,6 +1,5 @@
 import networkx as nx
 from gurobipy import *
-from workspace_dars import Workspace
 import matplotlib.pyplot as plt
 import itertools
 from vis import vis
@@ -9,7 +8,7 @@ import numpy as np
 
 
 def multi_agent_path_planning(workspace, T, robot_team_initial_target, robot_move, neg_clause, robot_init, show,
-                              collision_avoidance):
+                              collision_avoidance=True):
     # build the time_expanded graph
     time_expanded_graph = nx.DiGraph()
     # s = datetime.datetime.now()
@@ -197,202 +196,99 @@ def extract_paths(x_vars, time_expanded_graph, loc2node, robot_index, edge_index
     return paths
 
 
-def mapp(workspace, buchi, acpt_run, robot_waypoint, robot_time, order, show, collision_avoidance=True):
+def mapp(workspace, acpt_run, robot_waypoint, robot_time, show=False):
     """
     Generalized multi-robot path planning
     """
     start = datetime.datetime.now()
-    if order == 'sequential':
-        robot_path = {type_robot: [location] for type_robot, location in workspace.type_robot_location.items()}
-        robot_progress = {robot: -1 for robot in robot_waypoint.keys()}
-        clock = -1
-        # stop at the last subtask
-        effective_length = len(acpt_run) - 1
 
-        while clock < effective_length:
-            # check if the initial robot locations satisfy the first subtask or the current subtask is '1'
-            # if yes, update the local progress of robots that participate and global clock
-            if acpt_run[clock + 1]['subtask'] in buchi.sat_init_edge:  # or acpt_run[clock+1]['essential_clause_edge'] == '1':
-                for robots in acpt_run[clock + 1]['essential_robot_edge'].values():
-                    for robot in robots:
-                        robot_progress[robot] += 1
-                clock += 1
-                continue
+    robot_path = {type_robot: [location] for type_robot, location in workspace.type_robot_location.items()}
+    robot_progress = {robot: -1 for robot in robot_waypoint.keys()}
+    clock = -1
+    # stop at the last subtask
+    effective_length = len(acpt_run)-1
 
-            # determine the target for robots: (1) edge (2) vertex of the current subtask
-            robot_team_initial_target = dict()
-            robot_team_initial_target['edge'] = {robot: (robot_path[robot][-1], target) for target, robots in
-                                                 acpt_run[clock + 1]['essential_robot_edge'].items() for robot in
-                                                 robots}
-            robot_team_initial_target['vertex1'] = {robot: (robot_path[robot][-1], target) for target, robots in
-                                                    acpt_run[clock + 1]['essential_robot_vertex'].items() for robot in
-                                                    robots}
-            robot_team_initial_target['other_edges'] = dict()
-            # determine the running and terminal constraints
-            neg_clause = dict()
-            neg_clause['edge'] = acpt_run[clock + 1]['neg_edge']
-            neg_clause['vertex1'] = acpt_run[clock + 1]['neg_vertex']
+    while clock < effective_length:
+        # determine the target for robots: (1) edge (2) vertex of the current subtask
+        robot_team_initial_target = dict()
+        robot_team_initial_target['edge'] = {robot: (robot_path[robot][-1], target) for target, robots in
+                                                acpt_run[clock+1]['essential_robot_edge'].items() for robot in robots}
+        robot_team_initial_target['vertex1'] = {robot: (robot_path[robot][-1], target) for target, robots in
+                                                acpt_run[clock+1]['essential_robot_vertex'].items() for robot in robots}
+        # determine the running and terminal constraints
+        neg_clause = dict()
+        neg_clause['edge'] = acpt_run[clock+1]['neg_edge']
+        neg_clause['vertex1'] = acpt_run[clock+1]['neg_vertex']
 
-            # update robot_team_initial_target by considering simultaneity
-            next_time = acpt_run[clock + 1]['time_element'][0]  # the completion of the current subtask
+        # update robot_team_initial_target by considering simultaneity
+        next_time = acpt_run[clock+1]['time_element'] # the completion of the current subtask
 
-            # robots that need to move according to positive literals
-            partial_or_full = 'f'
-            robot_move = set(robot for robot_initial_target in robot_team_initial_target.values()
-                             for robot in robot_initial_target.keys())
-            if partial_or_full == 'f':
-                robot_move = list(robot_path.keys())
+        # robots that need to move according to positive literals
+        robot_move = set(robot for robot_initial_target in robot_team_initial_target.values()
+                            for robot in robot_initial_target.keys())
+        remove_edge = update_robot_env(workspace, robot_team_initial_target, robot_move, robot_waypoint, robot_time,
+                                        robot_path, robot_progress, next_time, neg_clause)
+        
+        robot_move = list(robot_path.keys())
 
-            # ------ find the collision-avoidance paths for involved robots ---------
-            # the completion time of last subtask
-            if clock == -1:
-                past_time = 0
+        # ------ find the collision-avoidance paths for involved robots ---------
+        # the completion time of last subtask
+        if clock == -1:
+            past_time = 0
+        else:
+            past_time = acpt_run[clock]['time_element']
+        # expected horizon according to high-level plan
+        horizon = next_time - past_time
+        robot_init = {robot: path[-1] for robot, path in robot_path.items()}
+        freq = 1
+        for T in range(horizon, horizon + 100, 1):
+            mapp_paths = multi_agent_path_planning(workspace, T, robot_team_initial_target, robot_move, neg_clause,
+                                                    robot_init, show)
+            if mapp_paths:
+                # update the path: second to the last
+                for robot, path in mapp_paths.items():
+                    robot_path[robot] += path[1:]
+                for robot in robot_path.keys():
+                    if robot not in mapp_paths.keys():
+                        robot_path[robot] += [robot_path[robot][-1]] * T
+                break
             else:
-                past_time = acpt_run[clock]['time_element'][0]
-            # expected horizon according to high-level plan
-            horizon = next_time - past_time
-            robot_init = {robot: path[-1] for robot, path in robot_path.items()}
-            for T in range(horizon, horizon + 100, 1):
-                mapp_paths = multi_agent_path_planning(workspace, T, robot_team_initial_target, robot_move, neg_clause,
-                                                       robot_init, show, collision_avoidance)
-                if mapp_paths:
-                    # update the path: second to the last
-                    for robot, path in mapp_paths.items():
-                        robot_path[robot] += path[1:]
-                    for robot in robot_path.keys():
-                        if robot not in mapp_paths.keys():
-                            robot_path[robot] += [robot_path[robot][-1]] * T
-                    break
+                freq += 1
+                if freq > 10:
+                    exit()
 
-            # update key time points for each robot
-            if T > horizon:
-                for robot, time in robot_time.items():
-                    if robot_progress[robot] + 1 < len(robot_time[robot]):
-                        robot_time[robot][robot_progress[robot] + 1:] = [t + T - horizon
-                                                                         for t in
-                                                                         robot_time[robot][robot_progress[robot] + 1:]]
+        # update key time points for each robot
+        if T > horizon:
+            for robot, time in robot_time.items():
+                if robot_progress[robot] + 1 < len(robot_time[robot]):
+                    robot_time[robot][robot_progress[robot]+1:] = [t+T-horizon
+                                                                    for t in robot_time[robot][robot_progress[robot]+1:]]
 
-            # update the overall progress
-            past_time += T
-            # update the individual progress
-            for robots in acpt_run[clock + 1]['essential_robot_edge'].values():
-                for robot in robots:
-                    robot_progress[robot] += 1
-            # update the overall plan
-            for subseq_clock in range(clock + 1, len(acpt_run)):
-                acpt_run[subseq_clock]['time_element'][0] = acpt_run[subseq_clock]['time_element'][0] + T - horizon
-            if show:
-                print(acpt_run[clock + 1]['subtask'], acpt_run[clock + 1]['time_element'][0])
-            # plt.show()
-            clock += 1
-
-        end = datetime.datetime.now()
+        # update the overall progress
+        past_time += T
+        # update the individual progress
+        for robots in acpt_run[clock+1]['essential_robot_edge'].values():
+            for robot in robots:
+                robot_progress[robot] += 1
+        # update the overall plan
+        for subseq_clock in range(clock+1, len(acpt_run)):
+            acpt_run[subseq_clock]['time_element'] = acpt_run[subseq_clock]['time_element'] + T - horizon
         if show:
-            print('GMMPP: ', (end - start).total_seconds())
+            print('subtask, time', acpt_run[clock + 1]['subtask'], acpt_run[clock+1]['time_element'])
+        # restore removed edges
+        workspace.graph_workspace.add_edges_from(itertools.chain(remove_edge))
+        # plt.show()
+        clock += 1
 
-        return robot_path
+    end = datetime.datetime.now()
+    if show:
+        print('GMMPP: ', (end - start).total_seconds())
 
-    elif order == 'simultaneous':
-        robot_path = {type_robot: [location] for type_robot, location in workspace.type_robot_location.items()}
-        robot_progress = {robot: -1 for robot in robot_waypoint.keys()}
-        clock = -1
-        # stop at the last subtask
-        effective_length = len(acpt_run)-1
-
-        while clock < effective_length:
-            # print('******************************************')
-            # check if the initial robot locations satisfy the first subtask or the current subtask is '1'
-            # if yes, update the local progress of robots that participate and global clock
-            if acpt_run[clock+1]['subtask'] in buchi.sat_init_edge:  # or acpt_run[clock+1]['essential_clause_edge'] == '1':
-                for robots in acpt_run[clock+1]['essential_robot_edge'].values():
-                    for robot in robots:
-                        robot_progress[robot] += 1
-                if show:
-                    print('subtask, time', acpt_run[clock + 1]['subtask'], acpt_run[clock + 1]['time_element'][0])
-                clock += 1
-                continue
-
-            # determine the target for robots: (1) edge (2) vertex of the current subtask
-            robot_team_initial_target = dict()
-            robot_team_initial_target['edge'] = {robot: (robot_path[robot][-1], target) for target, robots in
-                                                 acpt_run[clock+1]['essential_robot_edge'].items() for robot in robots}
-            robot_team_initial_target['vertex1'] = {robot: (robot_path[robot][-1], target) for target, robots in
-                                                    acpt_run[clock+1]['essential_robot_vertex'].items() for robot in robots}
-            # determine the running and terminal constraints
-            neg_clause = dict()
-            neg_clause['edge'] = acpt_run[clock+1]['neg_edge']
-            neg_clause['vertex1'] = acpt_run[clock+1]['neg_vertex']
-
-            # update robot_team_initial_target by considering simultaneity
-            next_time = acpt_run[clock+1]['time_element'][0]  # the completion of the current subtask
-
-            # robots that need to move according to positive literals
-            partial_or_full = sys.argv[1]
-            robot_move = set(robot for robot_initial_target in robot_team_initial_target.values()
-                             for robot in robot_initial_target.keys())
-            remove_edge = update_robot_env(workspace, robot_team_initial_target, robot_move, robot_waypoint, robot_time,
-                                           robot_path, robot_progress, next_time, neg_clause, partial_or_full)
-            if partial_or_full == 'f':
-                robot_move = list(robot_path.keys())
-
-            # ------ find the collision-avoidance paths for involved robots ---------
-            # the completion time of last subtask
-            if clock == -1:
-                past_time = 0
-            else:
-                past_time = acpt_run[clock]['time_element'][0]
-            # expected horizon according to high-level plan
-            horizon = next_time - past_time
-            robot_init = {robot: path[-1] for robot, path in robot_path.items()}
-            freq = 1
-            for T in range(horizon, horizon + 100, 1):
-                mapp_paths = multi_agent_path_planning(workspace, T, robot_team_initial_target, robot_move, neg_clause,
-                                                       robot_init, show, collision_avoidance)
-                if mapp_paths:
-                    # update the path: second to the last
-                    for robot, path in mapp_paths.items():
-                        robot_path[robot] += path[1:]
-                    for robot in robot_path.keys():
-                        if robot not in mapp_paths.keys():
-                            robot_path[robot] += [robot_path[robot][-1]] * T
-                    break
-                else:
-                    freq += 1
-                    if freq > 10:
-                        exit()
-
-            # update key time points for each robot
-            if T > horizon:
-                for robot, time in robot_time.items():
-                    if robot_progress[robot] + 1 < len(robot_time[robot]):
-                        robot_time[robot][robot_progress[robot]+1:] = [t+T-horizon
-                                                                       for t in robot_time[robot][robot_progress[robot]+1:]]
-
-            # update the overall progress
-            past_time += T
-            # update the individual progress
-            for robots in acpt_run[clock+1]['essential_robot_edge'].values():
-                for robot in robots:
-                    robot_progress[robot] += 1
-            # update the overall plan
-            for subseq_clock in range(clock+1, len(acpt_run)):
-                acpt_run[subseq_clock]['time_element'][0] = acpt_run[subseq_clock]['time_element'][0] + T - horizon
-            if show:
-                print('subtask, time', acpt_run[clock + 1]['subtask'], acpt_run[clock+1]['time_element'][0])
-            # restore removed edges
-            workspace.graph_workspace.add_edges_from(itertools.chain(remove_edge))
-            # plt.show()
-            clock += 1
-
-        end = datetime.datetime.now()
-        if show:
-            print('GMMPP: ', (end - start).total_seconds())
-
-        return robot_path
+    return robot_path
 
 
 def update_robot_env(workspace, robot_team_initial_target, robot_move, robot_waypoint, robot_time, robot_path,
-                     robot_progress, next_time, neg_clause, partial_or_full):
+                     robot_progress, next_time, neg_clause):
     """
     find robots that need to move simultaneous and those that remain idle
     """
@@ -430,11 +326,7 @@ def update_robot_env(workspace, robot_team_initial_target, robot_move, robot_way
     robot_move.update(set(robot_team_initial_target['constraint'].keys()))
 
     # treat robots that do not move as obstacles
-    if partial_or_full == 'p':
-        new_obstacles = [path[-1] for robot, path in robot_path.items() if robot not in robot_move
-                         and robot not in robot_future_time_min_length_path_target.keys()]
-    elif partial_or_full == 'f':
-        new_obstacles = []
+    new_obstacles = []
 
     # treat all robots that do not execute the current subtask as obstacles
     remove_edge = []

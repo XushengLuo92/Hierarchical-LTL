@@ -8,6 +8,60 @@ from gurobipy import *
 def isEquivalent(expr1, expr2):
     return sympy.simplify_logic((expr1 & (~expr2)) | ((~expr1) & expr2)) == False
 
+# ------------- get accepted runs using the waypoint only ----------------
+def run_with_t_edge(task_hierarchy, time_task_element_axis, var, task_element_component_clause_literal_node, ts, type_num,
+        type_robot_label, last_subtask=None, loop=False, show=False):
+    """
+    the accepting run incurred by the path
+    """
+   
+    # ind the index of the first non-zero element
+    first_non_zero_index = next((index for index, item in enumerate(time_task_element_axis) if item[0] != 0.0), None)
+    
+    acpt_run = []
+    # iterate until the accepting state is reached
+    for i in range(first_non_zero_index, len(time_task_element_axis)):
+        if show:
+            print(time_task_element_axis[i])
+
+        # Determine the set of identical time instants
+        time_instant_task_element = time_task_element_axis[i]
+        if acpt_run:
+            pre_neg_edge = acpt_run[-1]['neg_edge']
+        else:
+            pre_neg_edge = []
+        # loop over each successor to see whether progress can be made
+
+        # print((node, succ), graph.edges[(node, succ)]['formula'])
+        # whether the collection of paths at clock satisfies the edge label
+        # neg_literal: negative clause that needs to be addressed
+        # exe_robot: set of robots that takes the subtask with nonzero id
+
+        task = time_instant_task_element[1][0]
+        element = time_instant_task_element[1][1]
+        buchi_graph = task_hierarchy[task].buchi_graph
+        element2edge = task_hierarchy[task].element2edge
+     
+        essential_clause_edge, neg_clause_edge, exe_robots_edge \
+                    = determine_essentials(time_instant_task_element, var, buchi_graph.edges[element2edge[element]]['label'],
+                                           buchi_graph.edges[element2edge[element]]['neg_label'], 1,
+                                           task_element_component_clause_literal_node, ts, type_num,
+                                           type_robot_label, last_subtask, buchi_graph, [], loop)
+            
+        essential_clause_vertex, neg_clause_vertex, exe_robots_vertex \
+            = determine_essentials(time_instant_task_element, var, buchi_graph.nodes[element2edge[element][0]]['label'],
+                                    buchi_graph.nodes[element2edge[element][0]]['neg_label'], 0,
+                                    task_element_component_clause_literal_node, ts, type_num, dict(),
+                                    last_subtask, buchi_graph, pre_neg_edge, loop)
+
+        acpt_run.append({'subtask': time_instant_task_element[1], 'time_element': time_instant_task_element[0],
+                            'essential_robot_edge': exe_robots_edge,
+                            'essential_clause_edge': essential_clause_edge, 'neg_edge': neg_clause_edge,
+                            'essential_robot_vertex': exe_robots_vertex,
+                            'neg_vertex': neg_clause_vertex})
+    return acpt_run
+
+
 
 # ------------- get accepted runs using the waypoint only ----------------
 def run(task_hierarchy, time_task_element_axis, composite_subtasks, var, task_element_component_clause_literal_node, ts, type_num,
@@ -15,6 +69,8 @@ def run(task_hierarchy, time_task_element_axis, composite_subtasks, var, task_el
     """
     the accepting run incurred by the path
     """
+    sorted_t_edge = list(sorted(var['t'].items(), key=lambda item: item[1].x))
+    initial = next((item for item in sorted_t_edge if item[1].x != 0.0), None)
     ap_up_to_now = {}
     initial = {}
     for (task, hierarchy) in task_hierarchy.items():

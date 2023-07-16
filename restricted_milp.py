@@ -3,13 +3,13 @@ import math
 from restricted_post_processing import run
 from termcolor import colored, cprint
 import itertools
+from restricted_post_processing import run_with_t_edge
 
 print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
 
-
 def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy, task_element_component_clause_literal_node, \
     init_type_robot_node, strict_larger_task_element, incomparable_task_element, 
-    larger_task_element, maximal_task_element, robot2teccl, composite_subtasks, pairwise_or_relation_composite_subtasks, show=True):
+    larger_task_element, maximal_task_element, robot2teccl, composite_subtasks, pairwise_or_relation_composite_subtasks, show=False):
     M = 1e5
     epsilon = 1  # edge and previous edge
     m = Model()
@@ -161,10 +161,13 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
 
     # extract the run
     
+    # acpt_run = dict()
     # acpt_run = run(task_hierarchy, time_task_element_axis, composite_subtasks, \
     #     {'x': x_vars, 'c': c_vars, 't': t_edge_vars}, task_element_component_clause_literal_node, ts, type_num,
     #     dict())
-    acpt_run = dict()
+    acpt_run = run_with_t_edge(task_hierarchy, time_task_element_axis, {'x': x_vars, 'c': c_vars, 't': t_edge_vars}, 
+                               task_element_component_clause_literal_node, ts, type_num, dict(), show=show)
+         
     for (task, var) in t_edge_vars.items():
         print("{0}: {1}".format(task, var.x))
     return robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
@@ -641,19 +644,19 @@ def get_same_robot(id2robots, robot2teccl, x_vars, task_element_component_clause
 
 
 def get_axis(t_edge_vars):
-    time_axis = [[round(t_edge_vars[edge_t].x), edge_t] for edge_t in t_edge_vars.keys()]
-    time_axis.sort()
+    time_task_element_axis = [[round(t_edge_vars[edge_t].x), edge_t] for edge_t in t_edge_vars.keys()]
+    time_task_element_axis.sort()
 
     offset = 0
-    value = time_axis[0][0]
-    for i in range(1, len(time_axis)):
+    value = time_task_element_axis[0][0]
+    for i in range(1, len(time_task_element_axis)):
         # skip for subtasks for which time is 0.0 due to there eixsts subtasks that have or relation to them
-        if (time_axis[i][0] == 0.0):
+        if (time_task_element_axis[i][0] == 0.0):
             continue
-        if time_axis[i][0] == value:
+        if time_task_element_axis[i][0] == value:
             offset += 1
-            time_axis[i][0] = time_axis[i][0] + offset
+            time_task_element_axis[i][0] = time_task_element_axis[i][0] + offset
         else:
-            value = time_axis[i][0]
-            time_axis[i][0] = time_axis[i][0] + offset
-    return time_axis
+            value = time_task_element_axis[i][0]
+            time_task_element_axis[i][0] = time_task_element_axis[i][0] + offset
+    return time_task_element_axis

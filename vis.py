@@ -149,8 +149,9 @@ def vis(workspace, robot_path, robot_pre_suf_time, ap):
     time_text = ax.text(0.01, 1.05, time_template % cls_robot_path.elapse_time, transform=ax.transAxes, weight='bold')
 
     ap_template = '{0} {1} {2}'
-    ap_text = [ax.text(-3.5, 9.5 - k*0.5, ap_template.format('{0}'.format("."), '{0}'.format("."), '{0}'.format(".")),
-                       color='red', weight='bold') for k in range(10)]
+    # ap_text = [ax.text(-3.5, 9.5 - k*0.5, ap_template.format('{0}'.format("."), '{0}'.format("."), '{0}'.format(".")),
+    #                    color='red', weight='bold') for k in range(10)]
+    ap_text = []
     cls_robot_path.label(workspace.type_robot_location)
 
     particles = ax.scatter([], [], c=[], s=70, cmap="hsv", vmin=0, vmax=1)
@@ -164,6 +165,6 @@ def vis(workspace, robot_path, robot_pre_suf_time, ap):
                                                   ap_template, ap_text],
                              frames=int(np.ceil(max_frame)), interval=30, blit=True)
     # ani.save('/Users/chrislaw/Box Sync/Research/LTL_MRTA_icra2020/video/phi.mp4', fps=1/cls_robot_path.dt, dpi=400)
-    ani.save('/home/xusheng/CodeBase/LTL_LEGO/mapp.mp4', fps=2/cls_robot_path.dt, dpi=400)
+    ani.save('./mapp.mp4', fps=2/cls_robot_path.dt, dpi=400)
 
-    plt.show()
+    # plt.show()
