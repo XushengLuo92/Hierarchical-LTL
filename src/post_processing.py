@@ -235,9 +235,9 @@ def determine_essentials(time_instant_task_element, var, label, neg_label, compo
                 for clause in neg_label:
                     # initial state with negative clause
                     if not pre_neg_edge:
-                        if buchi.ap_sat_label('1', [clause]):
-                            neg_clause = clause
-                            break
+                        # if buchi.ap_sat_label('1', [clause]):
+                        neg_clause = clause
+                        break
                     # othereise, subformula
                     if set(clause).issubset(set(pre_neg_edge)):
                         neg_clause = clause

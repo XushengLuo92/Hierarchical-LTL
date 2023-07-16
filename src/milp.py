@@ -100,10 +100,9 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
 
         
         if reduced_task_network.graph["task"] == "nav" and self_loop_label and self_loop_label != '1':
-            self_loop_constraints(m, ts, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
-                                  task, element, self_loop_label, strict_larger_task_element, incomparable_task_element,
-                                  task_element_component_clause_literal_node, type_num, M, pruned_subgraph,
-                                  element2edge)
+            self_loop_constraints(m, ts, task_vars, x_vars, c_vars, task, element, self_loop_label,
+                          strict_larger_task_element, incomparable_task_element,
+                          task_element_component_clause_literal_node, type_num, pruned_subgraph)
 
         # activation of the next subtask
         activate_next(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
@@ -418,10 +417,9 @@ def edge_constraints(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_el
     m.update()
 
 
-def self_loop_constraints(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_element_vars, b_immediate_element_vars,
-                          task, element, self_loop_label,
+def self_loop_constraints(m, ts, task_vars, x_vars, c_vars, task, element, self_loop_label,
                           strict_larger_element, incomparable_element,
-                          task_element_component_clause_literal_node, type_num, M, buchi, element2edge):
+                          task_element_component_clause_literal_node, type_num, buchi):
     # one and only one clause is true, -- eq (9)
     one_clause_true(m, task_vars, c_vars, task, element, 0, self_loop_label, strict_larger_element, incomparable_element, buchi)
 

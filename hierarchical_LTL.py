@@ -7,6 +7,7 @@ from task import Task
 from buchi_parse import Buchi
 from datetime import datetime
 from workspace import Workspace
+from specification import Specification
 import weighted_ts
 import milp
 from GMAPP import mapp
@@ -26,66 +27,6 @@ PrimitiveSubtask = namedtuple('PrimitiveSubtask', ['element_in_poset'])
 CompositeSubtask = namedtuple('CompositeSubtask', ['subtask2element', 'or_composite_subtasks'])
 Hierarchy = namedtuple('Hierarchy', ['level', 'formula', 'buchi_graph', 'hass_graphs', 'element2edge'])
 PrimitiveSubtaskId = namedtuple('PrimitiveSubtaskId', ['parent', 'element'])
-
-def get_task_specification(task, case):
-    hierarchy = []
-    if case == 0:
-        # ------------------------ task 0 -------------------------
-        level_one = dict()
-        level_one["p0"] = "<> (p100_2_1_0 || p200_1_1_0) && <> p300_1_1_0"
-        hierarchy.append(level_one)
-
-        level_two = dict()
-        level_two["p100"] = "<> (p2_2_1_0 && <> p3_1_1_0)"
-        level_two["p200"] = "<> p4_1_1_0"
-        level_two["p300"] = "<> p5_1_1_0"
-        # level_two["p300"] = "<> p1_1_1_0"
-        hierarchy.append(level_two)
-    elif case == 1: 
-        # ------------------------ task 1 -------------------------
-        level_one = dict()
-        level_one["p0"] = "<> (p100_1_1_0 && <> p1_2_1_0)"
-        hierarchy.append(level_one)
-
-        level_two = dict()
-        # level_two["p100"] = "<> p2_1_1_0"
-        level_two["p100"] = "<> (p2_1_1_0 && <> p4_1_1_0)"
-        hierarchy.append(level_two)
-    elif case == 2: 
-        # ------------------------ task 2 -------------------------
-        level_one = dict()
-        level_one["p0"] = "<> (p100_1_1_0 && <> p200_1_1_0)"
-        hierarchy.append(level_one)
-
-        level_two = dict()
-        level_two["p100"] = "<> p2_1_1_0 && <> p4_1_1_0"
-        level_two["p200"] = "<> (p3_1_1_0 && <> (p5_1_1_0 || p1_1_1_0))"
-        hierarchy.append(level_two)
-    elif case == 3: 
-        # ------------------------ task 3 -------------------------
-        level_one = dict()
-        level_one["p0"] = "<> (p100_1_1_0 && <> (p200_1_1_0 && <> p7_1_1_0))"
-        hierarchy.append(level_one)
-
-        level_two = dict()
-        level_two["p100"] = "<> (p2_2_1_0 && <> p4_1_1_0)"
-        level_two["p200"] = "<> (p3_2_1_0 && <> (p5_1_1_0 || p1_1_1_0)) && <> p6_1_1_0 && !p6_1_1_0 U p3_2_1_0"
-        hierarchy.append(level_two)
-    elif case == 4: 
-        # ------------------------ task 4 -------------------------
-        level_one = dict()
-        level_one["p0"] = "<> (p100_1_1_0 && <> p7_1_1_0))"
-        hierarchy.append(level_one)
-
-        level_two = dict()
-        level_two["p100"] = "<> (p200_1_1_0 && <> p4_1_1_0)"
-        hierarchy.append(level_two)
-        
-        level_three = dict()
-        level_three["p200"] = "<> p3_2_1_0"
-        hierarchy.append(level_three)
-
-    return hierarchy
 
 def get_ordered_subtasks(task, workspace):
     buchi = Buchi(task, workspace)
@@ -561,26 +502,6 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
             current_exec_tasks.remove(finished_task)
             current_exec_robots.remove(task_element2type_robot[finished_task])
 
-def show(workspace, robot_waypoint, robot_time_axis, robot_waypoint_axis, robot_time, robot_label, acpt_run):
-    print('----------------------------------------------')
-    for type_robot, waypoint in robot_waypoint.items():
-        print("waypoint (type, robot): ", type_robot, " : ", waypoint)
-        print("time (type, robot): ", type_robot, " : ", robot_time[type_robot])
-        print("component (type, robot): ", type_robot, " : ", robot_label[type_robot])
-    print('----------------------------------------------')
-
-    print('time axis: ', robot_time_axis)
-    
-    for type_robot, waypoint in robot_waypoint_axis.items():
-        print("waypoint (type, robot): ", type_robot, " : ", waypoint)
-        print("time axis (type, robot): ", type_robot, " : ", robot_time_axis[type_robot])
-
-    print('----------------------------------------------')
-
-    for stage in acpt_run:
-        print(stage)
-    print('----------------------------------------------')
-
 def create_parser():
     """ create parser
 
@@ -599,7 +520,7 @@ def main():
     args = parser.parse_known_args()[0]
 
     # ----------------- task -----------------
-    task_specification = get_task_specification(args.task, args.case)
+    task_specification = Specification().get_task_specification(args.task, args.case)
     workspace = Workspace()
     # ----------------- individual partial order set  -----------------
     task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification, workspace)

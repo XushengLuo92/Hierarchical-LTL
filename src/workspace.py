@@ -32,6 +32,8 @@ class Workspace(object):
         self.regions = {'p{0}'.format(i): j for i, j in enumerate(self.allocate_region_dars())}
         self.obstacles = {'o{0}'.format(i+1): j for i, j in enumerate(self.allocate_obstacle_dars())}
         self.type_robot_location = self.initialize()
+        # customized location
+        # self.type_robot_location[(2, 0)]  = (0, 0) # nav task 4
         # region and corresponding locations
         self.label_location = {'r{0}'.format(i + 1): j for i, j in enumerate(list(self.type_robot_location.values()))}
         # region where robots reside
@@ -239,6 +241,7 @@ class Workspace(object):
             region += self.regions['p'+str(k)]
         x0 = [(i, j) for i in range(10) for j in range(10)
               if (i, j) not in obs and (i, j) not in region]
+        # random.seed(1)
         for robot_type in self.type_num.keys():
             for num in range(self.type_num[robot_type]):
                 while True:
