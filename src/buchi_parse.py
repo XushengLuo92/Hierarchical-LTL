@@ -43,7 +43,7 @@ class Buchi(object):
         # directory of the program ltl2ba
         dirname = os.path.dirname(__file__)
         # output of the program ltl2ba
-        output = subprocess.check_output(dirname + "/./ltl2ba -f \"" + self.formula + "\"", shell=True).decode(
+        output = subprocess.check_output(dirname + "/./../ltl2ba -f \"" + self.formula + "\"", shell=True).decode(
             "utf-8")
         # find all states/nodes in the buchi automaton
         state_re = re.compile(r'\n(\w+):\n\t')

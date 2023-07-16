@@ -1,11 +1,15 @@
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+
 import networkx as nx
 from task import Task
-from restricted_buchi_parse import Buchi
+from buchi_parse import Buchi
 from datetime import datetime
 from workspace import Workspace
-import restricted_weighted_ts
-import restricted_milp
-from restricted_GMAPP import mapp
+import weighted_ts
+import milp
+from GMAPP import mapp
 from vis import plot_workspace
 from vis import vis
 from termcolor import colored, cprint
@@ -606,17 +610,17 @@ def main():
     print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
     reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
     reduced_task_network.graph["task"] = args.task
-    vis_graph(reduced_task_network, 'label', 'task_network')
+    vis_graph(reduced_task_network, 'label', 'data/task_network')
     # ----------------- build routing-like graph -----------------
     ts, task_element_component_clause_literal_node, init_type_robot_node, \
         strict_larger_task_element, incomparable_task_element, larger_task_element, pairwise_or_relation_composite_subtasks = \
-            restricted_weighted_ts.construct_graph(task_hierarchy, reduced_task_network, composite_subtasks, workspace, True)
-    vis_graph(ts, 'label', 'routing_graph')
+            weighted_ts.construct_graph(task_hierarchy, reduced_task_network, composite_subtasks, workspace, True)
+    vis_graph(ts, 'label', 'data/routing_graph')
     # ----------------- form MILP to generate timed plan -----------------
     maximal_task_element = [node for node in reduced_task_network.nodes() if reduced_task_network.in_degree(node) == 0]
-    robot2teccl = restricted_weighted_ts.task_element2robot2eccl(reduced_task_network, task_hierarchy)
+    robot2teccl = weighted_ts.task_element2robot2eccl(reduced_task_network, task_hierarchy)
     robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
-           time_task_element_type_robot_axis, acpt_run = restricted_milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
+           time_task_element_type_robot_axis, acpt_run = milp.construct_milp_constraint(ts, workspace.type_num, reduced_task_network,
                                                 task_hierarchy,
                                                 task_element_component_clause_literal_node,
                                                 init_type_robot_node,
@@ -646,7 +650,7 @@ def main():
         ax = fig.add_subplot(111)
         plot_workspace(workspace, ax)
         # workspace.plot_workspace()
-        plt.savefig('workspace.png') 
+        plt.savefig('./data/workspace.png') 
 
 
     if reduced_task_network.graph["task"] == "man":

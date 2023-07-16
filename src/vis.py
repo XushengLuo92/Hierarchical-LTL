@@ -165,6 +165,6 @@ def vis(workspace, robot_path, robot_pre_suf_time, ap):
                                                   ap_template, ap_text],
                              frames=int(np.ceil(max_frame)), interval=30, blit=True)
     # ani.save('/Users/chrislaw/Box Sync/Research/LTL_MRTA_icra2020/video/phi.mp4', fps=1/cls_robot_path.dt, dpi=400)
-    ani.save('./mapp.mp4', fps=2/cls_robot_path.dt, dpi=400)
+    ani.save('./data/mapp.mp4', fps=2/cls_robot_path.dt, dpi=400)
 
     # plt.show()

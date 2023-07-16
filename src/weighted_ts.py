@@ -1,6 +1,6 @@
 import itertools
 import networkx as nx
-import restricted_milp
+import milp
 
 def construct_node_set(reduced_task_network, task_hierarchy, type_robot_label):
     """

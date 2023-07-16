@@ -1,4 +1,5 @@
 __pycache__/
 .vscode/
-ltl2ba-1.3/
+ltl2ba
 data/
+src/__pycache__/

@@ -1,9 +1,9 @@
 from gurobipy import *
 import math
-from restricted_post_processing import run
+from post_processing import run
 from termcolor import colored, cprint
 import itertools
-from restricted_post_processing import run_with_t_edge
+from post_processing import run_with_t_edge
 
 print_red_on_cyan = lambda x: cprint(x, 'blue', 'on_red')
 
