@@ -147,21 +147,21 @@ def construct_edge_set_for_node_helper(task, element, task_hierarchy, task_eleme
                 to_node = task_element_component_clause_literal_node[teccl]
                 edge_set += list(itertools.product(from_node, to_node))
 
-    # for another_task_element in strict_larger_task_element[(task, element)] + incomparable_task_element[(task, element)]:
-    #     element2edge = task_hierarchy[another_task_element[0]].element2edge
-    #     pruned_subgraph = task_hierarchy[another_task_element[0]].buchi_graph
-    #     edge = element2edge[another_task_element[1]]
-    #     # have positive literals
-    #     if pruned_subgraph.nodes[edge[1]]['label'] != '1':
-    #         # paired clause with implication
-    #         for pair in pruned_subgraph.imply[edge]:
-    #             # literal in the end vertex
-    #             for index, lit in enumerate(pruned_subgraph.nodes[edge[1]]['label'][pair[1]]):
-    #                 # literal in the edge
-    #                 index_in_edge = pruned_subgraph.edges[edge]['label'][pair[0]].index(lit)
-    #                 from_node = task_element_component_clause_literal_node[(another_task_element, 1, pair[0], index_in_edge)]
-    #                 to_node = task_element_component_clause_literal_node[(task, element, 0, pair[1], index)]
-    #                 edge_set += [(from_node[i], to_node[i]) for i in range(len(to_node))]
+    for another_task_element in strict_larger_task_element[(task, element)] + incomparable_task_element[(task, element)]:
+        element2edge = task_hierarchy[another_task_element[0]].element2edge
+        pruned_subgraph = task_hierarchy[another_task_element[0]].buchi_graph
+        edge = element2edge[another_task_element[1]]
+        # have positive literals
+        if pruned_subgraph.nodes[edge[1]]['label'] != '1':
+            # paired clause with implication
+            for pair in pruned_subgraph.graph['implication'][edge]:
+                # literal in the end vertex
+                for index, lit in enumerate(pruned_subgraph.nodes[edge[1]]['label'][pair[1]]):
+                    # literal in the edge
+                    index_in_edge = pruned_subgraph.edges[edge]['label'][pair[0]].index(lit)
+                    from_node = task_element_component_clause_literal_node[another_task_element + (1, pair[0], index_in_edge)]
+                    to_node = task_element_component_clause_literal_node[(task, element, 0, pair[1], index)]
+                    edge_set += [(from_node[i], to_node[i]) for i in range(len(to_node))]
 
 
 def get_order_info(reduced_task_network, composite_subtasks):

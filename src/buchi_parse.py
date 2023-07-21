@@ -551,6 +551,7 @@ class Buchi(object):
         subgraph = subgraph.subgraph(nodes).copy()
         subgraph.graph['init'] = init
         subgraph.graph['accept'] = accept
+        subgraph.graph['implication'] = self.imply
 
         # remove all outgoing edges of the accepting state from subgraph for the prefix part if head != tail
         if init != accept:
