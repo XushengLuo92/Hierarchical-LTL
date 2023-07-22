@@ -624,7 +624,7 @@ def get_same_robot(id2robots, robot2teccl, x_vars, task_element_component_clause
     for robot, teccls in robot2teccl.items():
         robots = []
         num_vertex = len(task_element_component_clause_literal_node[teccls[0]])
-        num_robot = type_num[ts.nodes[tuple(task_element_component_clause_literal_node[teccls[0]][0:2])]
+        num_robot = type_num[ts.nodes[task_element_component_clause_literal_node[teccls[0]][0]]
         ['location_type_component_task_element'][1]]
         # detemine the teccl that the corresponding vertices are visited
         vertices = None

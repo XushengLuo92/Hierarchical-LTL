@@ -55,7 +55,7 @@ class Specification():
             # ------------------------ task 4 -------------------------
             level_one = dict()
             # level_one["p0"] = "<> (p3_2_1_0 && X(p3_2_1_0 U p3_1_1_0))" # && <> p3_1_1_0" # && <> p1_2_1_0"
-            level_one["p0"] = "<> (p100_1_1_0 && <> p5_1_1_0))"
+            level_one["p0"] = "<> (p100_1_1_0 && <> p5_1_1_1))"
             hierarchy.append(level_one)
 
             level_two = dict()
@@ -64,8 +64,8 @@ class Specification():
             
             level_three = dict()
             # level_three["p200"] = "<> p1_2_1_0 && !p2_2_1_0 U p1_2_1_0"
-            level_three["p200"] = "<> (p3_2_1_0 && p3_2_1_0 U p3_1_1_0)"
-            level_three['p300'] = "<> p1_2_1_0"
+            level_three["p200"] = "<> (p3_2_1_1 && p3_2_1_1 U p3_1_1_1)"
+            level_three['p300'] = "<> p1_2_1_1"
             hierarchy.append(level_three)
 
         return hierarchy
