@@ -241,7 +241,7 @@ def mapp(workspace, acpt_run, robot_waypoint, robot_time, show=False):
         horizon = next_time - past_time
         robot_init = {robot: path[-1] for robot, path in robot_path.items()}
         freq = 1
-        for T in range(horizon, horizon + 100, 1):
+        for T in range(horizon, horizon + 100, 2):
             mapp_paths = multi_agent_path_planning(workspace, T, robot_team_initial_target, robot_move, neg_clause,
                                                     robot_init, show)
             if mapp_paths:
@@ -254,7 +254,7 @@ def mapp(workspace, acpt_run, robot_waypoint, robot_time, show=False):
                 break
             else:
                 freq += 1
-                if freq > 10:
+                if freq > 40:
                     exit()
 
         # update key time points for each robot

@@ -10,6 +10,7 @@ import random
 import sys
 import itertools
 import pickle
+import copy
 
 
 class Workspace(object):
@@ -21,13 +22,13 @@ class Workspace(object):
         # self.length = int(sys.argv[1])
         # self.width = int(sys.argv[1])
         # n = int(sys.argv[2])
-        self.length = 10 # 9   # length
-        self.width = 10 # 9   # width
+        self.length = 15 # 9   # length
+        self.width = 40 # 9   # width
         # n = 4
-        self.type_num = {1: 1, 2: 1, 3: 1}   # single-task robot
+        self.type_num = {1: 2, 2: 2, 3: 2}   # single-task robot
         self.workspace = (self.length, self.width)
-        self.num_of_regions = 10
-        self.num_of_obstacles = 10
+        self.num_of_regions = 8
+        self.num_of_obstacles = 6
         self.occupied = []
         self.regions = {'p{0}'.format(i): j for i, j in enumerate(self.allocate_region_dars())}
         self.obstacles = {'o{0}'.format(i+1): j for i, j in enumerate(self.allocate_obstacle_dars())}
@@ -138,7 +139,7 @@ class Workspace(object):
         plt.rc('text', usetex=True)
         plt.rc('font', family='serif')
         plt.gca().set_aspect('equal', adjustable='box')
-        plt.grid(b=True, which='major', color='k', linestyle='--')
+        plt.grid(which='major', color='k', linestyle='--')
         for key in obj:
             color = 'b' if obj_label != 'region' else 'c'
             for grid in obj[key]:
@@ -178,46 +179,71 @@ class Workspace(object):
             plt.savefig('img/path.png', bbox_inches='tight', dpi=600)
 
     def allocate_region_dars(self):
-        # (x, y) --> (y-1, 30-x)
-        # ijrr
-        # # small workspace
-        regions = []
-        # TRO version 1
-        # regions.append(list(itertools.product(range(6, 9), range(0, 2))))  # l1
-        # regions.append(list(itertools.product(range(7, 9), range(5, 8))) + [(8, 4)])  # l2
-        # regions.append(list(itertools.product(range(0, 3), range(0, 4))))  # l3
-        # regions.append(list(itertools.product(range(0, 4), range(6, 7))))  # l4
-        # regions.append(list(itertools.product(range(4, 6), range(8, 9))))  # l5
-        # TRO version 2
-        regions.append(list(itertools.product(range(8, 10), range(0, 2))))  # l1
-        regions.append(list(itertools.product(range(8, 10), range(9, 10))))  # l2
-        regions.append(list(itertools.product(range(7, 10), range(5, 8))))  # l3
-        regions.append(list(itertools.product(range(0, 3), range(3, 5))))  # l4
-        regions.append(list(itertools.product(range(0, 2), range(6, 7))))  # l5
-        regions.append(list(itertools.product(range(4, 6), range(9, 10))))  # l6
-
-
+        regions = []        
+        # ICRA
+        shelf_width_x = 2
+        shelf_length_y = 5
+        start_charging_station_x = 2
+        charging_station_width_x = 4
+        charging_station_length_y = 6
+        first_shelf_to_charging_station_x = 2
+        first_shelf_to_charging_station_y = 2
+        inter_shelf_x = 3
+        depot_to_last_shelf_x = 2
+        depot_width_x = 4
+        depot_length_y = 4
+        
+        # p0 dock
+        # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
+        # p7 packing area
+        n_shelf = 6
+        regions.append(list(itertools.product(range(start_charging_station_x, start_charging_station_x + charging_station_width_x), range(0, charging_station_length_y)))) 
+        for i in range(n_shelf):
+            if i == 4:
+                regions.append(list(itertools.product([charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                        i * (shelf_width_x + inter_shelf_x) - 1], 
+                                                  range(charging_station_length_y + first_shelf_to_charging_station_y,
+                                                        charging_station_length_y + first_shelf_to_charging_station_y + shelf_length_y))))
+            else:
+                regions.append(list(itertools.product([charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                        i * (shelf_width_x + inter_shelf_x) - 1,
+                                                        charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                        i * (shelf_width_x + inter_shelf_x) + shelf_width_x], 
+                                                  range(charging_station_length_y + first_shelf_to_charging_station_y,
+                                                        charging_station_length_y + first_shelf_to_charging_station_y + shelf_length_y))))
+            
+            
+        regions.append(list(itertools.product(range(charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                    (n_shelf - 1) * (shelf_width_x + inter_shelf_x) + shelf_width_x + depot_to_last_shelf_x,
+                                                        charging_station_width_x + first_shelf_to_charging_station_x +
+                                                    (n_shelf - 1) * (shelf_width_x + inter_shelf_x) + shelf_width_x + depot_to_last_shelf_x + depot_width_x),
+                                            range(0, depot_length_y))))
 
         return regions
 
     def allocate_obstacle_dars(self):
 
-        # small workspace
         obstacles = []
-        # obstacles.append(list(itertools.product(range(3, 4), range(2, 6))) + [(4, 2)])  # o1
-        # TRO version 1
-        # obstacles.append(list(itertools.product(range(4, 5), range(0, 6))))  # o1
-        # TRO version 2
-        obstacles.append(list(itertools.product(range(0, 3), range(1, 2))))  # o1
-        obstacles.append(list(itertools.product(range(4, 5), range(1, 8))) + [(3,6), (5,2), (5,3)])  # o2
-        obstacles.append(list(itertools.product(range(7, 8), range(0, 2))))  # o3
-        obstacles.append(list(itertools.product(range(8, 10), range(3, 4))))  # o4
-        obstacles.append(list(itertools.product(range(6, 7), range(5, 8))))  # o5
-        obstacles.append(list(itertools.product(range(8, 10), range(8, 9))))  # o6
-        obstacles.append(list(itertools.product(range(6, 7), range(9, 10))))  # o7
-        obstacles.append(list(itertools.product(range(2, 3), range(8, 10))))  # o8
-        obstacles.append(list(itertools.product(range(0, 1), range(7, 8))))  # o9
-
+        # ICRA
+        shelf_width_x = 2
+        shelf_length_y = 5
+        charging_station_width_x = 4
+        charging_station_length_y = 6
+        first_shelf_to_charging_station_x = 2
+        first_shelf_to_charging_station_y = 2
+        inter_shelf_x = 3
+        
+        # p0 charging station
+        # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics
+        n_shelf = 6
+        for i in range(n_shelf):
+            obstacles.append(list(itertools.product(range(charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                        i * (shelf_width_x + inter_shelf_x),
+                                                        charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                        i * (shelf_width_x + inter_shelf_x) + shelf_width_x), 
+                                                  range(charging_station_length_y + first_shelf_to_charging_station_y,
+                                                        charging_station_length_y + first_shelf_to_charging_station_y + shelf_length_y))))
+            
 
         return obstacles
 
@@ -232,15 +258,16 @@ class Workspace(object):
 
     def initialize(self):
         type_robot_location = dict()
-        # x0 = list(itertools.product(range(5, 9), range(9)))
-        region = []
-        obs = []
-        for k in range(1, 10):
-            obs += self.obstacles['o'+str(k)]
-        for k in range(0, 6):
-            region += self.regions['p'+str(k)]
-        x0 = [(i, j) for i in range(10) for j in range(10)
-              if (i, j) not in obs and (i, j) not in region]
+        # region = []
+        # obs = []
+        # if self.obstacles.keys():
+        #     for k in range(1, 10):
+        #         obs += self.obstacles['o'+str(k)]
+        # for k in range(0, 6):
+        #     region += self.regions['p'+str(k)]
+        # x0 = [(i, j) for i in range(10) for j in range(10)
+        #       if (i, j) not in obs and (i, j) not in region]
+        x0 = copy.deepcopy(self.regions['p0'])
         # random.seed(1)
         for robot_type in self.type_num.keys():
             for num in range(self.type_num[robot_type]):

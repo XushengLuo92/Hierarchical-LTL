@@ -6,13 +6,13 @@ import networkx as nx
 from task import Task
 from buchi_parse import Buchi
 from datetime import datetime
-from workspace import Workspace
+from workspace_supermarket import Workspace
 from specification import Specification
 import weighted_ts
 import milp
 from GMAPP import mapp
-from vis import plot_workspace
-from vis import vis
+from vis_supermarket import plot_workspace
+from vis_supermarket import vis
 from termcolor import colored, cprint
 from sympy.logic.boolalg import to_dnf
 from collections import namedtuple
@@ -522,6 +522,11 @@ def main():
     # ----------------- task -----------------
     task_specification = Specification().get_task_specification(args.task, args.case)
     workspace = Workspace()
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # plot_workspace(workspace, ax)
+    # # workspace.plot_workspace()
+    # plt.savefig('./data/workspace.png') 
     # ----------------- individual partial order set  -----------------
     task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification, workspace)
     print_subtask_info(task_hierarchy, primitive_subtasks, composite_subtasks)
