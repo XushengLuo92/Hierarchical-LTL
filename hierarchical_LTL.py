@@ -398,13 +398,17 @@ def generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifi
     reduced_task_network.add_edges_from((u, v, task_network.edges[u, v]) for u, v in reduced_task_network.edges)
     return reduced_task_network
 
-def vis_graph(graph, att, title):
+def vis_graph(graph, att, title, latex=False):
     # write dot file to use with graphviz
     # run "dot -Tpng test.dot >test.png"
     nx.nx_agraph.write_dot(graph, title+'.dot')
-    # Run a Linux command
-    command = "dot -Tpng {0}.dot >{0}.png".format(title)
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    if not latex:
+        # Run a Linux command
+        command = "dot -Tpng {0}.dot >{0}.png".format(title)
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    else:
+        command = "dot2tex {0}.dot --preproc > {0}.tex".format(title)
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
     # same layout using matplotlib with no labels
     # labels = nx.get_node_attributes(graph, att)     
     # pos_nodes = nx.spring_layout(graph)
@@ -502,6 +506,30 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
             current_exec_tasks.remove(finished_task)
             current_exec_robots.remove(task_element2type_robot[finished_task])
 
+def generate_latex_expr(label):
+    # p0 dock
+    # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
+    # p7 packing area
+    sym2region = {'p0': 'dock', 'p1': 'groc', 'p2': 'heal', 'p3': 'outd', 'p4': 'pet',
+                  'p5': 'furn', 'p6': 'elec', 'p7': 'pack'}
+    # Helper function to format each element as a string
+    def format_element(element):
+        process_id, values = element[0], [element[1], element[3]]
+        values_str = ', '.join(str(val) for val in values)
+        return f"\\\\pi_{{\\\\text{{{sym2region[process_id]}}}}}^{{{values_str}}}"
+
+    # Iterate through the list and create formatted strings for each sublist
+    formatted_sublists = []
+    for sublist in label:
+        formatted_elements = [format_element(element) for element in sublist]
+        formatted_sublists.append(" & ".join(formatted_elements))
+
+    # Join the formatted sublists with '||' to get the final expression
+    final_expression = " | ".join(formatted_sublists)
+    return final_expression
+    # return '$a$'
+
+
 def create_parser():
     """ create parser
 
@@ -512,6 +540,7 @@ def create_parser():
     parser.add_argument('--task', default="man", type=str)
     parser.add_argument('--case', default=0, type=int)
     parser.add_argument('--vis', action='store_true', help='Enable visualization')
+    parser.add_argument('--dot', action='store_true', help='Enable dot graph')
 
     return parser
   
@@ -536,7 +565,13 @@ def main():
     print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
     reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
     reduced_task_network.graph["task"] = args.task
-    vis_graph(reduced_task_network, 'label', 'data/task_network')
+    if args.dot:
+        semantic_reduced_task_network = reduced_task_network.copy()
+        for node in semantic_reduced_task_network.nodes():
+            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'])
+        vis_graph(semantic_reduced_task_network, 'label', 'data/task_network', True)
+    else:
+        vis_graph(reduced_task_network, 'label', 'data/task_network', True)
     # ----------------- build routing-like graph -----------------
     ts, task_element_component_clause_literal_node, init_type_robot_node, \
         strict_larger_task_element, incomparable_task_element, larger_task_element, pairwise_or_relation_composite_subtasks = \
@@ -553,8 +588,7 @@ def main():
                                                 strict_larger_task_element,
                                                 incomparable_task_element,
                                                 larger_task_element,
-                                                maximal_task_element, robot2teccl, composite_subtasks, 
-                                                pairwise_or_relation_composite_subtasks, show=args.vis)
+                                                maximal_task_element, robot2teccl, composite_subtasks, show=args.vis)
 
     if not robot_waypoint:
         return
