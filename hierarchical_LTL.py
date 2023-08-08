@@ -10,7 +10,7 @@ from workspace_supermarket import Workspace
 from specification import Specification
 import weighted_ts
 import milp
-from GMAPP import mapp
+from GMAPP import mapp, compute_path_cost
 from vis_supermarket import plot_workspace
 from vis_supermarket import vis
 from termcolor import colored, cprint
@@ -135,11 +135,11 @@ def get_task_seq(target_task, task_hierarchy, composite_subtasks):
     return task_seq
         
      
-def produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks):
+def produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks, vis=False):
     # get partial order within single composite task
-    primitive_subtasks_partial_order = produce_global_poset_within_composite_subtask(task_hierarchy, primitive_subtasks)
+    primitive_subtasks_partial_order = produce_global_poset_within_composite_subtask(task_hierarchy, primitive_subtasks, vis)
     # get partial order between composite tasks
-    primitive_subtasks_partial_order.extend(produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_subtasks, primitive_subtasks))
+    primitive_subtasks_partial_order.extend(produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_subtasks, primitive_subtasks, vis))
     # # get partial order from composite subtask with primitive subtask in the first level
     # primitive_subtasks_partial_order.extend(produce_global_poset_from_composite_and_primitive_subtasks(task_hierarchy, composite_subtasks, primitive_subtasks))
     primitive_subtasks_with_identifier = []
@@ -148,7 +148,7 @@ def produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks)
             primitive_subtasks_with_identifier.append(PrimitiveSubtaskId(parent=task, element=primitive_subtask))
     return primitive_subtasks_with_identifier, primitive_subtasks_partial_order
 
-def produce_global_poset_within_composite_subtask(task_hierarchy, primitive_subtasks):
+def produce_global_poset_within_composite_subtask(task_hierarchy, primitive_subtasks, vis=False):
     primitive_subtasks_partial_order = []
     for (task, hierarchy) in task_hierarchy.items():
         buchi_graph = hierarchy.buchi_graph
@@ -164,22 +164,25 @@ def produce_global_poset_within_composite_subtask(task_hierarchy, primitive_subt
                 checked_primitive_pairs.append((ele_a, ele_b))
                 if (ele_a, ele_b) in poset_relation:
                     primitive_subtasks_partial_order.append((PrimitiveSubtaskId(parent=task, element=ele_a), PrimitiveSubtaskId(parent=task, element=ele_b)))
-                    print("within composite subtask {0} element: {1} -> {2} label: {3} -> {4}".\
-                        format(task, ele_a, ele_b, buchi_graph.edges[element2edge[ele_a]]["label"],\
-                            buchi_graph.edges[element2edge[ele_b]]["label"]))
+                    if vis:
+                        print("within composite subtask {0} element: {1} -> {2} label: {3} -> {4}".\
+                            format(task, ele_a, ele_b, buchi_graph.edges[element2edge[ele_a]]["label"],\
+                                buchi_graph.edges[element2edge[ele_b]]["label"]))
                 elif (ele_a, ele_b) in poset_relation:
                     primitive_subtasks_partial_order.append((PrimitiveSubtaskId(parent=task, element=ele_b), PrimitiveSubtaskId(parent=task, element=ele_a)))
-                    print("within composite subtask {0} element: {1} -> {2} label: {3} -> {4}".\
-                        format(task, ele_b, ele_a, buchi_graph.edges[element2edge[ele_b]]["label"],\
-                            buchi_graph.edges[element2edge[ele_a]]["label"]))
+                    if vis:
+                        print("within composite subtask {0} element: {1} -> {2} label: {3} -> {4}".\
+                            format(task, ele_b, ele_a, buchi_graph.edges[element2edge[ele_b]]["label"],\
+                                buchi_graph.edges[element2edge[ele_a]]["label"]))
                 else:
-                    print("within composite subtask {0} element: {1} || {2} label: {3} || {4}".\
-                        format(task, ele_a, ele_b, buchi_graph.edges[element2edge[ele_a]]["label"],\
-                            buchi_graph.edges[element2edge[ele_b]]["label"]))
+                    if vis:
+                        print("within composite subtask {0} element: {1} || {2} label: {3} || {4}".\
+                            format(task, ele_a, ele_b, buchi_graph.edges[element2edge[ele_a]]["label"],\
+                                buchi_graph.edges[element2edge[ele_b]]["label"]))
     return primitive_subtasks_partial_order
                 
     
-def produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_subtasks, primitive_subtasks):
+def produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_subtasks, primitive_subtasks, vis=False):
     # get the smallest common ancestor of any two composite subtasks
     Parents = namedtuple('Parents', ['parent_front', 'parent_back', 'common_parent'])
     composite_subtask_pair_with_parent = dict()
@@ -199,9 +202,10 @@ def produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_s
             composite_subtask_pair_with_parent[(task_a, task_b)] = Parents(parent_front=task_a_seq[task_a_parent_index-1],
                                                                            parent_back=task_b_seq[task_b_parent_index-1],
                                                                            common_parent=parent)
-    for (subtask_pair, parents) in composite_subtask_pair_with_parent.items():
-        print("subtask {0} {1}, parent {2} {3}, common {4}".format(subtask_pair[0], subtask_pair[1], \
-            parents.parent_front, parents.parent_back, parents.common_parent))
+    if vis:
+        for (subtask_pair, parents) in composite_subtask_pair_with_parent.items():
+            print("subtask {0} {1}, parent {2} {3}, common {4}".format(subtask_pair[0], subtask_pair[1], \
+                parents.parent_front, parents.parent_back, parents.common_parent))
     # get partial order based on composite tasks
     primitive_subtasks_partial_order = []
     for (subtask_pair, parents) in composite_subtask_pair_with_parent.items():
@@ -219,22 +223,25 @@ def produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_s
             if (parent_element_from_pair0, parent_element_from_pair1) in poset_relation:
                 primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=subtask_pair[0], element=pre), PrimitiveSubtaskId(parent=subtask_pair[1], element=suc)) \
                 for pre in primitive_subtasks[subtask_pair[0]].element_in_poset for suc in primitive_subtasks[subtask_pair[1]].element_in_poset])
-                print("[composite subtask {0} -> {1},  parent {2} {3} common {4}] parent element: {5} -> {6} parent label: {7} -> {8}".\
-                    format(subtask_pair[0], subtask_pair[1], parents.parent_front, parents.parent_back, parents.common_parent, \
-                        parent_element_from_pair0, parent_element_from_pair1, buchi_graph.edges[element2edge[parent_element_from_pair0]]["label"],\
-                        buchi_graph.edges[element2edge[parent_element_from_pair1]]["label"]))
+                if vis:
+                    print("[composite subtask {0} -> {1},  parent {2} {3} common {4}] parent element: {5} -> {6} parent label: {7} -> {8}".\
+                        format(subtask_pair[0], subtask_pair[1], parents.parent_front, parents.parent_back, parents.common_parent, \
+                            parent_element_from_pair0, parent_element_from_pair1, buchi_graph.edges[element2edge[parent_element_from_pair0]]["label"],\
+                            buchi_graph.edges[element2edge[parent_element_from_pair1]]["label"]))
             elif (parent_element_from_pair1, parent_element_from_pair0) in poset_relation:
                 primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=subtask_pair[1], element=pre), PrimitiveSubtaskId(parent=subtask_pair[0], element=suc)) \
                 for pre in primitive_subtasks[subtask_pair[1]].element_in_poset for suc in primitive_subtasks[subtask_pair[0]].element_in_poset])
-                print("[composite subtask {0} -> {1}, parent {2} {3} common {4}] parent element: {5} -> {6} parent label: {7} -> {8}".\
-                    format(subtask_pair[1], subtask_pair[0], parents.parent_back, parents.parent_front, parents.common_parent, \
-                        parent_element_from_pair1, parent_element_from_pair0, buchi_graph.edges[element2edge[parent_element_from_pair1]]["label"],\
-                        buchi_graph.edges[element2edge[parent_element_from_pair0]]["label"]))
+                if vis:
+                    print("[composite subtask {0} -> {1}, parent {2} {3} common {4}] parent element: {5} -> {6} parent label: {7} -> {8}".\
+                        format(subtask_pair[1], subtask_pair[0], parents.parent_back, parents.parent_front, parents.common_parent, \
+                            parent_element_from_pair1, parent_element_from_pair0, buchi_graph.edges[element2edge[parent_element_from_pair1]]["label"],\
+                            buchi_graph.edges[element2edge[parent_element_from_pair0]]["label"]))
             else:
-                print("[composite subtask {0} || {1}, parent {2} {3} common {4}] parent element: {5} || {6} parent label: {7} || {8}".\
-                    format(subtask_pair[0], subtask_pair[1], parents.parent_front, parents.parent_back, parents.common_parent,\
-                        parent_element_from_pair0, parent_element_from_pair1, buchi_graph.edges[element2edge[parent_element_from_pair0]]["label"],\
-                        buchi_graph.edges[element2edge[parent_element_from_pair1]]["label"]))
+                if vis:
+                    print("[composite subtask {0} || {1}, parent {2} {3} common {4}] parent element: {5} || {6} parent label: {7} || {8}".\
+                        format(subtask_pair[0], subtask_pair[1], parents.parent_front, parents.parent_back, parents.common_parent,\
+                            parent_element_from_pair0, parent_element_from_pair1, buchi_graph.edges[element2edge[parent_element_from_pair0]]["label"],\
+                            buchi_graph.edges[element2edge[parent_element_from_pair1]]["label"]))
         # if one task is the parent of the other task, then got the primitive subtasks of parent and composite subtask of child
         else:
             child = subtask_pair[0]
@@ -248,25 +255,28 @@ def produce_global_poset_from_composite_subtask_pair(task_hierarchy, composite_s
                 if (primitive_element, composite_element) in poset_relation:
                     primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=parents.common_parent, element=primitive_element), PrimitiveSubtaskId(parent=child, element=suc)) \
                     for suc in primitive_subtasks[child].element_in_poset])
-                    print("[comp subtask {0}, parent {1} common {2}] parent element: {3} -> {4} parent label: {5} -> {6}".\
-                        format(child, parent_of_child, parents.common_parent, primitive_element, composite_element, \
-                            buchi_graph.edges[element2edge[primitive_element]]["label"],\
-                            buchi_graph.edges[element2edge[composite_element]]["label"]))
+                    if vis:
+                        print("[comp subtask {0}, parent {1} common {2}] parent element: {3} -> {4} parent label: {5} -> {6}".\
+                            format(child, parent_of_child, parents.common_parent, primitive_element, composite_element, \
+                                buchi_graph.edges[element2edge[primitive_element]]["label"],\
+                                buchi_graph.edges[element2edge[composite_element]]["label"]))
                 elif (composite_element, primitive_element) in poset_relation:
                     primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=child, element=pre), PrimitiveSubtaskId(parent=parents.common_parent, element=primitive_element)) \
                     for pre in primitive_subtasks[child].element_in_poset])
-                    print("[comp subtask {0}, parent {1} common {2}] parent element: {3} -> {4} parent label: {5} -> {6}".\
-                        format(child, parent_of_child, parents.common_parent, composite_element, primitive_element, \
-                            buchi_graph.edges[element2edge[composite_element]]["label"],\
-                            buchi_graph.edges[element2edge[primitive_element]]["label"]))
+                    if vis:
+                        print("[comp subtask {0}, parent {1} common {2}] parent element: {3} -> {4} parent label: {5} -> {6}".\
+                            format(child, parent_of_child, parents.common_parent, composite_element, primitive_element, \
+                                buchi_graph.edges[element2edge[composite_element]]["label"],\
+                                buchi_graph.edges[element2edge[primitive_element]]["label"]))
                 else:
-                    print("[comp subtask {0}, parent {1} common {2}] parent element: {3} || {4} parent label: {5} || {6}".\
-                        format(child, parent_of_child, parents.common_parent, primitive_element, composite_element, \
-                            buchi_graph.edges[element2edge[primitive_element]]["label"],\
-                            buchi_graph.edges[element2edge[composite_element]]["label"]))
+                    if vis:
+                        print("[comp subtask {0}, parent {1} common {2}] parent element: {3} || {4} parent label: {5} || {6}".\
+                            format(child, parent_of_child, parents.common_parent, primitive_element, composite_element, \
+                                buchi_graph.edges[element2edge[primitive_element]]["label"],\
+                                buchi_graph.edges[element2edge[composite_element]]["label"]))
     return primitive_subtasks_partial_order
 
-def produce_global_poset_from_composite_and_primitive_subtasks(task_hierarchy, composite_subtasks, primitive_subtasks):
+def produce_global_poset_from_composite_and_primitive_subtasks(task_hierarchy, composite_subtasks, primitive_subtasks, vis=False):
     # get the partial order betwen two primitive subtasks in the first level
     primitive_subtasks_partial_order = []
     first_level_task = "l0"
@@ -285,18 +295,21 @@ def produce_global_poset_from_composite_and_primitive_subtasks(task_hierarchy, c
             # all child tasks of a task inherit the parital order w.r.t. all child tasks of a nother task
             if (primitive_task_a, primitive_task_b) in poset_relation:
                 primitive_subtasks_partial_order.append((PrimitiveSubtaskId(parent=first_level_task, element=primitive_task_a), PrimitiveSubtaskId(parent=first_level_task, element=primitive_task_b)))
-                print("[primitive: parent {0}] element: {1} -> {2} label: {3} -> {4}".\
-                    format(first_level_task, primitive_task_a, primitive_task_b, buchi_graph.edges[element2edge[primitive_task_a]]["label"],\
-                        buchi_graph.edges[element2edge[primitive_task_b]]["label"]))
+                if vis:
+                    print("[primitive: parent {0}] element: {1} -> {2} label: {3} -> {4}".\
+                        format(first_level_task, primitive_task_a, primitive_task_b, buchi_graph.edges[element2edge[primitive_task_a]]["label"],\
+                            buchi_graph.edges[element2edge[primitive_task_b]]["label"]))
             elif (primitive_task_b, primitive_task_a) in poset_relation:
                 primitive_subtasks_partial_order.append((PrimitiveSubtaskId(parent=first_level_task, element=primitive_task_b), PrimitiveSubtaskId(parent=first_level_task, element=primitive_task_a)))
-                print("[primitive: parent {0}] element: {1} -> {2} label: {3} -> {4}".\
-                    format(first_level_task, primitive_task_b, primitive_task_a, buchi_graph.edges[element2edge[primitive_task_b]]["label"],\
-                        buchi_graph.edges[element2edge[primitive_task_a]]["label"]))
+                if vis:
+                    print("[primitive: parent {0}] element: {1} -> {2} label: {3} -> {4}".\
+                        format(first_level_task, primitive_task_b, primitive_task_a, buchi_graph.edges[element2edge[primitive_task_b]]["label"],\
+                            buchi_graph.edges[element2edge[primitive_task_a]]["label"]))
             else:
-                print("[primitive: parent {0}] element: {1} || {2} label: {3} -> {4}".\
-                    format(first_level_task, primitive_task_a, primitive_task_b, buchi_graph.edges[element2edge[primitive_task_a]]["label"],\
-                        buchi_graph.edges[element2edge[primitive_task_b]]["label"]))
+                if vis:
+                    print("[primitive: parent {0}] element: {1} || {2} label: {3} -> {4}".\
+                        format(first_level_task, primitive_task_a, primitive_task_b, buchi_graph.edges[element2edge[primitive_task_a]]["label"],\
+                            buchi_graph.edges[element2edge[primitive_task_b]]["label"]))
     # get partial order based on composite tasks
     for primitive_element in primitive_subtasks[first_level_task].element_in_poset:
         for composite_task in task_hierarchy.keys():
@@ -310,19 +323,22 @@ def produce_global_poset_from_composite_and_primitive_subtasks(task_hierarchy, c
             if (primitive_element, composite_element) in poset_relation:
                 primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=first_level_task, element=primitive_element), PrimitiveSubtaskId(parent=composite_task, element=suc)) \
                  for suc in primitive_subtasks[composite_task].element_in_poset])
-                print("[pre_comp subtask {0}, {1}, parent {2}] element: {3} -> {4} label: {5} -> {6}".\
-                    format(primitive_element, composite_task, first_level_task, primitive_element, composite_element, buchi_graph.edges[element2edge[primitive_element]]["label"],\
-                        buchi_graph.edges[element2edge[composite_element]]["label"]))
+                if vis:
+                    print("[pre_comp subtask {0}, {1}, parent {2}] element: {3} -> {4} label: {5} -> {6}".\
+                        format(primitive_element, composite_task, first_level_task, primitive_element, composite_element, buchi_graph.edges[element2edge[primitive_element]]["label"],\
+                            buchi_graph.edges[element2edge[composite_element]]["label"]))
             elif (composite_element, primitive_element) in poset_relation:
                 primitive_subtasks_partial_order.extend([(PrimitiveSubtaskId(parent=composite_task, element=pre), PrimitiveSubtaskId(parent=first_level_task, element=primitive_element)) \
                  for pre in primitive_subtasks[composite_task].element_in_poset])
-                print("[comp_pre subtask {0}, {1}, parent {2}] element: {3} -> {4} label: {5} -> {6}".\
-                    format(composite_task, primitive_element, first_level_task, composite_element, primitive_element, buchi_graph.edges[element2edge[composite_element]]["label"],\
-                        buchi_graph.edges[element2edge[primitive_element]]["label"]))
+                if vis:
+                    print("[comp_pre subtask {0}, {1}, parent {2}] element: {3} -> {4} label: {5} -> {6}".\
+                        format(composite_task, primitive_element, first_level_task, composite_element, primitive_element, buchi_graph.edges[element2edge[composite_element]]["label"],\
+                            buchi_graph.edges[element2edge[primitive_element]]["label"]))
             else:
-                print("[pre_comp subtask {0}, {1}, parent {2}] element: {3} || {4} label: {5} -> {6}".\
-                    format(primitive_element, composite_task, first_level_task, primitive_element, composite_element, buchi_graph.edges[element2edge[primitive_element]]["label"],\
-                        buchi_graph.edges[element2edge[composite_element]]["label"]))
+                if vis:
+                    print("[pre_comp subtask {0}, {1}, parent {2}] element: {3} || {4} label: {5} -> {6}".\
+                        format(primitive_element, composite_task, first_level_task, primitive_element, composite_element, buchi_graph.edges[element2edge[primitive_element]]["label"],\
+                            buchi_graph.edges[element2edge[composite_element]]["label"]))
     
     return primitive_subtasks_partial_order
 
@@ -545,6 +561,7 @@ def create_parser():
     return parser
   
 def main():
+    start = datetime.now()
     parser = create_parser()
     args = parser.parse_known_args()[0]
 
@@ -558,11 +575,13 @@ def main():
     # plt.savefig('./data/workspace.png') 
     # ----------------- individual partial order set  -----------------
     task_hierarchy, primitive_subtasks, composite_subtasks = build_buchi_graph_and_poset(task_specification, workspace)
-    print_subtask_info(task_hierarchy, primitive_subtasks, composite_subtasks)
+    if args.vis:
+        print_subtask_info(task_hierarchy, primitive_subtasks, composite_subtasks)
     # ----------------- partial global order set -----------------
-    primitive_subtasks_with_identifier, primitive_subtasks_partial_order = produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks)
-    print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
-    print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
+    primitive_subtasks_with_identifier, primitive_subtasks_partial_order = produce_global_poset(task_hierarchy, composite_subtasks, primitive_subtasks, args.vis)
+    if args.vis:
+        print_primitive_subtasks_with_identifer(primitive_subtasks_with_identifier, task_hierarchy)
+        print_global_partial_order(primitive_subtasks_partial_order, task_hierarchy)
     reduced_task_network = generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifier, primitive_subtasks_partial_order)
     reduced_task_network.graph["task"] = args.task
     if args.dot:
@@ -618,7 +637,9 @@ def main():
     else:
         # --------------------- GMRPP -------------------------
         robot_path = mapp(workspace, acpt_run, robot_waypoint_axis, robot_time_axis, args.vis)
-
-        vis(workspace, robot_path, {robot: [len(path)] * 2 for robot, path in robot_path.items()}, [])
+        cost = compute_path_cost(robot_path)
+        print('{1}, {0}\n'.format((datetime.now() - start).total_seconds(), cost))
+        if args.vis:
+            vis(workspace, robot_path, {robot: [len(path)] * 2 for robot, path in robot_path.items()}, [])
 if __builtins__:
     main()

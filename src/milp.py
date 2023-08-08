@@ -165,9 +165,9 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
     #     dict())
     acpt_run = run_with_t_edge(task_hierarchy, time_task_element_axis, {'x': x_vars, 'c': c_vars, 't': t_edge_vars}, 
                                task_element_component_clause_literal_node, ts, type_num, dict(), show=show)
-         
-    for (task, var) in t_edge_vars.items():
-        print("{0}: {1}".format(task, var.x))
+    if show:
+        for (task, var) in t_edge_vars.items():
+            print("{0}: {1}".format(task, var.x))
     return robot_waypoint, robot_time, id2robots, robot_label, robot_waypoint_axis, robot_time_axis, \
            time_task_element_axis, acpt_run
 
@@ -263,7 +263,7 @@ def initial_constraints(m, x_vars, t_vars, ts, init_type_robot_node, type_num):
 def task_constraints(m, task_vars, composite_subtasks):
     for (_, or_subtasks) in composite_subtasks.items():
         for subtasks in or_subtasks.or_composite_subtasks:
-            print(subtasks)
+            # print(subtasks)
             m.addConstr(quicksum([task_vars[subtask] for subtask in subtasks]) == 1)
     for task in composite_subtasks.keys():
         exist_or_relation = False        
@@ -275,7 +275,7 @@ def task_constraints(m, task_vars, composite_subtasks):
             if exist_or_relation:
                 break
         if not exist_or_relation:
-            print(task)
+            # print(task)
             m.addConstr(task_vars[task] == 1)
             
     m.update()
