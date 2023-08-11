@@ -14,7 +14,7 @@ class RobotPath:
         self.i_x = np.asarray(x, dtype=float)
         self.color = np.asarray(color, dtype=float)
         self.x = self.i_x.copy()
-        self.elapse_time = -4  # adjust this number to display time recorder from 0s
+        self.elapse_time = -3  # adjust this number to display time recorder from 0s
         self.dt = 1
         self.workspace = workspace
         self.ap = ap

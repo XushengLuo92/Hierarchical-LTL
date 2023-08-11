@@ -418,6 +418,9 @@ def vis_graph(graph, att, title, latex=False):
     # write dot file to use with graphviz
     # run "dot -Tpng test.dot >test.png"
     nx.nx_agraph.write_dot(graph, title+'.dot')
+    # add the following the generated dot file
+    # rankdir=LR;
+	# node [texmode="math"];
     if not latex:
         # Run a Linux command
         command = "dot -Tpng {0}.dot >{0}.png".format(title)
@@ -505,29 +508,56 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
 
             current_exec_robots.append(type_robot)
             current_exec_tasks.append(candidate_tasks_for_robot[task_index])
+            
+            # generate message 
+            is_human = type_robot == (1, 1)
+            task_id = reduced_task_network.nodes[current_exec_tasks[-1]]['label'][0][0][0]
+            print("is human {0}, task id {1}".format(is_human, task_id))
         # remove current subtasks
         executing_task_network.remove_nodes_from(current_exec_tasks)
         print("current_exec_robots: ", current_exec_robots)
         for task in current_exec_tasks:
-            print("current_exec_tasks: ", task, reduced_task_network.nodes[task]['label'])
+            print("current_exec_tasks: ", task, reduced_task_network.nodes[task]['label'], 
+                  reduced_task_network.nodes[task]['label'][0][0][0])
         
-        if finished_task_str == invalid_str:
+        # if finished_task_str == invalid_str:
+        #     finished_task_str = input("Finished task: ")
+        #     finished_task_split = finished_task_str.split()     
+        #     finished_task_str = invalid_str
+        #     # update when some tasks are finished
+        #     finished_task = (finished_task_split[0], int(finished_task_split[1]))
+        #     finished_tasks.append(finished_task)
+        #     print("finished_task: ", finished_task)
+        #     current_exec_tasks.remove(finished_task)
+        #     current_exec_robots.remove(task_element2type_robot[finished_task])
+            
+        # (1, 1) human (1, 0) robot
+        while finished_task_str == invalid_str:
             finished_task_str = input("Finished task: ")
-            finished_task_split = finished_task_str.split()     
-            finished_task_str = invalid_str
-            # update when some tasks are finished
-            finished_task = (finished_task_split[0], int(finished_task_split[1]))
-            finished_tasks.append(finished_task)
-            print("finished_task: ", finished_task)
-            current_exec_tasks.remove(finished_task)
-            current_exec_robots.remove(task_element2type_robot[finished_task])
-
-def generate_latex_expr(label):
-    # p0 dock
-    # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
-    # p7 packing area
-    sym2region = {'p0': 'dock', 'p1': 'groc', 'p2': 'heal', 'p3': 'outd', 'p4': 'pet',
-                  'p5': 'furn', 'p6': 'elec', 'p7': 'pack'}
+            if finished_task_str != '0' and finished_task_str != '1':
+                finished_task_str = invalid_str
+        is_human = int(finished_task_str) == 1
+        finished_task_str = invalid_str
+        if is_human:
+            task_idx = current_exec_robots.index((1,1))
+        else:
+            task_idx = current_exec_robots.index((1,0))
+        print("finished_task: ", current_exec_tasks[task_idx])
+        current_exec_tasks.pop(task_idx)
+        current_exec_robots.pop(task_idx)
+            
+def generate_latex_expr(label, task):
+    if task == "nav":
+        # p0 dock
+        # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
+        # p7 packing area
+        sym2region = {'p0': 'dock', 'p1': 'groc', 'p2': 'heal', 'p3': 'outd', 'p4': 'pet',
+                    'p5': 'furn', 'p6': 'elec', 'p7': 'pack'}
+    elif task == "man":
+        # p1 | p2 .
+        # p3 _ p4 | p5 _ p6 - p7 | p8 _ p9 ' p10 | p11 _
+        sym2region = {'p1': 'P', 'p2': 'P', 'p3': 'I', 'p4': 'I', 'p5': 'I',
+                    'p6': 'C', 'p7': 'C', 'p8': 'C', 'p9': 'L', 'p10': 'L', 'p11': 'L'}
     # Helper function to format each element as a string
     def format_element(element):
         process_id, values = element[0], [element[1], element[3]]
@@ -587,7 +617,7 @@ def main():
     if args.dot:
         semantic_reduced_task_network = reduced_task_network.copy()
         for node in semantic_reduced_task_network.nodes():
-            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'])
+            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'], args.task)
         vis_graph(semantic_reduced_task_network, 'label', 'data/task_network', True)
     else:
         vis_graph(reduced_task_network, 'label', 'data/task_network', True)
