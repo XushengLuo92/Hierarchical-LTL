@@ -54,7 +54,7 @@
   </include> -->
 
   <!-- Set the robot urdf on the parameter server -->
-  <param name="robot_description" textfile="/home/xusj/Documents/0LAB/LTL/src/moveit_human_config/config/humanSubject01_48dof.urdf" />
+  <param name="robot_description" textfile="$(find moveit_human_config)/config/humanSubject01_48dof.urdf" />
 
   <!-- Unpause the simulation after loading the robot model -->
   <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />

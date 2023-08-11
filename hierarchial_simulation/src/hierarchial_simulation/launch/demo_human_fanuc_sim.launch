@@ -20,7 +20,7 @@
   <group ns="/human_gazebo">
     <arg name = "human" default="human"/>
     <arg name="model" value="human_gazebo"/>
-    <arg name="world_pose" value="-x 0.7 -y 0.3 -z 0.1 -R 0 -P 0 -Y 2.7" doc="Pose to spawn the robot at"/>
+    <arg name="world_pose" value="-x 0.3 -y 0.3 -z 0.1 -R 0 -P 0 -Y 2.7" doc="Pose to spawn the robot at"/>
     <arg name="initial_joint_positions" value="
         -J jLeftAnkle_roty 0.541
         -J jLeftAnkle_rotz -0.2508

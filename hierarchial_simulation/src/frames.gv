@@ -1,0 +1,18 @@
+digraph G {
+"world" -> "base"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1448.622 sec old)\nBuffer length: 0.000 sec\n"];
+"base" -> "base_link"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1448.622 sec old)\nBuffer length: 0.000 sec\n"];
+"link_camera" -> "link_camera_origin"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1448.622 sec old)\nBuffer length: 0.000 sec\n"];
+"link_tool" -> "link_camera"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1448.622 sec old)\nBuffer length: 0.000 sec\n"];
+"link_6" -> "fts"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 1448.622 sec old)\nBuffer length: 0.000 sec\n"];
+"link_5" -> "link_6"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 50.362 Hz\nMost recent transform: 1448.602 ( 0.020 sec old)\nBuffer length: 2.760 sec\n"];
+"fts" -> "link_tool"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 50.362 Hz\nMost recent transform: 1448.602 ( 0.020 sec old)\nBuffer length: 2.760 sec\n"];
+"base_link" -> "link_1"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 50.362 Hz\nMost recent transform: 1448.602 ( 0.020 sec old)\nBuffer length: 2.760 sec\n"];
+"link_1" -> "link_2"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 50.362 Hz\nMost recent transform: 1448.602 ( 0.020 sec old)\nBuffer length: 2.760 sec\n"];
+"link_2" -> "link_3"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 50.362 Hz\nMost recent transform: 1448.602 ( 0.020 sec old)\nBuffer length: 2.760 sec\n"];
+"link_3" -> "link_4"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 50.362 Hz\nMost recent transform: 1448.602 ( 0.020 sec old)\nBuffer length: 2.760 sec\n"];
+"link_4" -> "link_5"[label="Broadcaster: /fanuc_gazebo/robot_state_publisher\nAverage rate: 50.362 Hz\nMost recent transform: 1448.602 ( 0.020 sec old)\nBuffer length: 2.760 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1448.622"[ shape=plaintext ] ;
+ }->"world";
+}

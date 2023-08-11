@@ -74,7 +74,8 @@
       <arg name="load_robot_description" value="false" />
       <arg name="moveit_controller_manager" value="ros_control" />
     </include>
-
+    <node name="move_group_python_interface" pkg="moveit_human_config" type="human_controller.py" respawn="false" output="screen">
+    </node>
   </group >
 </launch>
 

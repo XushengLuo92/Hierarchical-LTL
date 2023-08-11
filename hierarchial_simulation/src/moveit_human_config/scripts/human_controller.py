@@ -89,7 +89,8 @@ def robot_action_service_handler_left_arm(req:robot_action):
 
     # `go()` returns a boolean indicating whether the planning and execution was successful.
     success = move_group.go(wait=True)
-    print('human_gazebo left_arm stop state',robot_human.get_current_state())
+    # move_group.
+    # print('human_gazebo left_arm stop state',robot_human.get_current_state())
     # Calling `stop()` ensures that there is no residual movement
     move_group.stop()
     move_group.clear_pose_targets()
