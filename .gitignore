@@ -4,7 +4,10 @@ ltl2ba
 data/
 src/__pycache__/
 .vscode/
-./devel/*
+devel/*
 logs/*
 build/*
+hierarchial_simulation/devel/*
+hierarchial_simulation/logs/*
+hierarchial_simulation/build/*
 .catkin_tools

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" name="human_model" >
+
+   <xacro:include filename="human_body.urdf.xacro" />
+   <xacro:include filename="human_arm.urdf.xacro" />
+   <xacro:include filename="human_leg.urdf.xacro" />
+   <xacro:include filename="props_global.urdf.xacro" />
+
+   <xacro:human_body />
+   <xacro:human_arm side="right" reflect="-1" boolside="0"/>
+   <xacro:human_arm side="left" reflect="1" boolside="1"/>
+   <xacro:human_leg side="right" reflect="-1"/>
+   <xacro:human_leg side="left" reflect="1"/>
+</robot>

@@ -1,0 +1,11 @@
+<launch>
+    <include file="$(find stmotion_controller)/simulation/launch/fanuc_gazebo.launch"/>
+    <include file="$(find stmotion_controller)/launch/controller_node.launch"/>
+    <node name="stmotion_controller_task_planning_cartesian" pkg="stmotion_controller" type="stmotion_controller_task_planning_cartesian" output="screen" required="true">
+        <param name="config_fname" value="$(find stmotion_controller)/config/user_config.json"/>
+        <param name="root_pwd" value="$(find stmotion_controller)/"/>
+        <remap from="/stmotion_controller_task_planning_cartesian/robot_state" to="/stmotion_controller_bringup/robot_state"/>
+        <remap from="/stmotion_controller_task_planning_cartesian/goal" to="/stmotion_controller_bringup/robot_goal"/>
+    </node>
+
+</launch>

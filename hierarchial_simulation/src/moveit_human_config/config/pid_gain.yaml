@@ -1,0 +1,194 @@
+gazebo_ros_control:
+  pid_gains:
+    jL5S1_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jL5S1_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jL4L3_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jL4L3_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jL1T12_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jL1T12_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jT9T8_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jT9T8_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jT9T8_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jT1C7_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jT1C7_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jT1C7_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jC1Head_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jC1Head_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightC7Shoulder_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightShoulder_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightShoulder_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightShoulder_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightElbow_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightElbow_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightWrist_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightWrist_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftC7Shoulder_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftShoulder_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftShoulder_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftShoulder_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftElbow_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftElbow_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftWrist_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftWrist_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightHip_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightHip_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightHip_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightKnee_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightKnee_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightAnkle_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightAnkle_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightAnkle_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jRightBallFoot_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftHip_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftHip_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftHip_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftKnee_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftKnee_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftAnkle_rotx:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftAnkle_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftAnkle_rotz:
+      p: 100.0
+      i: 0.01
+      d: 10.0
+    jLeftBallFoot_roty:
+      p: 100.0
+      i: 0.01
+      d: 10.0

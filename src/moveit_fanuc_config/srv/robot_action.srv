@@ -1,4 +1,0 @@
-geometry_msgs/PoseStamped des
-geometry_msgs/PoseStamped src
----
-bool finished

@@ -1,0 +1,12 @@
+<launch>
+    <node name="stmotion_controller_bringup" pkg="stmotion_controller" type="stmotion_controller_bringup" output="screen" required="true">
+        <param name="config_fname" value="$(find stmotion_controller)/config/user_config.json"/>
+        <param name="root_pwd" value="$(find stmotion_controller)/"/>
+        <remap from="/stmotion_controller_bringup/j1_pub" to="/fanuc_gazebo/joint1_position_controller/command"/>
+        <remap from="/stmotion_controller_bringup/j2_pub" to="/fanuc_gazebo/joint2_position_controller/command"/>
+        <remap from="/stmotion_controller_bringup/j3_pub" to="/fanuc_gazebo/joint3_position_controller/command"/>
+        <remap from="/stmotion_controller_bringup/j4_pub" to="/fanuc_gazebo/joint4_position_controller/command"/>
+        <remap from="/stmotion_controller_bringup/j5_pub" to="/fanuc_gazebo/joint5_position_controller/command"/>
+        <remap from="/stmotion_controller_bringup/j6_pub" to="/fanuc_gazebo/joint6_position_controller/command"/>
+    </node>
+</launch>

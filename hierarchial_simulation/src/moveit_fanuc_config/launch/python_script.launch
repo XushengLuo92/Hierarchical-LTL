@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="/fanuc_gazebo">
+    <arg name = "robot_arm" default="robot_arm"/>
+    <arg name="model" value="fanuc_gazebo"/>
+    <node pkg="moveit_fanuc_config" name="move_group_python_interface" type="fanuc_controller.py" output="screen">
+      <!-- set /foo/utterance/param_talker/topic_name -->
+      <param name="topic_name" value="chatter" />
+    </node>
+      </group>
+</launch>
