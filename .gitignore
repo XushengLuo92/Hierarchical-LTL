@@ -3,3 +3,8 @@ __pycache__/
 ltl2ba
 data/
 src/__pycache__/
+.vscode/
+./devel/*
+logs/*
+build/*
+.catkin_tools

@@ -1,0 +1,9 @@
+<launch>
+    <node name="stmotion_controller_task_planning" pkg="stmotion_controller" type="stmotion_controller_task_planning" output="screen" required="true">
+        <param name="config_fname" value="$(find stmotion_controller)/config/user_config.json"/>
+        <param name="root_pwd" value="$(find stmotion_controller)/"/>
+        <remap from="/stmotion_controller_task_planning/robot_state" to="/stmotion_controller_bringup/robot_state"/>
+        <remap from="/stmotion_controller_task_planning/goal" to="/stmotion_controller_bringup/robot_goal"/>
+    </node>
+
+</launch>

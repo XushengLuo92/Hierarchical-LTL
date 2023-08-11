@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="/human_gazebo">
+    <arg name = "human" default="human"/>
+    <arg name="model" value="human_gazebo"/>
+    <node pkg="moveit_human_config" name="move_group_python_interface" type="human_controller.py" output="screen">
+      <!-- set /foo/utterance/param_talker/topic_name -->
+      <param name="topic_name" value="chatter" />
+    </node>
+      </group>
+</launch>
