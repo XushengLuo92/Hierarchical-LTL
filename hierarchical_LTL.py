@@ -421,6 +421,7 @@ def vis_graph(graph, att, title, latex=False):
     # add the following the generated dot file
     # rankdir=LR;
 	# node [texmode="math"];
+    #  dot2tex --preproc ./data/task_network.dot | dot2tex > ./data/task_network.tex
     if not latex:
         # Run a Linux command
         command = "dot -Tpng {0}.dot >{0}.png".format(title)
@@ -564,16 +565,18 @@ def generate_latex_expr(label, task):
         values_str = ', '.join(str(val) for val in values)
         return f"\\\\pi_{{\\\\text{{{sym2region[process_id]}}}}}^{{{values_str}}}"
 
-    # Iterate through the list and create formatted strings for each sublist
-    formatted_sublists = []
-    for sublist in label:
-        formatted_elements = [format_element(element) for element in sublist]
-        formatted_sublists.append(" & ".join(formatted_elements))
+    if label != '1':
+        # Iterate through the list and create formatted strings for each sublist
+        formatted_sublists = []
+        for sublist in label:
+            formatted_elements = [format_element(element) for element in sublist]
+            formatted_sublists.append(" & ".join(formatted_elements))
 
-    # Join the formatted sublists with '||' to get the final expression
-    final_expression = " | ".join(formatted_sublists)
+        # Join the formatted sublists with '||' to get the final expression
+        final_expression = " | ".join(formatted_sublists)
+    else:
+        final_expression = f"\\top"
     return final_expression
-    # return '$a$'
 
 
 def create_parser():
@@ -618,6 +621,12 @@ def main():
         semantic_reduced_task_network = reduced_task_network.copy()
         for node in semantic_reduced_task_network.nodes():
             semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'], args.task)
+        for task in primitive_subtasks_with_identifier:
+            buchi_graph  = task_hierarchy[task.parent].buchi_graph
+            edge = task_hierarchy[task.parent].element2edge[task.element]
+            semantic_reduced_task_network.add_edge((task.parent, task.element), ((task.parent, task.element)))
+            semantic_reduced_task_network.edges[(task.parent, task.element), ((task.parent, task.element))]['label'] = \
+            generate_latex_expr(buchi_graph.nodes[edge[0]]['label'], args.task) 
         vis_graph(semantic_reduced_task_network, 'label', 'data/task_network', True)
     else:
         vis_graph(reduced_task_network, 'label', 'data/task_network', True)
