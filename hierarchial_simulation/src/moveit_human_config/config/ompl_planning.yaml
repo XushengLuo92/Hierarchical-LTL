@@ -193,8 +193,6 @@ left_arm:
     - AITstar
     - ABITstar
     - BITstar
-  projection_evaluator: joints(jLeftC7Shoulder_rotx,jLeftShoulder_rotx)
-  longest_valid_segment_fraction: 0.005
 right_arm:
   planner_configs:
     - AnytimePathShortening

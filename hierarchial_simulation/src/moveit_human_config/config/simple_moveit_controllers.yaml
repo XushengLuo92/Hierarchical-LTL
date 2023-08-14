@@ -1,37 +1,27 @@
 ros_control_namespace: /human_gazebo
 controller_list:
-  - name: human_gazebo/body_controller
-    action_ns: follow_joint_trajectory
-    type: FollowJointTrajectory
-    default: True
-    joints:
-      - jL5S1_rotx
-      - jL5S1_roty
-      - jL4L3_rotx
-      - jL4L3_roty
-      - jL1T12_rotx
-      - jL1T12_roty
-      - jT9T8_rotx
-      - jT9T8_roty
-      - jT9T8_rotz
-      - jT1C7_rotx
-      - jT1C7_roty
-      - jT1C7_rotz
-      - jC1Head_rotx
-      - jC1Head_roty
-  - name: human_gazebo/left_arm_controller
-    action_ns: follow_joint_trajectory
-    type: FollowJointTrajectory
-    default: True
-    joints:
-      - jLeftC7Shoulder_rotx
-      - jLeftShoulder_rotx
-      - jLeftShoulder_roty
-      - jLeftShoulder_rotz
-      - jLeftElbow_roty
-      - jLeftElbow_rotz
-      - jLeftWrist_rotx
-      - jLeftWrist_rotz
+  # - name: human_gazebo/body_controller
+  #   action_ns: follow_joint_trajectory
+  #   type: FollowJointTrajectory
+  #   default: True
+  #   joints:
+  #     - jLeftC7Shoulder_rotx
+  #     - jLeftShoulder_rotx
+  #     - jLeftShoulder_roty
+  #     - jLeftShoulder_rotz
+  #     - jLeftElbow_roty
+  #     - jLeftElbow_rotz
+  #     - jLeftWrist_rotx
+  #     - jLeftWrist_rotz
+  #     - jL5S1_rotx
+  #     - jL5S1_roty
+  #     - jL4L3_rotx
+  #     - jL4L3_roty
+  #     - jL1T12_rotx
+  #     - jL1T12_roty
+  #     - jT9T8_rotx
+  #     - jT9T8_roty
+  #     - jT9T8_rotz
   - name: human_gazebo/right_arm_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory

@@ -1,6 +1,14 @@
-body_controller:
+left_arm_controller:
   type: position_controllers/JointTrajectoryController
   joints:
+    - jLeftC7Shoulder_rotx
+    - jLeftShoulder_rotx
+    - jLeftShoulder_roty
+    - jLeftShoulder_rotz
+    - jLeftElbow_roty
+    - jLeftElbow_rotz
+    - jLeftWrist_rotx
+    - jLeftWrist_rotz
     - jL5S1_rotx
     - jL5S1_roty
     - jL4L3_rotx
@@ -10,12 +18,47 @@ body_controller:
     - jT9T8_rotx
     - jT9T8_roty
     - jT9T8_rotz
-    - jT1C7_rotx
-    - jT1C7_roty
-    - jT1C7_rotz
-    - jC1Head_rotx
-    - jC1Head_roty
   gains:
+    jLeftC7Shoulder_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftShoulder_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftShoulder_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftShoulder_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftElbow_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftElbow_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftWrist_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftWrist_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
     jL5S1_rotx:
       p: 100
       d: 1
@@ -57,83 +100,6 @@ body_controller:
       i: 1
       i_clamp: 1
     jT9T8_rotz:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jT1C7_rotx:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jT1C7_roty:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jT1C7_rotz:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jC1Head_rotx:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jC1Head_roty:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-left_arm_controller:
-  type: position_controllers/JointTrajectoryController
-  joints:
-    - jLeftC7Shoulder_rotx
-    - jLeftShoulder_rotx
-    - jLeftShoulder_roty
-    - jLeftShoulder_rotz
-    - jLeftElbow_roty
-    - jLeftElbow_rotz
-    - jLeftWrist_rotx
-    - jLeftWrist_rotz
-  gains:
-    jLeftC7Shoulder_rotx:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jLeftShoulder_rotx:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jLeftShoulder_roty:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jLeftShoulder_rotz:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jLeftElbow_roty:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jLeftElbow_rotz:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jLeftWrist_rotx:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
-    jLeftWrist_rotz:
       p: 100
       d: 1
       i: 1

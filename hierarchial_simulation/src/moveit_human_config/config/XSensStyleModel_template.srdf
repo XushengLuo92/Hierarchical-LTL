@@ -14,6 +14,15 @@
         <link name="LeftUpperArm"/>
         <link name="LeftForeArm"/>
         <link name="LeftHand"/>
+        <link name="L5"/>
+        <link name="L3"/>
+        <link name="T12"/>
+        <link name="T8"/>
+        <link name="L3_f1"/>
+        <link name="T12_f1"/>
+        <link name="T8_f1"/>
+        <link name="T8_f2"/>
+        <link name="Pelvis"/>
         <joint name="jLeftShoulder_rotx"/>
         <joint name="jLeftShoulder_roty"/>
         <joint name="jLeftShoulder_rotz"/>
@@ -21,6 +30,16 @@
         <joint name="jLeftElbow_rotz"/>
         <joint name="jLeftWrist_rotx"/>
         <joint name="jLeftWrist_rotz"/>
+        <joint name="jT9T8_rotz"/>
+        <joint name="jT9T8_roty"/>
+        <joint name="jT9T8_rotx"/>
+        <joint name="jL1T12_roty"/>
+        <joint name="jL1T12_rotx"/>
+        <joint name="jL4L3_roty"/>
+        <joint name="jL4L3_rotx"/>
+        <joint name="jL5S1_roty"/>
+        <joint name="jL5S1_rotx"/>
+        <chain base_link="Pelvis" tip_link="LeftHand"/>
     </group>
     <group name="right_arm">
         <link name="RightShoulder"/>

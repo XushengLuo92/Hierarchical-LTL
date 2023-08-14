@@ -6,6 +6,7 @@
 <robot name="fanuc_lrmate200id7l">
     <link name="world" />
     <joint name="world_fixed" type="fixed">
+        <!-- <origin rpy="0 0 0" xyz="0.5 0 0.0" /> -->
         <parent link="world" />
         <child link="base" />
     </joint>

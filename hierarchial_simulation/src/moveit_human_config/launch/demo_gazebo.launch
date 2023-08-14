@@ -7,8 +7,42 @@
   <arg name="gazebo_gui" default="true" doc="Start Gazebo GUI"/>
   <arg name="paused" default="false" doc="Start Gazebo paused"/>
   <arg name="world_name" default="worlds/empty.world" doc="Gazebo world file"/>
-  <arg name="world_pose" default="-x 0 -y 0 -z 0.15 -R 0.2 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
+  <arg name="world_pose" value="-x 0.4 -y 0.4 -z 0.1 -R 0 -P 0 -Y 3.14159" doc="Pose to spawn the robot at"/>
   <arg name="initial_joint_positions" default="
+        -J jLeftAnkle_roty 0.541
+        -J jLeftAnkle_rotz -0.2508
+        -J jLeftBallFoot_roty -0.1745
+        -J jLeftHip_rotx -0.5235
+        -J jLeftHip_roty -2.0943
+        -J jLeftHip_rotz 0.5501
+        -J jLeftKnee_roty 1.3875
+        -J jLeftKnee_rotz 0.0274
+        -J jRightAnkle_rotx 0
+        -J jRightAnkle_roty 0
+        -J jRightAnkle_rotz 0
+        -J jRightBallFoot_roty 0
+        -J jRightHip_rotx 0.5235
+        -J jRightHip_roty -1.898
+        -J jRightHip_rotz -0.7853
+        -J jRightKnee_roty 2.3561
+        -J jRightKnee_rotz 0
+        -J jRightC7Shoulder_rotx 0.0872
+        -J jRightElbow_roty 1.4835
+        -J jRightElbow_rotz 1.0954
+        -J jRightShoulder_rotx 0.2274
+        -J jRightShoulder_roty -1.352
+        -J jRightShoulder_rotz -0.082
+        -J jRightWrist_rotx 0.3117
+        -J jRightWrist_rotz 0.0321
+
+        -J jL1T12_rotx 0.0271
+        -J jL1T12_roty -0.0099
+        -J jL4L3_rotx -0.1418
+        -J jL4L3_roty 0.0099
+        -J jL5S1_rotx 0.0611
+        -J jL5S1_roty -0.0948"
+    doc="Initial joint configuration of the robot"/>
+  <!-- <arg name="initial_joint_positions" default="
         -J jLeftAnkle_roty 0.541
         -J jLeftAnkle_rotz -0.2508
         -J jLeftBallFoot_roty -0.1745
@@ -44,7 +78,7 @@
         -J jL5S1_roty -0.0948
  
         "
-    doc="Initial joint configuration of the robot"/>
+    doc="Initial joint configuration of the robot"/> -->
          <!-- 
         -J jC1Head_rotx 0
         -J jC1Head_roty 0

@@ -45,26 +45,22 @@ display_trajectory_publisher = rospy.Publisher(
 # rospy.spin()
 print(robot_fanuc.get_current_state())
 def robot_action_service_handler(req:robot_action):
-    print('fanuc_gazebo arm start state',robot_fanuc.get_current_state())
+    # print('fanuc_gazebo arm start state',robot_fanuc.get_current_state())
     group_name = "arm"
     move_group = moveit_commander.MoveGroupCommander(group_name)
-
+    move_group.set_pose_reference_frame("fanuc_gazebo::base")
     des=req.des
-    # pose_goal = geometry_msgs.msg.PoseStamped()
-    # pose_goal.header.frame_id = "world"
-    # pose_goal.pose.orientation.x = 1e-6
-    # pose_goal.pose.orientation.y = 1e-6
-    # pose_goal.pose.orientation.z = 1e-6
-    # pose_goal.pose.orientation.w = -1.000000
-    # pose_goal.pose.position.x = 0.5
-    # pose_goal.pose.position.y = 0
-    # pose_goal.pose.position.z = 0.16+0.015
+    end_effector_link = move_group.get_end_effector_link()
+    move_group.set_goal_position_tolerance(0.01)
+    move_group.set_goal_orientation_tolerance(0.05)
+    move_group.set_start_state_to_current_state()
 
-    move_group.set_pose_target(des)
+    # move_group.set_pose_target(des)
 
+    move_group.set_pose_target(des, end_effector_link)
     # `go()` returns a boolean indicating whether the planning and execution was successful.
     success = move_group.go(wait=True)
-    print('fanuc_gazebo arm stop state',robot_fanuc.get_current_state())
+    # print('fanuc_gazebo arm stop state',robot_fanuc.get_current_state())
     # Calling `stop()` ensures that there is no residual movement
     move_group.stop()
     move_group.clear_pose_targets()

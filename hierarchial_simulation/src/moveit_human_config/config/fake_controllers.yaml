@@ -2,6 +2,15 @@ controller_list:
   - name: fake_left_arm_controller
     type: $(arg fake_execution_type)
     joints:
+      - jL5S1_rotx
+      - jL5S1_roty
+      - jL4L3_rotx
+      - jL4L3_roty
+      - jL1T12_rotx
+      - jL1T12_roty
+      - jT9T8_rotx
+      - jT9T8_roty
+      - jT9T8_rotz
       - jLeftC7Shoulder_rotx
       - jLeftShoulder_rotx
       - jLeftShoulder_roty
