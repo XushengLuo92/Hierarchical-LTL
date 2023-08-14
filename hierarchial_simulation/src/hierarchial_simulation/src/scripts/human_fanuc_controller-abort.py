@@ -159,49 +159,48 @@ def getLink2world(name="fanuc_gazebo::base"):
         return res.link_state.pose
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
-def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,brink_name=None):
+def fanuc_action_reletive2world(x=0.3,y=0.3,z=0.1,orientation=0,pick=True,brink_name=None):
     if pick and brink_name != None:
         lego_action(brick_name=brink_name,reference_frame='fanuc_gazebo::link_tool',y=0.17,orientation=-90)
     currentpose=getLink2world(name='fanuc_gazebo::base')
     print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
-    pose_goal = geometry_msgs.msg.PoseStamped()
+    pose_goal = geometry_msgs.msg.Pose()
     # pose_goal.header.frame_id = "world"
     # orientation=0
-    # relative to the world config
-    q = Rotation.from_euler('xyz',[orientation * DE2RA, 90 * DE2RA, 0 * DE2RA]).as_quat()
-    pose_goal.pose.orientation.x = q[0]
-    pose_goal.pose.orientation.y = q[1]
-    pose_goal.pose.orientation.z = q[2]
-    pose_goal.pose.orientation.w = q[3]
-    pose_goal.pose.position.x = x-currentpose.position.x
-    pose_goal.pose.position.y = y-currentpose.position.y
-    pose_goal.pose.position.z = z-currentpose.position.z
+    q = Rotation.from_euler('xyz',[-orientation * DE2RA, 90 * DE2RA, 0 * DE2RA]).as_quat()
+    pose_goal.orientation.x = q[0]
+    pose_goal.orientation.y = q[1]
+    pose_goal.orientation.z = q[2]
+    pose_goal.orientation.w = q[3]
+    pose_goal.position.x = x
+    pose_goal.position.y = y
+    pose_goal.position.z = z
 
-    # pose2base=get_pose2base(pose_goal.pose,currentpose)
-    # print(pose2base)
+    pose2base=get_pose2base(pose_goal,currentpose)
+    print(pose2base)
     # res=currentpose
     # fanuc_action()
     rospy.wait_for_service('/fanuc_gazebo/action_msg')
     try:
         action_msg = rospy.ServiceProxy('/fanuc_gazebo/action_msg', robot_action)
         
-        # pose_goal = geometry_msgs.msg.PoseStamped()
+        pose_goal = geometry_msgs.msg.PoseStamped()
         pose_goal.header.frame_id = "world"
         # orientation=0
         # q = quaternion_from_euler(orientation * DE2RA, 90 * DE2RA, 0 * DE2RA)
-        # pose_goal.pose.orientation.x = pose2base[0][0]
-        # pose_goal.pose.orientation.y = pose2base[0][1]
-        # pose_goal.pose.orientation.z = pose2base[0][2]
-        # pose_goal.pose.orientation.w = pose2base[0][3]
-        # pose_goal.pose.position.x = pose2base[1][0]
-        # pose_goal.pose.position.y = pose2base[1][1]
-        # pose_goal.pose.position.z = pose2base[1][2]
+        pose_goal.pose.orientation.x = pose2base[0][0]
+        pose_goal.pose.orientation.y = pose2base[0][1]
+        pose_goal.pose.orientation.z = pose2base[0][2]
+        pose_goal.pose.orientation.w = pose2base[0][3]
+        pose_goal.pose.position.x = pose2base[1][0]
+        pose_goal.pose.position.y = pose2base[1][1]
+        pose_goal.pose.position.z = pose2base[1][2]
 
         res = action_msg(pose_goal, pose_goal)
         return res.finished
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
-def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick=True,brink_name=None):
+def human_left_hand_action_reletive2world(x=0,y=0,z=0.20,orientation=-45,pick=True,brink_name=None):
     if pick and brink_name != None:
         lego_action(brick_name=brink_name,reference_frame='human_gazebo::LeftHand',y=0.17,orientation=-90)
     # currentpose=getLink2world(name='world')
@@ -211,18 +210,18 @@ def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick
     pose_goal = geometry_msgs.msg.PoseStamped()
     # pose_goal.header.frame_id = "world"
     # orientation=0
-    q = Rotation.from_euler('yxz',[orientation * DE2RA, -90 * DE2RA, 0 * DE2RA]).as_quat()
+    q = Rotation.from_euler('xyz',[-orientation * DE2RA, 90 * DE2RA, 0 * DE2RA]).as_quat()
     # q = quaternion_from_euler(-90 * DE2RA, 0 * DE2RA, 0 * DE2RA)
     pose_goal.pose.orientation.x = q[0]
     pose_goal.pose.orientation.y = q[1]
     pose_goal.pose.orientation.z = q[2]
     pose_goal.pose.orientation.w = q[3]
-    pose_goal.pose.position.x = currentpose.position.x-x
-    pose_goal.pose.position.y = currentpose.position.y-y
-    pose_goal.pose.position.z = z-currentpose.position.z
+    pose_goal.pose.position.x = x
+    pose_goal.pose.position.y = y
+    pose_goal.pose.position.z = z
 
-    # pose2base=get_pose2base(pose_goal.pose,currentpose)
-    # print(pose2base)
+    pose2base=get_pose2base(pose_goal.pose,currentpose)
+    print(pose2base)
 
     rospy.wait_for_service('/human_gazebo/action_msg/left_arm')
     try:
@@ -268,11 +267,10 @@ if __name__=='__main__':
     print(human_left_hand_action_reletive2world())
 
     # print(human_left_hand_action_reletive2world(brink_name='b14_9'))
-
+    # print(fanuc_action_reletive2world(x=0.2,y=0.2,z=0.3,orientation=-45))
     # fanuc_now=getLink2world(name='fanuc_gazebo::link_tool')
-    # # print(fanuc_now)
+    # print(fanuc_now)
     # print(Rotation.from_quat((fanuc_now.orientation.x,fanuc_now.orientation.y,fanuc_now.orientation.z,fanuc_now.orientation.w)).as_euler('XYZ'))
-    # print(fanuc_action_reletive2world())
 #     print(human_left_action(      
 #         ox=-0.027391944045042717,
 #         oy=-0.04646070418412789,
