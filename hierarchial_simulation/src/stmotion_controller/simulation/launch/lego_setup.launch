@@ -682,5 +682,6 @@
       respawn="false" output="screen">
     </node>
     
-   
+    <node name="move_group_python_interface" pkg="moveit_human_config" type="human_controller.py" respawn="false" output="screen">
+    </node>
 </launch>

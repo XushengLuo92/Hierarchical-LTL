@@ -11,6 +11,7 @@ find_package(catkin REQUIRED
 add_service_files(
   FILES
   robot_action.srv
+  lego_pickup.srv
 #   Service2.srv
 )
 
@@ -29,5 +30,5 @@ CATKIN_DEPENDS message_runtime
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-# catkin_install_python(PROGRAMS scripts/fanuc_controller.py
-#     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+catkin_install_python(PROGRAMS simulation/py_scripts/lego_state_refresher.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

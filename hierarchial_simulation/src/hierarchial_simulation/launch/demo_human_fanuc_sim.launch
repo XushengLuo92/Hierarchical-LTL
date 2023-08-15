@@ -14,10 +14,15 @@
   <include file="$(find gazebo_ros)/launch/empty_world.launch" pass_all_args="true">
     <arg name="paused" value="true"/>
   </include>
-  
-  <include file="$(find stmotion_controller)/simulation/launch/lego_setup.launch"/>
+  <group ns="/lego_gazebo">
+    <include file="$(find hierarchial_simulation)/launch/lego_setup.launch"/>
+    <node pkg="hierarchial_simulation" name="lego_state_refresher" type="human_controller.py" output="screen">
+      <param name="config_json" value="$(find hierarchial_simulation)/config/ICL.json"/>
+    </node>
+  </group>
 
-  <group ns="/human_gazebo">
+
+  <!-- <group ns="/human_gazebo">
     <arg name = "human" default="human"/>
     <arg name="model" value="human_gazebo"/>
     <arg name="world_pose" value="-x 0.3 -y 0.3 -z 0.1 -R 0 -P 0 -Y 2.7" doc="Pose to spawn the robot at"/>
@@ -55,19 +60,13 @@
         -J jL5S1_rotx 0.0611
         -J jL5S1_roty -0.0948"
     doc="Initial joint configuration of the robot"/>
-    <!-- Launch Gazebo and spawn the robot -->
-    <include file="$(find moveit_human_config)/launch/gazebo.launch" pass_all_args="true" >
-      
+    <include file="$(find moveit_human_config)/launch/gazebo.launch" pass_all_args="true" >      
     </include>
-
-    <!-- Launch MoveIt -->
     <include file="$(find moveit_human_config)/launch/demo.launch" pass_all_args="true">
-      <!-- robot_description is loaded by gazebo.launch, to enable Gazebo features -->
       <arg name="load_robot_description" value="false" />
       <arg name="moveit_controller_manager" value="ros_control" />
     </include>
     <node pkg="moveit_human_config" name="move_group_python_interface" type="human_controller.py" output="screen">
-      <!-- <param name="topic_name" value="chatter" /> -->
     </node>
   </group >
 
@@ -75,17 +74,12 @@
     <arg name="world_pose" default="-x -0.5 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
     <arg name = "robot_arm" default="robot_arm"/>
     <arg name="model" value="fanuc_gazebo"/>
-    <!-- Launch Gazebo and spawn the robot -->
     <include file="$(find moveit_fanuc_config)/launch/gazebo.launch" pass_all_args="true"/>
-
-    <!-- Launch MoveIt -->
     <include file="$(find moveit_fanuc_config)/launch/demo.launch" pass_all_args="true">
-      <!-- robot_description is loaded by gazebo.launch, to enable Gazebo features -->
       <arg name="load_robot_description" value="false" />
       <arg name="moveit_controller_manager" value="ros_control" />
     </include>
     <node pkg="moveit_fanuc_config" name="move_group_python_interface" type="fanuc_controller.py" output="screen">
-      <!-- <param name="topic_name" value="chatter" /> -->
     </node>
-  </group>
+  </group> -->
 </launch>

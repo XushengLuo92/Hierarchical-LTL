@@ -1,0 +1,16 @@
+{
+    "task_description": "move leo bricks with H_LTL into the word ICL!",
+    "writer": "shaojunx@andrew.cmu.edu",
+    "config": [
+        {"brick_name": ,
+        "src":[
+            {
+                "x":
+                "y":
+                "z":
+            }
+        ],
+        "des":
+    }
+    ]
+}

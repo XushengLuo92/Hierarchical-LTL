@@ -29,6 +29,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
   FILES
   robot_action.srv
+  lego_pickup.srv
 #   Service2.srv
 )
 ## Generate added messages and services with any dependencies listed here
@@ -155,7 +156,8 @@ target_link_libraries(${PROJECT_NAME}_LTL_task_planning_cartesian
     ${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )
-
+catkin_install_python(PROGRAMS simulation/py_scripts/lego_state_refresher.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

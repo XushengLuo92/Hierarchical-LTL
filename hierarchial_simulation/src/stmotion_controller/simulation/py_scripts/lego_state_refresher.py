@@ -1,11 +1,47 @@
 import rospy 
-from stmotion_controller.srv import robot_action
+from stmotion_controller.srv import robot_action,lego_pickup
 import geometry_msgs.msg
 import math
 from tf.transformations import quaternion_from_euler
 import gazebo_msgs.msg 
 DE2RA = math.pi / 180
+from gazebo_msgs.srv import SetModelState,GetLinkState,GetModelState
+import json
+class lego_state():
+    def __init__(self,config_json=None) -> None:
+        pass
+        if config_json!=None:
+            with open(config_json,'r') as config_file:
+                config_data=json.load(config_file)
+                
+    def refresh_state(self):
+        pass 
+    def change_state(self):
+        pass 
+def lego_action(brick_name='b14_9',reference_frame='world',x=0,y=0,z=0,orientation=90):
+    # rospy.init_node('set_pose')
 
+    state_msg = ModelState()
+    state_msg.model_name = brick_name
+    state_msg.reference_frame = reference_frame
+    state_msg.pose.position.x = x
+    state_msg.pose.position.y = y
+    state_msg.pose.position.z = z
+    # orientation=90
+    q = quaternion_from_euler(0 * DE2RA, 0 * DE2RA, orientation * DE2RA)
+    state_msg.pose.orientation.w = q[0]
+    state_msg.pose.orientation.x = q[1]
+    state_msg.pose.orientation.y = q[2]
+    state_msg.pose.orientation.z = q[3]
+
+    rospy.wait_for_service('/gazebo/set_model_state')
+    try:
+        set_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
+        resp = set_state( state_msg )
+        return resp
+    except rospy.ServiceException as e:
+        print( "Service call failed: %s" % e)
+        
 def lego_state_service_handler(req:robot_action):
     rospy.wait_for_service('/fanuc_gazebo/action_msg')
     print('fanuc_gazebo arm start state',robot_fanuc.get_current_state())
@@ -33,11 +69,14 @@ def lego_state_service_handler(req:robot_action):
     move_group.clear_pose_targets()
     return success
 
-s = rospy.Service('action_msg', gazebo_msgs, lego_state_service_handler)
-print("fanuc python service ready")
+s = rospy.Service('action_msg/lego_state', lego_pickup, lego_state_service_handler)
+print("lego python service ready")
 rospy.spin()
 
 
 if __name__=='__main__':
-    print(fanuc_action())
+    lego_state(config_json="/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/src/hierarchial_simulation/config/ICL.json")
+    lego_action(brick_name=brink_name,reference_frame='fanuc_gazebo::link_tool',y=0.17,orientation=-90)
+    lego_action(brick_name=brink_name,reference_frame='human_gazebo::LeftHand',y=0.17,orientation=-90)
+    # print(fanuc_action())
     # print(human_right_action())
