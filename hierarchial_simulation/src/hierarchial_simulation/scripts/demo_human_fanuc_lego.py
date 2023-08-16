@@ -162,9 +162,9 @@ def getLink2world(name="fanuc_gazebo::base"):
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,brick_name=None):
-    print('-----------------------')
+    # print('-----------------------')
     currentpose=getLink2world(name='fanuc_gazebo::base')
-    print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
+    # print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
 
 
     pose_goal = geometry_msgs.msg.PoseStamped()
@@ -176,7 +176,7 @@ def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,bri
     pose_goal.pose.position.x = x-currentpose.position.x
     pose_goal.pose.position.y = y-currentpose.position.y
     pose_goal.pose.position.z = z-currentpose.position.z
-    print(pose_goal.pose.position,'........................')
+    # print(pose_goal.pose.position,'........................')
     rospy.wait_for_service('/fanuc_gazebo/action_msg')
     try:
         action_msg = rospy.ServiceProxy('/fanuc_gazebo/action_msg', robot_action)
@@ -187,16 +187,16 @@ def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,bri
         res = action_msg(pose_goal, pose_goal)
 
         tippose=getLink2world(name='fanuc_gazebo::link_tool')
-        print(tippose.position.x -currentpose.position.x,
-        tippose.position.y -currentpose.position.y,
-        tippose.position.z -currentpose.position.z)
+        # print(tippose.position.x -currentpose.position.x,
+        # tippose.position.y -currentpose.position.y,
+        # tippose.position.z -currentpose.position.z)
         return res.finished
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 def fanuc1_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,brick_name=None):
-    print('-----------------------')
+    # print('-----------------------')
     currentpose=getLink2world(name='fanuc1_gazebo::base')
-    print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
+    # print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
 
 
     pose_goal = geometry_msgs.msg.PoseStamped()
@@ -208,7 +208,7 @@ def fanuc1_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,br
     pose_goal.pose.position.x = currentpose.position.x-x
     pose_goal.pose.position.y = currentpose.position.y-y
     pose_goal.pose.position.z = z-currentpose.position.z
-    print(pose_goal.pose.position,'........................')
+    # print(pose_goal.pose.position,'........................')
     rospy.wait_for_service('/fanuc1_gazebo/action_msg')
     try:
         action_msg = rospy.ServiceProxy('/fanuc1_gazebo/action_msg', robot_action)
@@ -219,9 +219,9 @@ def fanuc1_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,br
         res = action_msg(pose_goal, pose_goal)
 
         tippose=getLink2world(name='fanuc1_gazebo::link_tool')
-        print(tippose.position.x -currentpose.position.x,
-        tippose.position.y -currentpose.position.y,
-        tippose.position.z -currentpose.position.z)
+        # print(tippose.position.x -currentpose.position.x,
+        # tippose.position.y -currentpose.position.y,
+        # tippose.position.z -currentpose.position.z)
         return res.finished
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
@@ -261,7 +261,8 @@ def send2fanuc(robotname='/hltl_msg/fanuc_action',bringkname='b15_1'):
 class HLTL_sim():
     def __init__(self,config_json=None) -> None:
         self.global_task_finished_id=-1
-
+        self.num_operators=2
+        self.robot_id=['fanuc','fanuc1','human']
         if config_json!=None:
             with open(config_json,'r') as config_file:
                 self.config_data=json.load(config_file)
@@ -272,6 +273,7 @@ class HLTL_sim():
                     self.name2id[self.config_data['config'][id]["brick_name"]]=id
                     self.task_id2brick_id[self.config_data['config'][id]["task_id"]]=id
                 # print(self.task_id2brick_id)
+        self.someBodyPlacing=np.zeros(self.num_operators)
         print(self.config_data['config'][0]["brick_name"])
         print("lego python service ready")
         rospy.init_node("hltl_python_interface", anonymous=True)
@@ -296,8 +298,8 @@ class HLTL_sim():
         print("task_element2time: ", task_element2time)
         executing_task_network = reduced_task_network.copy()
         
-        self.invalid_str = "-1"
-        self.finished_task_str = self.invalid_str
+        self.invalid_str = -1
+        self.finished_task_str = np.zeros(self.num_operators)
         while executing_task_network.nodes():
             # candidate tasks: 1. no parent in updated task network 2. no parent in executing tasks
             candidate_tasks = set(node for node in executing_task_network.nodes() \
@@ -365,17 +367,22 @@ class HLTL_sim():
             #     current_exec_robots.remove(task_element2type_robot[finished_task])
                 
             # (1, 1) human (1, 0) robot
-            while self.finished_task_str == self.invalid_str:
+            while self.finished_task_str.any() == 0:
+                time.sleep(0.11)
                 # self.finished_task_str = self.global_task_finished_id
                 # self.global_task_finished_id=-1
-                if self.finished_task_str != 0 and self.finished_task_str != 1 :
-                    self.finished_task_str = self.invalid_str
-            is_human = int(self.finished_task_str) == 1
-            self.finished_task_str = self.invalid_str
-            if is_human:
-                task_idx = current_exec_robots.index((1,1))
-            else:
-                task_idx = current_exec_robots.index((1,0))
+                # robot_id=
+                # if self.finished_task_str != 0 and self.finished_task_str != 1 :
+                #     self.finished_task_str = self.invalid_str
+            
+            # is_human = int(self.finished_task_str) == 1
+            # self.finished_task_str = self.invalid_str
+            # if robot_id==1:
+                # task_idx = current_exec_robots.index((1,1))
+            # else:
+            robot_id=np.where(self.finished_task_str==1)[0]
+            task_idx = current_exec_robots.index((1,robot_id))
+            self.finished_task_str[robot_id]=0
             # robot_id = get_from_topic()
             print("finished_task: ", current_exec_tasks[task_idx])
             current_exec_tasks.pop(task_idx)
@@ -433,7 +440,7 @@ class HLTL_sim():
         return True
 
     def refresh_lego_state(self):
-        rate = rospy.Rate(30) 
+        rate = rospy.Rate(60) 
         while not rospy.is_shutdown():
             for id in range(self.brick_len):
                 if self.config_data['config'][id]["state"] =='fanuc_gazebo::link_tool':
@@ -465,24 +472,37 @@ class HLTL_sim():
         pass 
     def fanuc_HLTL_service_launch(self):
         def fanuc_HLTL_service(req:lego_pickup):
+            robot_id=0
             id=self.name2id[req.pick_lego_name]
-            fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+            fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.35,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the above of the brick
+            # while(self.someBodyPlacing.any()>0):
+            #     time.sleep(0.2)
+            # self.someBodyPlacing[0]=1
             fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.12,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the top of the brick
             self.change_state(req.pick_lego_name,'fanuc_gazebo::link_tool')
-            fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+            fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.35,orientation=self.config_data['config'][id]["src"]["o"])
+            # self.someBodyPlacing[0]=0
             # move to the above of the brick
-            fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])
+            while(self.someBodyPlacing.any()>0):
+                time.sleep(0.2)
+            self.someBodyPlacing[robot_id]=1
+            fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.35,orientation=self.config_data['config'][id]["des"]["o"])
             # move to the above of the brick des
+
             fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.12,orientation=self.config_data['config'][id]["des"]["o"])
             self.change_state(req.pick_lego_name,'des')
-            # move to the top of the brick des
-            while (self.finished_task_str!=self.invalid_str):
-                time.sleep(0.2)
-            if self.finished_task_str==self.invalid_str:
-                self.finished_task_str=0
+            fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.35,orientation=self.config_data['config'][id]["des"]["o"])
 
+            fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.35,orientation=self.config_data['config'][id]["src"]["o"])
+            self.someBodyPlacing[robot_id]=0
+            # move to the top of the brick des
+            # while (self.finished_task_str!=self.invalid_str):
+            #     time.sleep(0.2)
+            # if self.finished_task_str==self.invalid_str:
+            #     self.finished_task_str=0
+            self.finished_task_str[robot_id]=1
             
             return True
             pass 
@@ -492,24 +512,37 @@ class HLTL_sim():
         pass 
     def fanuc1_HLTL_service_launch(self):
         def fanuc_HLTL_service(req:lego_pickup):
+            robot_id=1
             id=self.name2id[req.pick_lego_name]
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the above of the brick
+            # while(self.someBodyPlacing.any()>0):
+            #     time.sleep(0.2)
+            # self.someBodyPlacing[1]=1
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.12,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the top of the brick
             self.change_state(req.pick_lego_name,'fanuc1_gazebo::link_tool')
 
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+            # self.someBodyPlacing[1]=0
             # move to the above of the brick
+            while(self.someBodyPlacing.any()>0):
+                time.sleep(0.2)
+            self.someBodyPlacing[robot_id]=1
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])
             # move to the above of the brick des
+
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.12,orientation=self.config_data['config'][id]["des"]["o"])
             self.change_state(req.pick_lego_name,'des')
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+            self.someBodyPlacing[robot_id]=0
             # move to the top of the brick des
-            while (self.finished_task_str!=self.invalid_str):
-                time.sleep(0.2)
-            if self.finished_task_str==self.invalid_str:
-                self.finished_task_str=1
+            self.finished_task_str[robot_id]=1
+            # while (self.finished_task_str!=self.invalid_str):
+            #     time.sleep(0.2)
+            # if self.finished_task_str==self.invalid_str:
+            #     self.finished_task_str=1
 
             return True
             pass 
