@@ -75,7 +75,10 @@
   </group > -->
 
   <group ns="/fanuc_gazebo">
-    <arg name="world_pose" default="-x -0.6 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
+    <arg name="world_pose" default="-x -0.7 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
+    <arg name="initial_joint_positions" value="
+        -J joint_1 0.3"
+        />
     <arg name = "robot_arm" default="robot_arm"/>
     <arg name="model" value="fanuc_gazebo"/>
     <include file="$(find moveit_fanuc_config)/launch/gazebo.launch" pass_all_args="true"/>
@@ -88,7 +91,10 @@
   </group>
 
   <group ns="/fanuc1_gazebo">
-    <arg name="world_pose" default="-x +0.6 -y 0 -z 0 -R 0 -P 0 -Y 3.14159" doc="Pose to spawn the robot at"/>
+    <arg name="world_pose" default="-x +0.7 -y 0 -z 0 -R 0 -P 0 -Y 3.14159" doc="Pose to spawn the robot at"/>
+    <arg name="initial_joint_positions" value="
+    -J joint_1 0.3"
+    />
     <arg name = "robot_arm" default="robot_arm"/>
     <arg name="model" value="fanuc1_gazebo"/>
     <include file="$(find moveit_fanuc1_config)/launch/gazebo.launch" pass_all_args="true"/>

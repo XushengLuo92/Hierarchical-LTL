@@ -1,7 +1,7 @@
 from hierarchical_LTL import hierarchical_ltl_planner
 
 import argparse
-
+import rospy
 def create_parser():
     """ create parser
 
@@ -10,7 +10,7 @@ def create_parser():
     """
     parser = argparse.ArgumentParser(description='FM')
     parser.add_argument('--task', default="man", type=str)
-    parser.add_argument('--case', default=0, type=int)
+    parser.add_argument('--case', default=5, type=int)
     parser.add_argument('--vis', action='store_true', help='Enable visualization')
     parser.add_argument('--dot', action='store_true', help='Enable dot graph')
 
