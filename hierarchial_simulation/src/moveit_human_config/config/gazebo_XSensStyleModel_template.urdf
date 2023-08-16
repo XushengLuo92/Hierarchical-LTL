@@ -993,7 +993,7 @@
         <parent link="LeftForeArm" />
         <child link="LeftHand_f1" />
         <dynamics damping="0.1" friction="0.0" />
-        <limit effort="30" velocity="1.0" lower="-1.0472" upper="0.872665" />
+        <!-- <limit effort="30" velocity="1.0" lower="-1.0472" upper="0.872665" /> -->
         <axis xyz="1 0 0" />
     </joint>
     <joint name="jLeftWrist_rotz" type="revolute">

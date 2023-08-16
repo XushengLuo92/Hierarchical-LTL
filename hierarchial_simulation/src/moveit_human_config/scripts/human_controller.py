@@ -36,6 +36,15 @@ robot_human = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
 
 
+# table_pose = geometry_msgs.msg.PoseStamped()
+# table_size = [0.64, 0.64, 0.0016]  //设置长宽高
+# table_ground = 0
+# table_pose.header.frame_id = 'world'
+# table_pose.pose.position.x = 0.0
+# table_pose.pose.position.y = 0.0
+# table_pose.pose.position.z = table_ground + table_size[2] / 2.0
+# table_pose.pose.orientation.w = 0
+# scene.add_box('table', table_pose, table_size)  #添加障碍物
 
 display_trajectory_publisher = rospy.Publisher(
     "/human_gazebo/move_group/display_planned_path",
@@ -77,6 +86,7 @@ def robot_action_service_handler_left_arm(req:robot_action):
     move_group.set_pose_reference_frame("human_gazebo::Pelvis")
     des=req.des
     end_effector_link = move_group.get_end_effector_link()
+    move_group.set_planner_id('RRTstar')
     move_group.set_goal_position_tolerance(0.0001)
     move_group.set_goal_orientation_tolerance(0.0001)
     move_group.set_goal_joint_tolerance(0.0001)

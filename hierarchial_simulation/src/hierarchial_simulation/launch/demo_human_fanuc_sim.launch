@@ -23,18 +23,19 @@
   <!-- </group> -->
 
 
-  <group ns="/human_gazebo">
+  <!-- <group ns="/human_gazebo">
     <arg name = "human" default="human"/>
     <arg name="model" value="human_gazebo"/>
-    <!-- <arg name="world_pose" value="-x 0.3 -y 0.3 -z 0.1 -R 0 -P 0 -Y 2.7" doc="Pose to spawn the robot at"/> -->
+
     <arg name="world_pose" value="-x 0.4 -y 0.4 -z 0.1 -R 0 -P 0 -Y 3.14159" doc="Pose to spawn the robot at"/>
     <arg name="initial_joint_positions" value="
+        -J jLeftAnkle_rotx -0.3456
         -J jLeftAnkle_roty 0.541
         -J jLeftAnkle_rotz -0.2508
         -J jLeftBallFoot_roty -0.1745
         -J jLeftHip_rotx -0.5235
-        -J jLeftHip_roty -2.0943
-        -J jLeftHip_rotz 0.5501
+        -J jLeftHip_roty -1.8369
+        -J jLeftHip_rotz 0.7853
         -J jLeftKnee_roty 1.3875
         -J jLeftKnee_rotz 0.0274
         -J jRightAnkle_rotx 0
@@ -42,10 +43,11 @@
         -J jRightAnkle_rotz 0
         -J jRightBallFoot_roty 0
         -J jRightHip_rotx 0.5235
-        -J jRightHip_roty -1.898
+        -J jRightHip_roty -1.8943
         -J jRightHip_rotz -0.7853
-        -J jRightKnee_roty 2.3561
+        -J jRightKnee_roty 0.6874
         -J jRightKnee_rotz 0
+
         -J jRightC7Shoulder_rotx 0.0872
         -J jRightElbow_roty 1.4835
         -J jRightElbow_rotz 1.0954
@@ -70,10 +72,10 @@
     </include>
     <node pkg="moveit_human_config" name="move_group_python_interface" type="human_controller.py" output="screen">
     </node>
-  </group >
+  </group > -->
 
-  <!-- <group ns="/fanuc_gazebo">
-    <arg name="world_pose" default="-x -0.5 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
+  <group ns="/fanuc_gazebo">
+    <arg name="world_pose" default="-x -0.6 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
     <arg name = "robot_arm" default="robot_arm"/>
     <arg name="model" value="fanuc_gazebo"/>
     <include file="$(find moveit_fanuc_config)/launch/gazebo.launch" pass_all_args="true"/>
@@ -83,5 +85,18 @@
     </include>
     <node pkg="moveit_fanuc_config" name="move_group_python_interface" type="fanuc_controller.py" output="screen">
     </node>
-  </group> -->
+  </group>
+
+  <group ns="/fanuc1_gazebo">
+    <arg name="world_pose" default="-x +0.6 -y 0 -z 0 -R 0 -P 0 -Y 3.14159" doc="Pose to spawn the robot at"/>
+    <arg name = "robot_arm" default="robot_arm"/>
+    <arg name="model" value="fanuc1_gazebo"/>
+    <include file="$(find moveit_fanuc1_config)/launch/gazebo.launch" pass_all_args="true"/>
+    <include file="$(find moveit_fanuc1_config)/launch/demo.launch" pass_all_args="true">
+      <arg name="load_robot_description" value="false" />
+      <arg name="moveit_controller_manager" value="ros_control" />
+    </include>
+    <node pkg="moveit_fanuc1_config" name="move_group_python_interface" type="fanuc_controller.py" output="screen">
+    </node>
+  </group>
 </launch>

@@ -143,7 +143,7 @@
     <node name="spawn_b13_4" pkg="gazebo_ros" type="spawn_model"
       args="-param b13_description
             -urdf 
-            -x 0.003
+            -x 0
             -y 0
             -z 0.0016
             -model $(arg b13_4)"

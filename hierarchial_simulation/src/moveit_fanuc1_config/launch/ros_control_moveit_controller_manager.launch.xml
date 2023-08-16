@@ -1,0 +1,6 @@
+<launch>
+	<!-- Define MoveIt controller manager plugin -->
+	<param name="moveit_controller_manager" value="moveit_ros_control_interface::MoveItControllerManager" />
+	<arg name="moveit_controller_manager" value="moveit_ros_control_interface::MoveItControllerManager" />
+	<rosparam file="$(find moveit_fanuc1_config)/config/simple_moveit_controllers.yaml" />
+</launch>

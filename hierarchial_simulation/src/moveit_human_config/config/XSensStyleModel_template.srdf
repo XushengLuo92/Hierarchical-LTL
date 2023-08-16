@@ -106,8 +106,8 @@
         <joint name="jLeftAnkle_rotz" value="-0.2508"/>
         <joint name="jLeftBallFoot_roty" value="-0.1745"/>
         <joint name="jLeftHip_rotx" value="-0.5235"/>
-        <joint name="jLeftHip_roty" value="-2.0943"/>
-        <joint name="jLeftHip_rotz" value="0.5501"/>
+        <joint name="jLeftHip_roty" value="-1.8369"/>
+        <joint name="jLeftHip_rotz" value="0.7853"/>
         <joint name="jLeftKnee_roty" value="1.3875"/>
         <joint name="jLeftKnee_rotz" value="0.0274"/>
     </group_state>
@@ -117,9 +117,9 @@
         <joint name="jRightAnkle_rotz" value="0"/>
         <joint name="jRightBallFoot_roty" value="0"/>
         <joint name="jRightHip_rotx" value="0.5235"/>
-        <joint name="jRightHip_roty" value="-1.898"/>
+        <joint name="jRightHip_roty" value="-1.8943"/>
         <joint name="jRightHip_rotz" value="-0.7853"/>
-        <joint name="jRightKnee_roty" value="2.3561"/>
+        <joint name="jRightKnee_roty" value="0.6874"/>
         <joint name="jRightKnee_rotz" value="0"/>
     </group_state>
     <group_state name="cross_leg_sit" group="right_arm">

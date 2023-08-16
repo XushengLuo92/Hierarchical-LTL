@@ -11,7 +11,7 @@ from gazebo_msgs.msg import ModelState,LinkState
 # from human_fanuc_controller import human_left_hand_action_reletive2world,fanuc_action_reletive2world
 import json
 import _thread as thread 
-
+import time
 import rospy 
 from hierarchial_simulation.srv import robot_action,lego_pickup
 import geometry_msgs.msg
@@ -155,13 +155,6 @@ def getLink2world(name="fanuc_gazebo::base"):
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,brick_name=None):
-    # if brick_name != None:
-    #     if pick:
-    #         legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
-    #         res = legeo_action_msg("fanuc_gazebo::link_tool","pick",brick_name)
-    #     else:
-    #         legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
-    #         res = legeo_action_msg("fanuc_gazebo::link_tool","unpick",brick_name)
     print('-----------------------')
     currentpose=getLink2world(name='fanuc_gazebo::base')
     print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
@@ -180,30 +173,51 @@ def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,bri
     pose_goal.pose.position.y = y-currentpose.position.y
     pose_goal.pose.position.z = z-currentpose.position.z
     print(pose_goal.pose.position,'........................')
-    # pose2base=get_pose2base(pose_goal.pose,currentpose)
-    # print(pose2base)
-    # res=currentpose
-    # fanuc_action()
     rospy.wait_for_service('/fanuc_gazebo/action_msg')
     try:
         action_msg = rospy.ServiceProxy('/fanuc_gazebo/action_msg', robot_action)
         
         # pose_goal = geometry_msgs.msg.PoseStamped()
         pose_goal.header.frame_id = "world"
-        # orientation=0
-        # q = quaternion_from_euler(orientation * DE2RA, 90 * DE2RA, 0 * DE2RA)
-        # pose_goal.pose.orientation.x = pose2base[0][0]
-        # pose_goal.pose.orientation.y = pose2base[0][1]
-        # pose_goal.pose.orientation.z = pose2base[0][2]
-        # pose_goal.pose.orientation.w = pose2base[0][3]
-        # pose_goal.pose.position.x = pose2base[1][0]
-        # pose_goal.pose.position.y = pose2base[1][1]
-        # pose_goal.pose.position.z = pose2base[1][2]
 
         res = action_msg(pose_goal, pose_goal)
 
         tippose=getLink2world(name='fanuc_gazebo::link_tool')
-        # print(Rotation.from_quat([tippose.orientation.x,tippose.orientation.y,tippose.orientation.z,tippose.orientation.w]).as_euler('XYZ'),'\n',tippose.position)
+        print(tippose.position.x -currentpose.position.x,
+        tippose.position.y -currentpose.position.y,
+        tippose.position.z -currentpose.position.z)
+        return res.finished
+    except rospy.ServiceException as e:
+        print("Service call failed: %s"%e)
+def fanuc1_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,brick_name=None):
+    print('-----------------------')
+    currentpose=getLink2world(name='fanuc1_gazebo::base')
+    print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
+
+
+    pose_goal = geometry_msgs.msg.PoseStamped()
+    # pose_goal.header.frame_id = "world"
+    # orientation=0
+    # relative to the world config
+    q = Rotation.from_euler('xyz',[orientation * DE2RA, 90 * DE2RA, 0 * DE2RA]).as_quat()
+    pose_goal.pose.orientation.x = q[0]
+    pose_goal.pose.orientation.y = q[1]
+    pose_goal.pose.orientation.z = q[2]
+    pose_goal.pose.orientation.w = q[3]
+    pose_goal.pose.position.x = x-currentpose.position.x
+    pose_goal.pose.position.y = y-currentpose.position.y
+    pose_goal.pose.position.z = z-currentpose.position.z
+    print(pose_goal.pose.position,'........................')
+    rospy.wait_for_service('/fanuc1_gazebo/action_msg')
+    try:
+        action_msg = rospy.ServiceProxy('/fanuc1_gazebo/action_msg', robot_action)
+        
+        # pose_goal = geometry_msgs.msg.PoseStamped()
+        pose_goal.header.frame_id = "world"
+
+        res = action_msg(pose_goal, pose_goal)
+
+        tippose=getLink2world(name='fanuc1_gazebo::link_tool')
         print(tippose.position.x -currentpose.position.x,
         tippose.position.y -currentpose.position.y,
         tippose.position.z -currentpose.position.z)
@@ -230,7 +244,7 @@ def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick
     pose_goal = geometry_msgs.msg.PoseStamped()
     # pose_goal.header.frame_id = "world"
     # orientation=0
-    q = Rotation.from_euler('yxz',[orientation * DE2RA, -90 * DE2RA, 0 * DE2RA]).as_quat()
+    q = Rotation.from_euler('yxz',[-orientation * DE2RA, -90 * DE2RA, 0 * DE2RA]).as_quat()
     # q = quaternion_from_euler(-90 * DE2RA, 0 * DE2RA, 0 * DE2RA)
     pose_goal.pose.orientation.x = q[0]
     pose_goal.pose.orientation.y = q[1]
@@ -279,7 +293,22 @@ def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick
         # z: 0.6184903264237472
         # w: 0.2587062761478927
 
-
+def test():
+    time.sleep(5)
+    # action_msg = rospy.ServiceProxy('/hltl_msg/human_action', lego_pickup)
+    action_msg = rospy.ServiceProxy('/hltl_msg/fanuc1_action', lego_pickup)
+    action_msg("23", "pick", "b15_1")
+    action_msg("23", "pick", "b15_2")
+    action_msg("23", "pick", "b13_1")
+    action_msg("23", "pick", "b15_3")
+    action_msg("23", "pick", "b15_4")
+    action_msg("23", "pick", "b13_2")
+    action_msg("23", "pick", "b13_3")
+    action_msg("23", "pick", "b15_5")
+    action_msg("23", "pick", "b11_2")
+    action_msg("23", "pick", "b11_1")
+    action_msg("23", "pick", "b13_4")
+    pass 
 
 
 class lego_state():
@@ -300,8 +329,10 @@ class lego_state():
         print("lego python service ready")
         rospy.init_node("hltl_python_interface", anonymous=True)
         # thread.start_new_thread(self.refresh_lego_state,())
-        thread.start_new_thread(self.human_HLTL_service_launch,())
+        # thread.start_new_thread(self.human_HLTL_service_launch,())
         thread.start_new_thread(self.fanuc_HLTL_service_launch,())
+        thread.start_new_thread(self.fanuc1_HLTL_service_launch,())
+        thread.start_new_thread(test,())
         self.refresh_lego_state()
         # rospy.spin()
     def init_state(self):
@@ -354,7 +385,7 @@ class lego_state():
             human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.18,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the top of the brick
             self.change_state(req.pick_lego_name,'human_gazebo::LeftHand')
-            # human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.3,orientation=self.config_data['config'][id]["src"]["o"])
+            human_left_hand_action_reletive2world(x=(self.config_data['config'][id]["src"]["x"]+self.config_data['config'][id]["des"]["x"])/2,y=(self.config_data['config'][id]["src"]["y"]+self.config_data['config'][id]["des"]["y"])/2,z=0.3,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the above of the brick
             # human_left_hand_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.3,orientation=self.config_data['config'][id]["des"]["o"])
             # move to the above of the brick des
@@ -386,6 +417,27 @@ class lego_state():
             pass 
         s = rospy.Service('hltl_msg/fanuc_action', lego_pickup, fanuc_HLTL_service)
         print("hltl_msg/fanuc_action python service ready")
+        rospy.spin()
+        pass 
+    def fanuc1_HLTL_service_launch(self):
+        def fanuc_HLTL_service(req:lego_pickup):
+            id=self.name2id[req.pick_lego_name]
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+            # move to the above of the brick
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.12,orientation=self.config_data['config'][id]["src"]["o"])
+            # move to the top of the brick
+            self.change_state(req.pick_lego_name,'fanuc1_gazebo::link_tool')
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+            # move to the above of the brick
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])
+            # move to the above of the brick des
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.12,orientation=self.config_data['config'][id]["des"]["o"])
+            self.change_state(req.pick_lego_name,'des')
+            # move to the top of the brick des
+            return True
+            pass 
+        s = rospy.Service('hltl_msg/fanuc1_action', lego_pickup, fanuc_HLTL_service)
+        print("hltl_msg/fanuc1_action python service ready")
         rospy.spin()
         pass 
 

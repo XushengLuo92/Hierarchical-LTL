@@ -417,7 +417,7 @@
                     <far>2</far>
                 </clip>
             </camera>
-            <plugin filename="libgazebo_ros_openni_kinect.so" name="$depth_camera_controller">
+            <!-- <plugin filename="libgazebo_ros_openni_kinect.so" name="$depth_camera_controller">
                 <baseline>0.2</baseline>
                 <alwaysOn>true</alwaysOn>
                 <updateRate>0</updateRate>
@@ -440,7 +440,7 @@
                 <Cy>0</Cy>
                 <focalLength>0</focalLength>
                 <hackBaseline>0</hackBaseline>
-            </plugin>
+            </plugin> -->
         </sensor>
     </gazebo>
     <gazebo reference="link_1">
