@@ -1,1 +1,0 @@
-/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/devel/.private/hierarchial_simulation/lib/python3/dist-packages/hierarchial_simulation/srv/_lego_pickup.py

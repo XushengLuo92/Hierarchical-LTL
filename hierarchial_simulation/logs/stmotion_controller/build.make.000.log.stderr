@@ -1,5 +1,0 @@
-In file included from [01m[K/usr/include/termios.h:25[m[K,
-                 from [01m[K/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/src/stmotion_controller/src/FTS/rq_sensor_com.cpp:49[m[K:
-[01m[K/usr/include/features.h:187:3:[m[K [01;35m[Kwarning: [m[K#warning "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE" [[01;35m[K-Wcpp[m[K]
-  187 | # [01;35m[Kwarning[m[K "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE"
-      |   [01;35m[K^~~~~~~[m[K

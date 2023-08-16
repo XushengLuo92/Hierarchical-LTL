@@ -1,1 +1,0 @@
-/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/devel/.private/moveit_fanuc_config/lib/python3/dist-packages/moveit_fanuc_config/srv/__init__.py

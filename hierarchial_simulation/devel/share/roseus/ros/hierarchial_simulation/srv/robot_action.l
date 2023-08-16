@@ -1,1 +1,0 @@
-/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/devel/.private/hierarchial_simulation/share/roseus/ros/hierarchial_simulation/srv/robot_action.l
