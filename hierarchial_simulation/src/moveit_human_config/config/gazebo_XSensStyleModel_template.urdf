@@ -469,7 +469,8 @@
             <!--COM origin wrt jLeftWrist-->
             <origin xyz="0    0.083588           0" rpy="0 0 0" />
             <geometry>
-                <box size="0.11145     0.16718    0.039266" />
+                <!-- <box size="0.11145     0.16718    0.039266" /> -->
+                <box size="0.06145     0.16718    0.039266" />
             </geometry>
             <material name="color" />
         </visual>
@@ -477,7 +478,8 @@
             <!--COM origin wrt jLeftWrist-->
             <origin xyz="0    0.083588           0" rpy="0 0 0" />
             <geometry>
-                <box size="0.11145     0.16718    0.039266" />
+                <!-- <box size="0.11145     0.16718    0.039266" /> -->
+                <box size="0.06145     0.16718    0.039266" />
             </geometry>
         </collision>
     </link>

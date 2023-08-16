@@ -223,6 +223,7 @@ def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick
     # currentpose=getLink2world(name='world')
     currentpose=getLink2world(name="human_gazebo::LeftHand")
     print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
+    print('-----------------------')
     currentpose=getLink2world(name="human_gazebo::Pelvis")
     # print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
     # currentpose=getLink2world(name='world_fixed')
@@ -238,7 +239,7 @@ def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick
     pose_goal.pose.position.x = currentpose.position.x-x
     pose_goal.pose.position.y = currentpose.position.y-y
     pose_goal.pose.position.z = z-currentpose.position.z
-
+    print(pose_goal.pose.position,'\n........................')
     # pose2base=get_pose2base(pose_goal.pose,currentpose)
     # print(pose2base)
 
@@ -259,6 +260,11 @@ def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick
         # pose_goal.pose.position.z = pose2base[1][2]
 
         res = action_msg(pose_goal, pose_goal)
+        # tippose=getLink2world(name='human_gazebo::LeftHand')
+        # # print(Rotation.from_quat([tippose.orientation.x,tippose.orientation.y,tippose.orientation.z,tippose.orientation.w]).as_euler('XYZ'),'\n',tippose.position)
+        # print(tippose.position.x -currentpose.position.x,
+        # tippose.position.y -currentpose.position.y,
+        # tippose.position.z -currentpose.position.z)
         return res.finished
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
@@ -343,16 +349,16 @@ class lego_state():
     def human_HLTL_service_launch(self):
         def human_HLTL_service(req:lego_pickup):
             id=self.name2id[req.pick_lego_name]
-            human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.3,orientation=self.config_data['config'][id]["src"]["o"]+90)
+            # human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.3,orientation=self.config_data['config'][id]["src"]["o"]+90)
             # move to the above of the brick
-            human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.17,orientation=self.config_data['config'][id]["src"]["o"])
+            human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.18,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the top of the brick
             self.change_state(req.pick_lego_name,'human_gazebo::LeftHand')
-            human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+            # human_left_hand_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.3,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the above of the brick
-            human_left_hand_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])
+            # human_left_hand_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.3,orientation=self.config_data['config'][id]["des"]["o"])
             # move to the above of the brick des
-            human_left_hand_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.17,orientation=self.config_data['config'][id]["des"]["o"])
+            human_left_hand_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.18,orientation=self.config_data['config'][id]["des"]["o"])
             self.change_state(req.pick_lego_name,'des')
             # move to the top of the brick des
             return True
