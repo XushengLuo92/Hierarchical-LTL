@@ -1,0 +1,8 @@
+prefix=/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/devel/.private/stmotion_controller
+
+Name: stmotion_controller
+Description: Description of stmotion_controller
+Version: 0.0.0
+Cflags: -I/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/devel/.private/stmotion_controller/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime

@@ -1,0 +1,1 @@
+/home/xusj/Documents/0LAB/23ChangliuLiu/Hierarchical-LTL/hierarchial_simulation/devel/.private/stmotion_controller/share/gennodejs/ros/stmotion_controller/srv/lego_pickup.js

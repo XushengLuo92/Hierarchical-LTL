@@ -1,0 +1,65 @@
+ros_control_namespace: /human_gazebo
+controller_list:
+  # - name: human_gazebo/body_controller
+  #   action_ns: follow_joint_trajectory
+  #   type: FollowJointTrajectory
+  #   default: True
+  #   joints:
+  #     - jLeftC7Shoulder_rotx
+  #     - jLeftShoulder_rotx
+  #     - jLeftShoulder_roty
+  #     - jLeftShoulder_rotz
+  #     - jLeftElbow_roty
+  #     - jLeftElbow_rotz
+  #     - jLeftWrist_rotx
+  #     - jLeftWrist_rotz
+  #     - jL5S1_rotx
+  #     - jL5S1_roty
+  #     - jL4L3_rotx
+  #     - jL4L3_roty
+  #     - jL1T12_rotx
+  #     - jL1T12_roty
+  #     - jT9T8_rotx
+  #     - jT9T8_roty
+  #     - jT9T8_rotz
+  - name: human_gazebo/right_arm_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - jRightC7Shoulder_rotx
+      - jRightShoulder_rotx
+      - jRightShoulder_roty
+      - jRightShoulder_rotz
+      - jRightElbow_roty
+      - jRightElbow_rotz
+      - jRightWrist_rotx
+      - jRightWrist_rotz
+  - name: human_gazebo/right_leg_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - jRightHip_rotx
+      - jRightHip_roty
+      - jRightHip_rotz
+      - jRightKnee_roty
+      - jRightKnee_rotz
+      - jRightAnkle_rotx
+      - jRightAnkle_roty
+      - jRightAnkle_rotz
+      - jRightBallFoot_roty
+  - name: human_gazebo/left_leg_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - jLeftHip_rotx
+      - jLeftHip_roty
+      - jLeftHip_rotz
+      - jLeftKnee_roty
+      - jLeftKnee_rotz
+      - jLeftAnkle_rotx
+      - jLeftAnkle_roty
+      - jLeftAnkle_rotz
+      - jLeftBallFoot_roty

@@ -1,0 +1,12 @@
+[  0%] Built target geometry_msgs_generate_messages_cpp
+[  0%] Built target geometry_msgs_generate_messages_eus
+[  0%] Built target geometry_msgs_generate_messages_nodejs
+[  0%] Built target geometry_msgs_generate_messages_py
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  0%] Built target _moveit_fanuc_config_generate_messages_check_deps_robot_action
+[ 28%] Built target moveit_fanuc_config_generate_messages_py
+[ 42%] Built target moveit_fanuc_config_generate_messages_nodejs
+[ 57%] Built target moveit_fanuc_config_generate_messages_lisp
+[ 85%] Built target moveit_fanuc_config_generate_messages_eus
+[100%] Built target moveit_fanuc_config_generate_messages_cpp
+[100%] Built target moveit_fanuc_config_generate_messages

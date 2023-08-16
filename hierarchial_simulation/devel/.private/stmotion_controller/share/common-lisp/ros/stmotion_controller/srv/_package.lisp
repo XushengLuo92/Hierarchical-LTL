@@ -1,0 +1,15 @@
+(cl:defpackage stmotion_controller-srv
+  (:use )
+  (:export
+   "LEGO_PICKUP"
+   "<LEGO_PICKUP-REQUEST>"
+   "LEGO_PICKUP-REQUEST"
+   "<LEGO_PICKUP-RESPONSE>"
+   "LEGO_PICKUP-RESPONSE"
+   "ROBOT_ACTION"
+   "<ROBOT_ACTION-REQUEST>"
+   "ROBOT_ACTION-REQUEST"
+   "<ROBOT_ACTION-RESPONSE>"
+   "ROBOT_ACTION-RESPONSE"
+  ))
+

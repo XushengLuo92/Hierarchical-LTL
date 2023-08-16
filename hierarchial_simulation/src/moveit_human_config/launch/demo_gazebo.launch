@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- MoveIt options -->
+  <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
+
+  <!-- Gazebo options -->
+  <arg name="gazebo_gui" default="true" doc="Start Gazebo GUI"/>
+  <arg name="paused" default="false" doc="Start Gazebo paused"/>
+  <arg name="world_name" default="worlds/empty.world" doc="Gazebo world file"/>
+  <arg name="world_pose" value="-x 0.4 -y 0.4 -z 0.1 -R 0 -P 0 -Y 3.14159" doc="Pose to spawn the robot at"/>
+  <arg name="initial_joint_positions" default="
+        -J jLeftAnkle_roty 0.541
+        -J jLeftAnkle_rotz -0.2508
+        -J jLeftBallFoot_roty -0.1745
+        -J jLeftHip_rotx -0.5235
+        -J jLeftHip_roty -2.0943
+        -J jLeftHip_rotz 0.5501
+        -J jLeftKnee_roty 1.3875
+        -J jLeftKnee_rotz 0.0274
+        -J jRightAnkle_rotx 0
+        -J jRightAnkle_roty 0
+        -J jRightAnkle_rotz 0
+        -J jRightBallFoot_roty 0
+        -J jRightHip_rotx 0.5235
+        -J jRightHip_roty -1.898
+        -J jRightHip_rotz -0.7853
+        -J jRightKnee_roty 2.3561
+        -J jRightKnee_rotz 0
+        -J jRightC7Shoulder_rotx 0.0872
+        -J jRightElbow_roty 1.4835
+        -J jRightElbow_rotz 1.0954
+        -J jRightShoulder_rotx 0.2274
+        -J jRightShoulder_roty -1.352
+        -J jRightShoulder_rotz -0.082
+        -J jRightWrist_rotx 0.3117
+        -J jRightWrist_rotz 0.0321
+
+        -J jL1T12_rotx 0.0271
+        -J jL1T12_roty -0.0099
+        -J jL4L3_rotx -0.1418
+        -J jL4L3_roty 0.0099
+        -J jL5S1_rotx 0.0611
+        -J jL5S1_roty -0.0948"
+    doc="Initial joint configuration of the robot"/>
+  <!-- <arg name="initial_joint_positions" default="
+        -J jLeftAnkle_roty 0.541
+        -J jLeftAnkle_rotz -0.2508
+        -J jLeftBallFoot_roty -0.1745
+        -J jLeftHip_rotx -0.5235
+        -J jLeftHip_roty -2.0943
+        -J jLeftHip_rotz 0.5501
+        -J jLeftKnee_roty 1.3875
+        -J jLeftKnee_rotz 0.0274
+        -J jRightAnkle_rotx 0
+        -J jRightAnkle_roty 0
+        -J jRightAnkle_rotz 0
+        -J jRightBallFoot_roty 0
+        -J jRightHip_rotx 0.5235
+        -J jRightHip_roty -1.898
+        -J jRightHip_rotz -0.7853
+        -J jRightKnee_roty 2.3561
+        -J jRightKnee_rotz 0
+        -J jRightC7Shoulder_rotx 0.0872
+        -J jRightElbow_roty 1.4835
+        -J jRightElbow_rotz 1.0954
+        -J jRightShoulder_rotx 0.2274
+        -J jRightShoulder_roty -1.352
+        -J jRightShoulder_rotz -0.082
+        -J jRightWrist_rotx 0.3117
+        -J jRightWrist_rotz 0.0321
+
+
+        -J jL1T12_rotx 0.0271
+        -J jL1T12_roty -0.0099
+        -J jL4L3_rotx -0.1418
+        -J jL4L3_roty 0.0099
+        -J jL5S1_rotx 0.0611
+        -J jL5S1_roty -0.0948
+ 
+        "
+    doc="Initial joint configuration of the robot"/> -->
+         <!-- 
+        -J jC1Head_rotx 0
+        -J jC1Head_roty 0
+        -J jT1C7_rotx 0.095
+        -J jT1C7_roty 0
+        -J jT1C7_rotz 0
+        -J jT9T8_rotx -0.2611
+        -J jT9T8_roty -0.0337
+        -J jT9T8_rotz -0.4425 -->
+    <!-- Gazebo options -->
+
+    <!-- Start Gazebo paused to allow the controllers to pickup the initial pose -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" pass_all_args="true">
+    <arg name="paused" value="true"/>
+  </include>
+  
+  <group ns="/human_gazebo">
+    <arg name = "human" default="human"/>
+    <arg name="model" value="human_gazebo"/>
+    <!-- Launch Gazebo and spawn the robot -->
+    <include file="$(dirname)/gazebo.launch" pass_all_args="true"/>
+
+    <!-- Launch MoveIt -->
+    <!-- robot_description is loaded by gazebo.launch, to enable Gazebo features -->
+    <include file="$(dirname)/demo.launch" pass_all_args="true">
+
+      <arg name="load_robot_description" value="false" />
+      <arg name="moveit_controller_manager" value="ros_control" />
+    </include>
+    <node name="move_group_python_interface" pkg="moveit_human_config" type="human_controller.py" respawn="false" output="screen">
+    </node>
+  </group >
+</launch>
+

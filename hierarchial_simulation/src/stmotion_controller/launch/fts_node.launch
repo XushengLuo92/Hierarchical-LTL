@@ -1,0 +1,5 @@
+<launch>
+    <node name="stmotion_controller_fts" pkg="stmotion_controller" type="stmotion_controller_fts" output="screen" required="true">
+        <param name="root_pwd" value="$(find stmotion_controller)/"/>
+    </node>
+</launch>

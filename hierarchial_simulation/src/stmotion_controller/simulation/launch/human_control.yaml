@@ -1,0 +1,160 @@
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 125
+
+hip_position_controller:
+  type: position_controllers/JointPositionController
+  joint: hip
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+spine_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: spine_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+spine_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: spine_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+spine_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: spine_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+shoulder_center_position_controller:
+  type: position_controllers/JointPositionController
+  joint: shoulder_center
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_arm_mount_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_arm_mount
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_shoulder_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_shoulder_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_shoulder_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_shoulder_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_shoulder_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_shoulder_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_elbow_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_elbow_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_wrist_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_wrist_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_wrist_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_wrist_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_wrist_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_wrist_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+neck_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: neck_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+neck_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: neck_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+neck_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: neck_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+head_position_controller:
+  type: position_controllers/JointPositionController
+  joint: head
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_arm_mount_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_arm_mount
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_shoulder_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_shoulder_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_shoulder_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_shoulder_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_shoulder_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_shoulder_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_elbow_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_elbow_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_wrist_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_wrist_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_wrist_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_wrist_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_wrist_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_wrist_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_hip_leg_mount_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_hip_leg_mount
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_hip_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_hip_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_hip_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_hip_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_hip_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_hip_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_knee_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_knee_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_ankle_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_ankle_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+left_ankle_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: left_ankle_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_hip_leg_mount_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_hip_leg_mount
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_hip_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_hip_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_hip_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_hip_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_hip_2_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_hip_2
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_knee_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_knee_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_ankle_0_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_ankle_0
+  pid: {p: 1000.0, i: 0.01, d: 10.0}
+right_ankle_1_position_controller:
+  type: position_controllers/JointPositionController
+  joint: right_ankle_1
+  pid: {p: 1000.0, i: 0.01, d: 10.0}

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py", line 57, in <module>
+    spec = load_srv_from_file(msg_context, msg_file, full_type_name)
+  File "/opt/ros/noetic/lib/python3/dist-packages/genmsg/msg_loader.py", line 485, in load_srv_from_file
+    spec = load_srv_from_string(msg_context, text, full_name)
+  File "/opt/ros/noetic/lib/python3/dist-packages/genmsg/msg_loader.py", line 469, in load_srv_from_string
+    msg_in = load_msg_from_string(msg_context, text_in.getvalue(), '%sRequest'%(full_name))
+  File "/opt/ros/noetic/lib/python3/dist-packages/genmsg/msg_loader.py", line 266, in load_msg_from_string
+    field_type, name = _load_field_line(orig_line, package_name)
+  File "/opt/ros/noetic/lib/python3/dist-packages/genmsg/msg_loader.py", line 225, in _load_field_line
+    raise InvalidMsgSpec("Invalid declaration: %s"%(orig_line))
+genmsg.base.InvalidMsgSpec: Invalid declaration: string reference_frame "world"
+make[2]: *** [CMakeFiles/_moveit_fanuc_config_generate_messages_check_deps_robot_action.dir/build.make:57：CMakeFiles/_moveit_fanuc_config_generate_messages_check_deps_robot_action] 错误 1
+make[1]: *** [CMakeFiles/Makefile2:1125：CMakeFiles/_moveit_fanuc_config_generate_messages_check_deps_robot_action.dir/all] 错误 2
+make: *** [Makefile:141：all] 错误 2

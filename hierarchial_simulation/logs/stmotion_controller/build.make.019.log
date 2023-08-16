@@ -1,0 +1,24 @@
+[  0%] Built target geometry_msgs_generate_messages_lisp
+[  4%] Built target qplib
+[  4%] Built target geometry_msgs_generate_messages_cpp
+[  4%] Built target geometry_msgs_generate_messages_py
+[  4%] Built target geometry_msgs_generate_messages_nodejs
+[  4%] Built target geometry_msgs_generate_messages_eus
+[  4%] Built target _stmotion_controller_generate_messages_check_deps_lego_pickup
+[ 28%] Built target stmotion_controller
+[ 28%] Built target _stmotion_controller_generate_messages_check_deps_robot_action
+[ 33%] Built target stmotion_controller_single_traj
+[ 42%] Built target stmotion_controller_lego_test
+[ 42%] Built target stmotion_controller_fts
+[ 47%] Built target stmotion_controller_bringup
+[ 52%] Built target stmotion_controller_LTL_task_planning_cartesian
+[ 57%] Built target stmotion_controller_ik_test
+[ 61%] Built target stmotion_controller_realsense
+[ 66%] Built target stmotion_controller_pick_up_test
+[ 71%] Built target stmotion_controller_task_planning_cartesian
+[ 76%] Built target stmotion_controller_generate_messages_lisp
+[ 80%] Built target stmotion_controller_generate_messages_nodejs
+[ 88%] Built target stmotion_controller_generate_messages_py
+[100%] Built target stmotion_controller_generate_messages_cpp
+[100%] Built target stmotion_controller_generate_messages_eus
+[100%] Built target stmotion_controller_generate_messages

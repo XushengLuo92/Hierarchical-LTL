@@ -1,0 +1,274 @@
+left_arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - jLeftC7Shoulder_rotx
+    - jLeftShoulder_rotx
+    - jLeftShoulder_roty
+    - jLeftShoulder_rotz
+    - jLeftElbow_roty
+    - jLeftElbow_rotz
+    - jLeftWrist_rotx
+    - jLeftWrist_rotz
+    - jL5S1_rotx
+    - jL5S1_roty
+    - jL4L3_rotx
+    - jL4L3_roty
+    - jL1T12_rotx
+    - jL1T12_roty
+    - jT9T8_rotx
+    - jT9T8_roty
+    - jT9T8_rotz
+  gains:
+    jLeftC7Shoulder_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftShoulder_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftShoulder_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftShoulder_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftElbow_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftElbow_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftWrist_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftWrist_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jL5S1_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jL5S1_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jL4L3_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jL4L3_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jL1T12_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jL1T12_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jT9T8_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jT9T8_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jT9T8_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+right_arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - jRightC7Shoulder_rotx
+    - jRightShoulder_rotx
+    - jRightShoulder_roty
+    - jRightShoulder_rotz
+    - jRightElbow_roty
+    - jRightElbow_rotz
+    - jRightWrist_rotx
+    - jRightWrist_rotz
+  gains:
+    jRightC7Shoulder_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightShoulder_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightShoulder_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightShoulder_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightElbow_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightElbow_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightWrist_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightWrist_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+right_leg_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - jRightHip_rotx
+    - jRightHip_roty
+    - jRightHip_rotz
+    - jRightKnee_roty
+    - jRightKnee_rotz
+    - jRightAnkle_rotx
+    - jRightAnkle_roty
+    - jRightAnkle_rotz
+    - jRightBallFoot_roty
+  gains:
+    jRightHip_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightHip_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightHip_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightKnee_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightKnee_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightAnkle_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightAnkle_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightAnkle_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jRightBallFoot_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+left_leg_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - jLeftHip_rotx
+    - jLeftHip_roty
+    - jLeftHip_rotz
+    - jLeftKnee_roty
+    - jLeftKnee_rotz
+    - jLeftAnkle_rotx
+    - jLeftAnkle_roty
+    - jLeftAnkle_rotz
+    - jLeftBallFoot_roty
+  gains:
+    jLeftHip_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftHip_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftHip_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftKnee_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftKnee_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftAnkle_rotx:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftAnkle_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftAnkle_rotz:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    jLeftBallFoot_roty:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1

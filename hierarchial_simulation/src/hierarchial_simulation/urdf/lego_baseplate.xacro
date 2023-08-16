@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot
+  name="base_plate" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="base_plate">
+  <xacro:arg name="plate_color" default="Orange" />
+  <xacro:property name="scale" value="0.001"/>
+  <xacro:property name="color" value="$(arg plate_color)"/>
+
+  <link
+    name="plate">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.001" />
+      <inertia
+        ixx="0"
+        ixy="-0.0"
+        ixz="0.0"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh scale="${scale} ${scale} ${scale}"
+          filename="file://$(find hierarchial_simulation)/meshes/lego/base48x48.stl"/>
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <!-- <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh scale="${scale} ${scale} ${scale}"
+          filename="file://$(find stmotion_controller)/simulation/meshes/lego/base50x50.stl"/>
+      </geometry>
+    </collision> -->
+    <gravity>0</gravity>
+  </link>
+  
+  <gazebo reference="plate">
+  <kinematic>true</kinematic>
+  <xacro:if value="${color == 'Orange'}">
+     <material>Gazebo/Orange</material>
+    </xacro:if>
+    <xacro:if value="${color == 'Green'}">
+     <material>Gazebo/Green</material>
+    </xacro:if>
+    <xacro:if value="${color == 'Black'}">
+     <material>Gazebo/Black</material>
+    </xacro:if>
+    <xacro:if value="${color == 'Blue'}">
+     <material>Gazebo/Blue</material>
+     </xacro:if>
+     <xacro:if value="${color == 'Yellow'}">
+     <material>Gazebo/Yellow</material>
+    </xacro:if>
+    <xacro:if value="${color == 'Red'}">
+     <material>Gazebo/Red</material>
+    </xacro:if>
+    <xacro:if value="${color == 'White'}">
+     <material>Gazebo/White</material>
+    </xacro:if>
+    <xacro:if value="${color == 'Grey'}">
+     <material>Gazebo/Grey</material>
+    </xacro:if>
+    <visual> <transparency> 0 </transparency> </visual>
+  </gazebo>
+  </xacro:macro>
+
+  <xacro:base_plate>
+  </xacro:base_plate>
+
+  
+</robot>

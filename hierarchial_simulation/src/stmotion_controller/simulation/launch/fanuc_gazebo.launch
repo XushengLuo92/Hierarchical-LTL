@@ -1,0 +1,54 @@
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- the include to include other launch files  -->
+  <include
+    file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+    <include file="$(find stmotion_controller)/simulation/launch/lego_setup.launch"/>
+
+    <arg name = "fanuc_arm" default="fanuc_arm"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find stmotion_controller)/simulation/urdf/fanuc_arm.xacro"/>
+    <node name="spawn_fanuc_arm" pkg="gazebo_ros" type="spawn_model"
+      args="-param robot_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0
+            -model $(arg fanuc_arm)"
+      respawn="false" output="screen">
+    </node>
+
+
+  <rosparam file="$(find stmotion_controller)/simulation/launch/control.yaml" command="load"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" ns="/fanuc_gazebo"
+    output="screen" 
+    args="joint_state_controller
+          joint1_position_controller
+          joint2_position_controller
+          joint3_position_controller
+          joint4_position_controller
+          joint5_position_controller
+          joint6_position_controller"
+  />
+  
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "robot_state_publisher"
+    respawn="false" output="screen">
+    <remap from="/joint_states" to="/fanuc_gazebo/joint_states" />
+  </node>
+</launch>

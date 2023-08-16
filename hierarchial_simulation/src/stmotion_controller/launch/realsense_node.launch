@@ -1,0 +1,5 @@
+<launch>
+    <node name="stmotion_controller_realsense" pkg="stmotion_controller" type="stmotion_controller_realsense" output="screen" required="true">
+        <param name="root_pwd" value="$(find stmotion_controller)/"/>
+    </node>
+</launch>

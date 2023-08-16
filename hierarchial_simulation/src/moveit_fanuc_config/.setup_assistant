@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: stmotion_controller
+    relative_path: simulation/urdf/fanuc_arm.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/fanuc_lrmate200id7l.srdf
+  CONFIG:
+    author_name: shaojunxu
+    author_email: shaojunx@andrew.cmu.edu
+    generated_timestamp: 1692209352
