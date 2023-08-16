@@ -204,8 +204,8 @@ def fanuc1_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,br
     pose_goal.pose.orientation.y = q[1]
     pose_goal.pose.orientation.z = q[2]
     pose_goal.pose.orientation.w = q[3]
-    pose_goal.pose.position.x = x-currentpose.position.x
-    pose_goal.pose.position.y = y-currentpose.position.y
+    pose_goal.pose.position.x = currentpose.position.x-x
+    pose_goal.pose.position.y = currentpose.position.y-y
     pose_goal.pose.position.z = z-currentpose.position.z
     print(pose_goal.pose.position,'........................')
     rospy.wait_for_service('/fanuc1_gazebo/action_msg')
@@ -295,19 +295,25 @@ def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick
 
 def test():
     time.sleep(5)
-    # action_msg = rospy.ServiceProxy('/hltl_msg/human_action', lego_pickup)
-    action_msg = rospy.ServiceProxy('/hltl_msg/fanuc1_action', lego_pickup)
-    action_msg("23", "pick", "b15_1")
-    action_msg("23", "pick", "b15_2")
-    action_msg("23", "pick", "b13_1")
-    action_msg("23", "pick", "b15_3")
-    action_msg("23", "pick", "b15_4")
-    action_msg("23", "pick", "b13_2")
-    action_msg("23", "pick", "b13_3")
-    action_msg("23", "pick", "b15_5")
-    action_msg("23", "pick", "b11_2")
-    action_msg("23", "pick", "b11_1")
-    action_msg("23", "pick", "b13_4")
+    def send2fanuc(robotname='/hltl_msg/fanuc_action',bringkname='b15_1'):
+        action_msg = rospy.ServiceProxy('/hltl_msg/fanuc_action', lego_pickup)
+        action_msg("23", "pick", "b15_1")
+    # def send2fanuc2(bringkname='b15_1'):
+    #     action_msg = rospy.ServiceProxy('/hltl_msg/fanuc1_action', lego_pickup)
+    #     action_msg("23", "pick", "b15_1")
+    # action1_msg = rospy.ServiceProxy('/hltl_msg/fanuc1_action', lego_pickup)
+    thread.start_new_thread(send2fanuc,('/hltl_msg/fanuc1_action','b15_1'))
+    
+    # action_msg("23", "pick", "b15_2")
+    # action_msg("23", "pick", "b13_1")
+    # action_msg("23", "pick", "b15_3")
+    # action_msg("23", "pick", "b15_4")
+    # action_msg("23", "pick", "b13_2")
+    # action_msg("23", "pick", "b13_3")
+    # action_msg("23", "pick", "b15_5")
+    # action_msg("23", "pick", "b11_2")
+    # action_msg("23", "pick", "b11_1")
+    # action_msg("23", "pick", "b13_4")
     pass 
 
 
@@ -373,6 +379,8 @@ class lego_state():
             for id in range(self.brick_len):
                 if self.config_data['config'][id]["state"] =='fanuc_gazebo::link_tool':
                     lego_action(brick_name=self.config_data['config'][id]["brick_name"] ,reference_frame='fanuc_gazebo::link_tool',x=0,y=0,z=0.075,orientation=180)
+                elif self.config_data['config'][id]["state"] =='fanuc1_gazebo::link_tool':
+                    lego_action(brick_name=self.config_data['config'][id]["brick_name"] ,reference_frame='fanuc1_gazebo::link_tool',x=0,y=0,z=0.075,orientation=180)
                 elif self.config_data['config'][id]["state"] =='human_gazebo::LeftHand':
                     lego_action(brick_name=self.config_data['config'][id]["brick_name"],reference_frame='human_gazebo::LeftHand',y=0.175,orientation=-90)
             rate.sleep()
@@ -427,6 +435,7 @@ class lego_state():
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.12,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the top of the brick
             self.change_state(req.pick_lego_name,'fanuc1_gazebo::link_tool')
+
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
             # move to the above of the brick
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])

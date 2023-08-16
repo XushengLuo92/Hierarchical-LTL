@@ -13,7 +13,7 @@
   </include> -->
 
   <!-- Set the robot urdf on the parameter server -->
-  <param name="robot_description" command="xacro  '$(find stmotion_controller)/simulation/urdf/fanuc_arm.xacro'" />
+  <param name="robot_description" command="xacro  '$(find moveit_fanuc_config)/config/gazebo_fanuc_lrmate200id7l.urdf'" />
 
   <!-- Unpause the simulation after loading the robot model -->
   <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />

@@ -46,7 +46,7 @@ display_trajectory_publisher = rospy.Publisher(
 print(robot_fanuc.get_current_state())
 def robot_action_service_handler(req:robot_action):
     # print('fanuc_gazebo arm start state',robot_fanuc.get_current_state())
-    group_name = "arm"
+    group_name = "arm1"
     move_group = moveit_commander.MoveGroupCommander(group_name)
     move_group.set_pose_reference_frame("fanuc1_gazebo::base")
     des=req.des

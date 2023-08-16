@@ -1,5 +1,6 @@
 import os
 import sys
+import rospy 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 import networkx as nx
@@ -439,6 +440,9 @@ def vis_graph(graph, att, title, latex=False):
     # plt.tight_layout()
     # plt.savefig('nx_test.png', bbox_inches='tight')
 
+def send2fanuc(robotname='/hltl_msg/fanuc_action',bringkname='b15_1'):
+    action_msg = rospy.ServiceProxy('/hltl_msg/fanuc_action', lego_pickup)
+    action_msg("23", "pick", bringkname)
 
 def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis, acpt_run):
     print("************* timed plan **************")
@@ -505,6 +509,9 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
 
             current_exec_robots.append(type_robot)
             current_exec_tasks.append(candidate_tasks_for_robot[task_index])
+
+
+        # thread.start_new_thread(send2fanuc,('/hltl_msg/fanuc1_action','b15_1'))
         # remove current subtasks
         executing_task_network.remove_nodes_from(current_exec_tasks)
         print("current_exec_robots: ", current_exec_robots)
@@ -513,6 +520,7 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
         
         if finished_task_str == invalid_str:
             finished_task_str = input("Finished task: ")
+
             finished_task_split = finished_task_str.split()     
             finished_task_str = invalid_str
             # update when some tasks are finished

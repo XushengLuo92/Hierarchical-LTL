@@ -17,7 +17,7 @@
 
   <group ns="/fanuc1_gazebo">
     <arg name = "robot_arm" default="robot_arm"/>
-    <arg name="model" value="fanuc_gazebo"/>
+    <arg name="model" value="fanuc1_gazebo"/>
     <!-- Launch Gazebo and spawn the robot -->
     <include file="$(dirname)/gazebo.launch" pass_all_args="true"/>
 
