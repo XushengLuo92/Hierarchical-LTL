@@ -9,7 +9,7 @@
     name="brick">
     <inertial>
       <origin
-        xyz="0 0 0"
+        xyz="0.004 -0.02 0"
         rpy="0 0 0" />
       <mass
         value="0.001" />
@@ -23,7 +23,7 @@
     </inertial>
     <visual>
       <origin
-        xyz="0 0 0"
+        xyz="0.004 -0.02 0"
         rpy="0 0 ${pi/2}" />
       <geometry>
         <mesh scale="${scale} ${scale} ${scale}"

@@ -1,5 +1,5 @@
 import rospy 
-from stmotion_controller.srv import robot_action,lego_pickup
+from hierarchial_simulation.srv import robot_action,lego_pickup
 import geometry_msgs.msg
 import math
 from tf.transformations import quaternion_from_euler,euler_from_quaternion
@@ -139,13 +139,13 @@ def getLink2world(name="fanuc_gazebo::base"):
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,brink_name=None):
-    if brink_name != None:
-        if pick:
-            legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
-            res = legeo_action_msg("fanuc_gazebo::link_tool","pick",brink_name)
-        else:
-            legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
-            res = legeo_action_msg("fanuc_gazebo::link_tool","unpick",brink_name)
+    # if brink_name != None:
+    #     if pick:
+    #         legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
+    #         res = legeo_action_msg("fanuc_gazebo::link_tool","pick",brink_name)
+    #     else:
+    #         legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
+    #         res = legeo_action_msg("fanuc_gazebo::link_tool","unpick",brink_name)
 
     currentpose=getLink2world(name='fanuc_gazebo::base')
     print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)
@@ -187,13 +187,15 @@ def fanuc_action_reletive2world(x=0.1,y=-0.2,z=0.15,orientation=40,pick=True,bri
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
 def human_left_hand_action_reletive2world(x=-0,y=-0.1,z=0.30,orientation=90,pick=True,brink_name=None):
-    if brink_name != None:
-        if pick:
-            legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
-            res = legeo_action_msg("human_gazebo::LeftHand","pick",brink_name)
-        else:
-            legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
-            res = legeo_action_msg("human_gazebo::LeftHand","unpick",brink_name)
+    # if brink_name != None:
+    #     if pick:
+    #         legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
+    #         res = legeo_action_msg("human_gazebo::LeftHand","pick",brink_name)
+    #     else:
+    #         legeo_action_msg = rospy.ServiceProxy('/lego_gazebo/action_msg', lego_pickup)
+    #         res = legeo_action_msg("human_gazebo::LeftHand","unpick",brink_name)
+
+
     # currentpose=getLink2world(name='world')
     currentpose=getLink2world(name="human_gazebo::Pelvis")
     print(Rotation.from_quat([currentpose.orientation.x,currentpose.orientation.y,currentpose.orientation.z,currentpose.orientation.w]).as_euler('XYZ'),'\n',currentpose.position)

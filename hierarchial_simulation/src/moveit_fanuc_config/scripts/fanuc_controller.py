@@ -51,8 +51,10 @@ def robot_action_service_handler(req:robot_action):
     move_group.set_pose_reference_frame("fanuc_gazebo::base")
     des=req.des
     end_effector_link = move_group.get_end_effector_link()
-    move_group.set_goal_position_tolerance(0.01)
-    move_group.set_goal_orientation_tolerance(0.05)
+    move_group.set_goal_position_tolerance(0.0001)
+    move_group.set_goal_orientation_tolerance(0.0001)
+    move_group.set_goal_joint_tolerance(0.0001)
+    move_group.set_goal_tolerance(0.0001)
     move_group.set_start_state_to_current_state()
 
     # move_group.set_pose_target(des)

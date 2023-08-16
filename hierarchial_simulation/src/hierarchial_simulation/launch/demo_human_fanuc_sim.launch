@@ -4,6 +4,7 @@
   <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
 
   <!-- Gazebo options -->
+  <arg name="use_rviz" default="false" />
   <arg name="gazebo_gui" default="true" doc="Start Gazebo GUI"/>
   <arg name="paused" default="false" doc="Start Gazebo paused"/>
   <arg name="world_name" default="worlds/empty.world" doc="Gazebo world file"/>
@@ -14,15 +15,15 @@
   <include file="$(find gazebo_ros)/launch/empty_world.launch" pass_all_args="true">
     <arg name="paused" value="true"/>
   </include>
-  <group ns="/lego_gazebo">
+  <!-- <group ns="/lego_gazebo"> -->
     <include file="$(find hierarchial_simulation)/launch/lego_setup.launch"/>
-    <node pkg="hierarchial_simulation" name="lego_state_refresher" type="human_controller.py" output="screen">
+    <!-- <node pkg="hierarchial_simulation" name="lego_state_refresher" type="demo_human_fanuc_lego.py" output="screen">
       <param name="config_json" value="$(find hierarchial_simulation)/config/ICL.json"/>
-    </node>
-  </group>
+    </node> -->
+  <!-- </group> -->
 
 
-  <!-- <group ns="/human_gazebo">
+  <group ns="/human_gazebo">
     <arg name = "human" default="human"/>
     <arg name="model" value="human_gazebo"/>
     <arg name="world_pose" value="-x 0.3 -y 0.3 -z 0.1 -R 0 -P 0 -Y 2.7" doc="Pose to spawn the robot at"/>
@@ -70,7 +71,7 @@
     </node>
   </group >
 
-  <group ns="/fanuc_gazebo">
+  <!-- <group ns="/fanuc_gazebo">
     <arg name="world_pose" default="-x -0.5 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
     <arg name = "robot_arm" default="robot_arm"/>
     <arg name="model" value="fanuc_gazebo"/>

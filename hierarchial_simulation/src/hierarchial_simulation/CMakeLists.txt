@@ -30,5 +30,6 @@ CATKIN_DEPENDS message_runtime
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-catkin_install_python(PROGRAMS simulation/py_scripts/lego_state_refresher.py
+# catkin_install_python(PROGRAMS scripts/lego_state_refresher.py scripts/human_fanuc_controller.py
+catkin_install_python(PROGRAMS scripts/demo_human_fanuc_lego.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
