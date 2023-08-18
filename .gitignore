@@ -12,3 +12,4 @@ hierarchial_simulation/logs/*
 hierarchial_simulation/build/*
 .catkin_tools
 *.mp4
+*.pdf

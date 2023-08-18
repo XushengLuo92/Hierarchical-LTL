@@ -29,15 +29,15 @@
       respawn="false" output="screen">
     </node>
     <param name="b28_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x8.xacro 
-                                                    brick_color:='Orange'"/>
+                                                    brick_color:='White'"/>
     <param name="b26_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x6.xacro 
                                                     brick_color:='Orange'"/>
     <param name="b22_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x2.xacro 
-                                                    brick_color:='Blue'"/>
+                                                    brick_color:='Red'"/>
     <param name="b16_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_1x6.xacro 
-                                                    brick_color:='Blue'"/>
+                                                    brick_color:='Yellow'"/>
     <param name="b14_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_1x4.xacro 
-                                                    brick_color:='Blue'"/>
+                                                    brick_color:='Grey'"/>
 
     <arg name = "b16_1" default="b16_1"/>
     <node name="spawn_b16_1" pkg="gazebo_ros" type="spawn_model"
