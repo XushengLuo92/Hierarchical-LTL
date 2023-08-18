@@ -277,11 +277,12 @@ class HLTL_sim():
         print(self.config_data['config'][0]["brick_name"])
         print("lego python service ready")
         rospy.init_node("hltl_python_interface", anonymous=True)
-        self.init_state()
-        thread.start_new_thread(self.fanuc_HLTL_service_launch,())
-        thread.start_new_thread(self.fanuc1_HLTL_service_launch,())
-        thread.start_new_thread(self.test,())
+        self.init_state(pose="des")
+        # thread.start_new_thread(self.fanuc_HLTL_service_launch,())
+        # thread.start_new_thread(self.fanuc1_HLTL_service_launch,())
+        # thread.start_new_thread(self.test,())
         self.refresh_lego_state()
+
         # rospy.spin()
 
     def task_execution(self,time_task_element_type_robot_axis, reduced_task_network, type_robots):
@@ -418,14 +419,19 @@ class HLTL_sim():
         # action_msg("23", "pick", "b11_1")
         # action_msg("23", "pick", "b13_4")
         pass 
-    def init_state(self):
+    def init_state(self,pose="src"):
         for id in range(self.brick_len):
             if self.config_data['config'][id]["state"]=="init":
                 lego_action(self.config_data['config'][id]["brick_name"],
-                            x=self.config_data['config'][id]["src"]["x"],
-                            y=self.config_data['config'][id]["src"]["y"],
-                            z=self.config_data['config'][id]["src"]["z"],orientation=self.config_data['config'][id]["src"]["o"])
-                self.config_data['config'][id]["state"]="src"
+                            x=self.config_data['config'][id][pose]["x"],
+                            y=self.config_data['config'][id][pose]["y"],
+                            z=self.config_data['config'][id][pose]["z"],orientation=self.config_data['config'][id][pose]["o"])
+                print(self.config_data['config'][id]["brick_name"],
+                            self.config_data['config'][id][pose]["x"],
+                            self.config_data['config'][id][pose]["y"],
+                            self.config_data['config'][id][pose]["z"],
+                            self.config_data['config'][id][pose]["o"])
+                self.config_data['config'][id]["state"]=pose
     def change_state(self,brick_name,reference_frame):
         self.config_data['config'][self.name2id[brick_name]]["state"]=reference_frame
         pass 
@@ -561,7 +567,8 @@ def lego_action(brick_name='b14_9',reference_frame='world',x=0,y=0,z=0,orientati
     state_msg.pose.position.y = y
     state_msg.pose.position.z = z
     # orientation=90
-    q = quaternion_from_euler(0 * DE2RA, 0 * DE2RA, orientation * DE2RA)
+    # q = quaternion_from_euler(0 * DE2RA, 0 * DE2RA, orientation * DE2RA)
+    q = Rotation.from_euler('ZYX',[0 * DE2RA, 0 * DE2RA, orientation * DE2RA]).as_quat()
     state_msg.pose.orientation.w = q[0]
     state_msg.pose.orientation.x = q[1]
     state_msg.pose.orientation.y = q[2]

@@ -16,7 +16,8 @@
     <arg name="paused" value="true"/>
   </include>
   <!-- <group ns="/lego_gazebo"> -->
-    <include file="$(find hierarchial_simulation)/launch/lego_setup.launch"/>
+    <include file="$(find hierarchial_simulation)/launch/lego_setup_BeaconTower.launch"/>
+    <!-- <include file="$(find hierarchial_simulation)/launch/lego_setup.launch"/> -->
     <!-- <node pkg="hierarchial_simulation" name="lego_state_refresher" type="demo_human_fanuc_lego.py" output="screen">
       <param name="config_json" value="$(find hierarchial_simulation)/config/ICL.json"/>
     </node> -->
@@ -74,7 +75,7 @@
     </node>
   </group > -->
 
-  <group ns="/fanuc_gazebo">
+  <!-- <group ns="/fanuc_gazebo">
     <arg name="world_pose" default="-x -0.7 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
     <arg name="initial_joint_positions" value="
         -J joint_1 0.3"
@@ -104,5 +105,5 @@
     </include>
     <node pkg="moveit_fanuc1_config" name="move_group_python_interface" type="fanuc_controller.py" output="screen">
     </node>
-  </group>
+  </group> -->
 </launch>

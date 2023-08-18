@@ -1,0 +1,226 @@
+<launch>
+    <!-- length 0.008 for each grid  -->
+    <arg name = "assemble_plate" default="assemble_plate"/>
+    <arg name = "assemble_plate_color" default="White" />
+    <param name="assemble_plate_description" command="$(find xacro)/xacro 
+                                                      $(find hierarchial_simulation)/urdf/lego_baseplate.xacro
+                                                      plate_color:=$(arg assemble_plate_color)"/>
+    <node name="spawn_assemble_plate" pkg="gazebo_ros" type="spawn_model"
+      args="-param assemble_plate_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg assemble_plate)"
+      respawn="false" output="screen">
+    </node>
+
+    <arg name = "storage_plate" default="storage_plate"/>
+    <arg name = "storage_plate_color" default="Grey" />
+    <param name="storage_plate_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_baseplate.xacro 
+                                                    plate_color:=$(arg storage_plate_color)"/>
+    <node name="spawn_storage_plate" pkg="gazebo_ros" type="spawn_model"
+      args="-param storage_plate_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg storage_plate)"
+      respawn="false" output="screen">
+    </node>
+    <param name="b28_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x8.xacro 
+                                                    brick_color:='Orange'"/>
+    <param name="b26_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x6.xacro 
+                                                    brick_color:='Orange'"/>
+    <param name="b22_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x2.xacro 
+                                                    brick_color:='Blue'"/>
+    <param name="b16_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_1x6.xacro 
+                                                    brick_color:='Blue'"/>
+    <param name="b14_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_1x4.xacro 
+                                                    brick_color:='Blue'"/>
+
+    <arg name = "b16_1" default="b16_1"/>
+    <node name="spawn_b16_1" pkg="gazebo_ros" type="spawn_model"
+      args="-param b16_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b16_1)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b16_2" default="b16_2"/>
+    <node name="spawn_b16_2" pkg="gazebo_ros" type="spawn_model"
+      args="-param b16_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b16_2)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b16_3" default="b16_3"/>
+    <node name="spawn_b16_3" pkg="gazebo_ros" type="spawn_model"
+      args="-param b16_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b16_3)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b16_4" default="b16_4"/>
+    <node name="spawn_b16_4" pkg="gazebo_ros" type="spawn_model"
+      args="-param b16_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b16_4)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b16_5" default="b16_5"/>
+    <node name="spawn_b16_5" pkg="gazebo_ros" type="spawn_model"
+      args="-param b16_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b16_5)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b16_6" default="b16_6"/>
+    <node name="spawn_b16_6" pkg="gazebo_ros" type="spawn_model"
+      args="-param b16_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b16_6)"
+      respawn="false" output="screen">
+    </node>
+
+    <arg name = "b14_1" default="b14_1"/>
+    <node name="spawn_b14_1" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_1)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b14_2" default="b14_2"/>
+    <node name="spawn_b14_2" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_2)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b14_3" default="b14_3"/>
+    <node name="spawn_b14_3" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_3)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b14_4" default="b14_4"/>
+    <node name="spawn_b14_4" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_4)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b14_5" default="b14_5"/>
+    <node name="spawn_b14_5" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_5)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b14_6" default="b14_6"/>
+    <node name="spawn_b14_6" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_6)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b14_7" default="b14_7"/>
+    <node name="spawn_b14_7" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_7)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b14_8" default="b14_8"/>
+    <node name="spawn_b14_8" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b14_8)"
+      respawn="false" output="screen">
+    </node>
+
+    <arg name = "b28_1" default="b28_1"/>
+    <node name="spawn_b28_1" pkg="gazebo_ros" type="spawn_model"
+      args="-param b28_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b28_1)"
+      respawn="false" output="screen">
+    </node>
+    <arg name = "b28_2" default="b28_2"/>
+    <node name="spawn_b28_2" pkg="gazebo_ros" type="spawn_model"
+      args="-param b28_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b28_2)"
+      respawn="false" output="screen">
+    </node>
+
+    <arg name = "b26_1" default="b26_1"/>
+    <node name="spawn_b26_1" pkg="gazebo_ros" type="spawn_model"
+      args="-param b26_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b26_1)"
+      respawn="false" output="screen">
+    </node>
+  
+    <arg name = "b22_1" default="b22_1"/>
+    <node name="spawn_b22_1" pkg="gazebo_ros" type="spawn_model"
+      args="-param b22_description
+            -urdf 
+            -x 0
+            -y 0
+            -z 0.0016
+            -model $(arg b22_1)"
+      respawn="false" output="screen">
+    </node>
+</launch>

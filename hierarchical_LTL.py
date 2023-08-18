@@ -415,6 +415,7 @@ def generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifi
     return reduced_task_network
 
 def vis_graph(graph, att, title, latex=False):
+    return
     # write dot file to use with graphviz
     # run "dot -Tpng test.dot >test.png"
     nx.nx_agraph.write_dot(graph, title+'.dot')

@@ -56,7 +56,7 @@ def robot_action_service_handler(req:robot_action):
     move_group.set_goal_joint_tolerance(0.0001)
     move_group.set_goal_tolerance(0.0001)
     move_group.set_start_state_to_current_state()
-
+    move_group.set_planner_id('TRRT')
     # move_group.set_pose_target(des)
 
     move_group.set_pose_target(des, end_effector_link)
@@ -68,6 +68,11 @@ def robot_action_service_handler(req:robot_action):
     move_group.clear_pose_targets()
     return success
 
+group_name = "arm"
+move_group = moveit_commander.MoveGroupCommander(group_name)
+move_group.set_named_target('main')
+move_group.go()  #让机械臂先规划，再运动，阻塞指令，直到机械臂到达home后再向下执行
+rospy.sleep(1)
 s = rospy.Service('action_msg', robot_action, robot_action_service_handler)
 print("fanuc python service ready")
 rospy.spin()
