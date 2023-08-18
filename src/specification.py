@@ -206,5 +206,31 @@ class Specification():
             level_three['p400'] = '<> (p6_1_1_0 && <> (p7_1_1_0 && <> p8_1_1_0))'
             level_three['p500'] = '<> (p9_1_1_0 && <> (p10_1_1_0 && <> p11_1_1_0))'
             hierarchy.append(level_three)
+        elif case == 6:
+        # ------------------------ task house -------------------------
+            level_one = dict()
+            level_one["p0"] = "<> (p100_1_1_0 && <> (p200_1_1_0 &&  <> (p300_1_1_0 && <> (p400_1_1_0 &&  <> (p500_1_1_0 &&  <> p600_1_1_0)))))"
+            hierarchy.append(level_one)    
             
+            level_two = dict()
+            level_two['p100'] = '<> p101_1_1_0 &&  <> p102_1_1_0'   # level 1
+            level_two['p200'] = '<> p201_1_1_0 &&  <> p202_1_1_0'
+            level_two['p300'] = '<> p301_1_1_0 &&  <> p302_1_1_0'
+            level_two['p400'] = '<> p401_1_1_0'
+            level_two['p500'] = '<> (p501_1_1_0 &&  <> p502_1_1_0)'
+            level_two['p600'] = '<> p601_1_1_0'   # level 6
+            hierarchy.append(level_two)
+            
+            level_three = dict()
+            level_three['p101'] = '<> p1_1_1_1 && <> p2_1_1_1'
+            level_three['p102'] = '<> p3_1_1_2 && <> p4_1_1_2'
+            level_three['p201'] = '<> (p5_1_1_1 && <> p6_1_1_1)'
+            level_three['p202'] = '<> (p9_1_1_2 && <> p10_1_1_2)'
+            level_three['p301'] = '<> (p7_1_1_1 && <> p8_1_1_1)'
+            level_three['p302'] = '<> (p11_1_1_2 && <> p12_1_1_2)'
+            level_three['p401'] = '<> p13_1_1_0 && <> p14_1_1_0'
+            level_three['p501'] = '<> p15_1_1_1 && <> p16_1_1_2'
+            level_three['p502'] = '<> p17_1_1_0'
+            level_three['p601'] = '<> p18_1_1_0'
+            hierarchy.append(level_three)
         return hierarchy
