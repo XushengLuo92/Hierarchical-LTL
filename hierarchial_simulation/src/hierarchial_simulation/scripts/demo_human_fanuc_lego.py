@@ -31,7 +31,7 @@ def create_parser():
     """
     parser = argparse.ArgumentParser(description='FM')
     parser.add_argument('--task', default="man", type=str)
-    parser.add_argument('--case', default=5, type=int)
+    parser.add_argument('--case', default=6, type=int)
     parser.add_argument('--vis', action='store_true', help='Enable visualization')
     parser.add_argument('--dot', action='store_true', help='Enable dot graph')
 
@@ -263,6 +263,10 @@ class HLTL_sim():
         self.global_task_finished_id=-1
         self.num_operators=2
         self.robot_id=['fanuc','fanuc1','human']
+
+        self.invalid_str = -1
+        self.finished_task_str = np.zeros(self.num_operators)
+
         if config_json!=None:
             with open(config_json,'r') as config_file:
                 self.config_data=json.load(config_file)
@@ -271,16 +275,16 @@ class HLTL_sim():
                 self.task_id2brick_id={}
                 for id in range(self.brick_len):
                     self.name2id[self.config_data['config'][id]["brick_name"]]=id
-                    self.task_id2brick_id[self.config_data['config'][id]["task_id"]]=id
+                    self.task_id2brick_id[self.config_data['config'][id]["task_id"]+self.config_data['config'][id]["belong"]]=id
                 # print(self.task_id2brick_id)
         self.someBodyPlacing=np.zeros(self.num_operators)
         print(self.config_data['config'][0]["brick_name"])
         print("lego python service ready")
         rospy.init_node("hltl_python_interface", anonymous=True)
-        self.init_state(pose="des")
-        # thread.start_new_thread(self.fanuc_HLTL_service_launch,())
-        # thread.start_new_thread(self.fanuc1_HLTL_service_launch,())
-        # thread.start_new_thread(self.test,())
+        self.init_state(pose="src")
+        thread.start_new_thread(self.fanuc_HLTL_service_launch,())
+        thread.start_new_thread(self.fanuc1_HLTL_service_launch,())
+        thread.start_new_thread(self.test,())
         self.refresh_lego_state()
 
         # rospy.spin()
@@ -299,8 +303,7 @@ class HLTL_sim():
         print("task_element2time: ", task_element2time)
         executing_task_network = reduced_task_network.copy()
         
-        self.invalid_str = -1
-        self.finished_task_str = np.zeros(self.num_operators)
+
         while executing_task_network.nodes():
             # candidate tasks: 1. no parent in updated task network 2. no parent in executing tasks
             candidate_tasks = set(node for node in executing_task_network.nodes() \
@@ -333,8 +336,8 @@ class HLTL_sim():
                 topic = 'hltl_msg/' + ['human','fanuc'][type_robot[0]] +['','1'][type_robot[1]]+ '_action'
                 task_id = reduced_task_network.nodes[current_exec_tasks[-1]]['label'][0][0][0]
 
-                thread.start_new_thread(send2fanuc,(topic,self.config_data['config'][self.task_id2brick_id[task_id]]["brick_name"]))
-                print('_____________send_______________\n',(topic,self.config_data['config'][self.task_id2brick_id[task_id]]["brick_name"]))
+                thread.start_new_thread(send2fanuc,(topic,self.config_data['config'][self.task_id2brick_id[task_id+['human','fanuc'][type_robot[0]] +['','1'][type_robot[1]]]]["brick_name"]))
+                print('_____________send_______________\n',(topic,self.config_data['config'][self.task_id2brick_id[task_id+['human','fanuc'][type_robot[0]] +['','1'][type_robot[1]]]]["brick_name"]))
                 # if current_exec_robots[0][1]==1:
                 #     thread.start_new_thread(send2fanuc,('/hltl_msg/fanuc1_action','b15_1'))
                 # elif current_exec_robots[0][1]==0:
@@ -399,16 +402,55 @@ class HLTL_sim():
             self.task_execution(time_task_element_type_robot_axis, reduced_task_network, type_robots)
         else:
             hierarchical_ltl_planner(args=args)
+
         #  python main.py --task man --case 5
 
 
         # def send2fanuc2(bringkname='b15_1'):
-        #     action_msg = rospy.ServiceProxy('/hltl_msg/fanuc1_action', lego_pickup)
+        # action_msg = rospy.ServiceProxy('/hltl_msg/fanuc1_action', lego_pickup)
         #     action_msg("23", "pick", "b15_1")
         # action1_msg = rospy.ServiceProxy('/hltl_msg/fanuc1_action', lego_pickup)
         
         
-        # action_msg("23", "pick", "b15_2")
+        # action_msg("23", "pick", "b16_1")  
+        # # 3
+        # action_msg("23", "pick", "b16_2")
+        # # 2
+        # action_msg("23", "pick", "b16_3")
+        # # 1
+        # action_msg("23", "pick", "b16_4")
+        # # 4
+
+        # action_msg("23", "pick", "b14_1")
+        # # 11
+        # action_msg("23", "pick", "b14_2")
+        # # 7
+        # action_msg("23", "pick", "b14_3")
+        # # 5
+        # action_msg("23", "pick", "b14_4")
+        # # 9
+        # action_msg("23", "pick", "b14_5")
+        # # 10
+        # action_msg("23", "pick", "b14_6")
+        # # 6
+        # action_msg("23", "pick", "b14_7")
+        # # 8
+        # action_msg("23", "pick", "b14_8")
+        # # 12
+
+        # action_msg("23", "pick", "b16_5")
+        # # 16
+        # action_msg("23", "pick", "b16_6")
+        # # 15
+        # action_msg("23", "pick", "b28_1")
+        # # 13
+        # action_msg("23", "pick", "b28_2")
+        # # 14
+        # action_msg("23", "pick", "b26_1")
+        # # 17
+        # action_msg("23", "pick", "b22_1")
+        # # 18
+
         # action_msg("23", "pick", "b13_1")
         # action_msg("23", "pick", "b15_3")
         # action_msg("23", "pick", "b15_4")
@@ -450,9 +492,9 @@ class HLTL_sim():
         while not rospy.is_shutdown():
             for id in range(self.brick_len):
                 if self.config_data['config'][id]["state"] =='fanuc_gazebo::link_tool':
-                    lego_action(brick_name=self.config_data['config'][id]["brick_name"] ,reference_frame='fanuc_gazebo::link_tool',x=0,y=0,z=0.075,orientation=180)
+                    lego_action(brick_name=self.config_data['config'][id]["brick_name"] ,reference_frame='fanuc_gazebo::link_tool',x=0,y=0,z=0.064,orientation=0,upside_orientation=180)
                 elif self.config_data['config'][id]["state"] =='fanuc1_gazebo::link_tool':
-                    lego_action(brick_name=self.config_data['config'][id]["brick_name"] ,reference_frame='fanuc1_gazebo::link_tool',x=0,y=0,z=0.075,orientation=180)
+                    lego_action(brick_name=self.config_data['config'][id]["brick_name"] ,reference_frame='fanuc1_gazebo::link_tool',x=0,y=0,z=0.064,orientation=0,upside_orientation=180)
                 elif self.config_data['config'][id]["state"] =='human_gazebo::LeftHand':
                     lego_action(brick_name=self.config_data['config'][id]["brick_name"],reference_frame='human_gazebo::LeftHand',y=0.175,orientation=-90)
             rate.sleep()
@@ -492,23 +534,19 @@ class HLTL_sim():
             # self.someBodyPlacing[0]=0
             # move to the above of the brick
             while(self.someBodyPlacing.any()>0):
-                time.sleep(0.2)
+                time.sleep(0.1)
             self.someBodyPlacing[robot_id]=1
             fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.35,orientation=self.config_data['config'][id]["des"]["o"])
             # move to the above of the brick des
 
-            fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.12,orientation=self.config_data['config'][id]["des"]["o"])
+            fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.11+self.config_data['config'][id]["des"]["z"],orientation=self.config_data['config'][id]["des"]["o"])
             self.change_state(req.pick_lego_name,'des')
             fanuc_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.35,orientation=self.config_data['config'][id]["des"]["o"])
-
-            fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.35,orientation=self.config_data['config'][id]["src"]["o"])
             self.someBodyPlacing[robot_id]=0
-            # move to the top of the brick des
-            # while (self.finished_task_str!=self.invalid_str):
-            #     time.sleep(0.2)
-            # if self.finished_task_str==self.invalid_str:
-            #     self.finished_task_str=0
+
             self.finished_task_str[robot_id]=1
+            fanuc_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.35,orientation=self.config_data['config'][id]["src"]["o"])
+
             
             return True
             pass 
@@ -533,18 +571,19 @@ class HLTL_sim():
             # self.someBodyPlacing[1]=0
             # move to the above of the brick
             while(self.someBodyPlacing.any()>0):
-                time.sleep(0.2)
+                time.sleep(0.1)
             self.someBodyPlacing[robot_id]=1
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])
             # move to the above of the brick des
 
-            fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.12,orientation=self.config_data['config'][id]["des"]["o"])
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.11+self.config_data['config'][id]["des"]["z"],orientation=self.config_data['config'][id]["des"]["o"])
             self.change_state(req.pick_lego_name,'des')
             fanuc1_action_reletive2world(x= self.config_data['config'][id]["des"]["x"],y=self.config_data['config'][id]["des"]["y"],z=0.2,orientation=self.config_data['config'][id]["des"]["o"])
-            fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
             self.someBodyPlacing[robot_id]=0
             # move to the top of the brick des
             self.finished_task_str[robot_id]=1
+            fanuc1_action_reletive2world(x= self.config_data['config'][id]["src"]["x"],y=self.config_data['config'][id]["src"]["y"],z=0.2,orientation=self.config_data['config'][id]["src"]["o"])
+
             # while (self.finished_task_str!=self.invalid_str):
             #     time.sleep(0.2)
             # if self.finished_task_str==self.invalid_str:
@@ -557,7 +596,7 @@ class HLTL_sim():
         rospy.spin()
         pass 
 
-def lego_action(brick_name='b14_9',reference_frame='world',x=0,y=0,z=0,orientation=90):
+def lego_action(brick_name='b14_9',reference_frame='world',x=0,y=0,z=0,orientation=90,upside_orientation=0):
     # rospy.init_node('set_pose')
 
     state_msg = ModelState()
@@ -568,7 +607,7 @@ def lego_action(brick_name='b14_9',reference_frame='world',x=0,y=0,z=0,orientati
     state_msg.pose.position.z = z
     # orientation=90
     # q = quaternion_from_euler(0 * DE2RA, 0 * DE2RA, orientation * DE2RA)
-    q = Rotation.from_euler('ZYX',[0 * DE2RA, 0 * DE2RA, orientation * DE2RA]).as_quat()
+    q = Rotation.from_euler('ZYX',[upside_orientation * DE2RA, 0 * DE2RA, orientation * DE2RA]).as_quat()
     state_msg.pose.orientation.w = q[0]
     state_msg.pose.orientation.x = q[1]
     state_msg.pose.orientation.y = q[2]

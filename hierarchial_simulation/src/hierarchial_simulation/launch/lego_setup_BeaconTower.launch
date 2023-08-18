@@ -29,7 +29,7 @@
       respawn="false" output="screen">
     </node>
     <param name="b28_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x8.xacro 
-                                                    brick_color:='White'"/>
+                                                    brick_color:='Green'"/>
     <param name="b26_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x6.xacro 
                                                     brick_color:='Orange'"/>
     <param name="b22_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_2x2.xacro 
@@ -37,190 +37,376 @@
     <param name="b16_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_1x6.xacro 
                                                     brick_color:='Yellow'"/>
     <param name="b14_description" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_1x4.xacro 
+                                                    brick_color:='Blue'"/>
+    <param name="b14_description2" command="$(find xacro)/xacro  $(find hierarchial_simulation)/urdf/lego_1x4.xacro 
                                                     brick_color:='Grey'"/>
 
-    <arg name = "b16_1" default="b16_1"/>
-    <node name="spawn_b16_1" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b16_1_fanuc" default="b16_1_fanuc"/>
+    <node name="spawn_b16_1_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b16_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b16_1)"
+            -model $(arg b16_1_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b16_2" default="b16_2"/>
-    <node name="spawn_b16_2" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b16_2_fanuc" default="b16_2_fanuc"/>
+    <node name="spawn_b16_2_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b16_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b16_2)"
+            -model $(arg b16_2_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b16_3" default="b16_3"/>
-    <node name="spawn_b16_3" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b16_3_fanuc" default="b16_3_fanuc"/>
+    <node name="spawn_b16_3_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b16_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b16_3)"
+            -model $(arg b16_3_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b16_4" default="b16_4"/>
-    <node name="spawn_b16_4" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b16_4_fanuc" default="b16_4_fanuc"/>
+    <node name="spawn_b16_4_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b16_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b16_4)"
+            -model $(arg b16_4_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b16_5" default="b16_5"/>
-    <node name="spawn_b16_5" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b16_5_fanuc" default="b16_5_fanuc"/>
+    <node name="spawn_b16_5_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b16_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b16_5)"
+            -model $(arg b16_5_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b16_6" default="b16_6"/>
-    <node name="spawn_b16_6" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b16_6_fanuc" default="b16_6_fanuc"/>
+    <node name="spawn_b16_6_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b16_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b16_6)"
+            -model $(arg b16_6_fanuc)"
       respawn="false" output="screen">
     </node>
 
-    <arg name = "b14_1" default="b14_1"/>
-    <node name="spawn_b14_1" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b14_1_fanuc" default="b14_1_fanuc"/>
+    <node name="spawn_b14_1_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b14_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_1)"
+            -model $(arg b14_1_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b14_2" default="b14_2"/>
-    <node name="spawn_b14_2" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b14_2_fanuc" default="b14_2_fanuc"/>
+    <node name="spawn_b14_2_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b14_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_2)"
+            -model $(arg b14_2_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b14_3" default="b14_3"/>
-    <node name="spawn_b14_3" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b14_3_fanuc" default="b14_3_fanuc"/>
+    <node name="spawn_b14_3_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b14_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_3)"
+            -model $(arg b14_3_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b14_4" default="b14_4"/>
-    <node name="spawn_b14_4" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b14_4_fanuc" default="b14_4_fanuc"/>
+    <node name="spawn_b14_4_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b14_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_4)"
+            -model $(arg b14_4_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b14_5" default="b14_5"/>
-    <node name="spawn_b14_5" pkg="gazebo_ros" type="spawn_model"
-      args="-param b14_description
+    <arg name = "b14_5_fanuc" default="b14_5_fanuc"/>
+    <node name="spawn_b14_5_fanuc" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description2
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_5)"
+            -model $(arg b14_5_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b14_6" default="b14_6"/>
-    <node name="spawn_b14_6" pkg="gazebo_ros" type="spawn_model"
-      args="-param b14_description
+    <arg name = "b14_6_fanuc" default="b14_6_fanuc"/>
+    <node name="spawn_b14_6_fanuc" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description2
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_6)"
+            -model $(arg b14_6_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b14_7" default="b14_7"/>
-    <node name="spawn_b14_7" pkg="gazebo_ros" type="spawn_model"
-      args="-param b14_description
+    <arg name = "b14_7_fanuc" default="b14_7_fanuc"/>
+    <node name="spawn_b14_7_fanuc" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description2
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_7)"
+            -model $(arg b14_7_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b14_8" default="b14_8"/>
-    <node name="spawn_b14_8" pkg="gazebo_ros" type="spawn_model"
-      args="-param b14_description
+    <arg name = "b14_8_fanuc" default="b14_8_fanuc"/>
+    <node name="spawn_b14_8_fanuc" pkg="gazebo_ros" type="spawn_model"
+      args="-param b14_description2
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b14_8)"
+            -model $(arg b14_8_fanuc)"
       respawn="false" output="screen">
     </node>
 
-    <arg name = "b28_1" default="b28_1"/>
-    <node name="spawn_b28_1" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b28_1_fanuc" default="b28_1_fanuc"/>
+    <node name="spawn_b28_1_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b28_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b28_1)"
+            -model $(arg b28_1_fanuc)"
       respawn="false" output="screen">
     </node>
-    <arg name = "b28_2" default="b28_2"/>
-    <node name="spawn_b28_2" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b28_2_fanuc" default="b28_2_fanuc"/>
+    <node name="spawn_b28_2_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b28_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b28_2)"
+            -model $(arg b28_2_fanuc)"
       respawn="false" output="screen">
     </node>
 
-    <arg name = "b26_1" default="b26_1"/>
-    <node name="spawn_b26_1" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b26_1_fanuc" default="b26_1_fanuc"/>
+    <node name="spawn_b26_1_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b26_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b26_1)"
+            -model $(arg b26_1_fanuc)"
       respawn="false" output="screen">
     </node>
   
-    <arg name = "b22_1" default="b22_1"/>
-    <node name="spawn_b22_1" pkg="gazebo_ros" type="spawn_model"
+    <arg name = "b22_1_fanuc" default="b22_1_fanuc"/>
+    <node name="spawn_b22_1_fanuc" pkg="gazebo_ros" type="spawn_model"
       args="-param b22_description
             -urdf 
             -x 0
             -y 0
             -z 0.0016
-            -model $(arg b22_1)"
+            -model $(arg b22_1_fanuc)"
       respawn="false" output="screen">
     </node>
+  <arg name = "b16_1_fanuc1" default="b16_1_fanuc1"/>
+  <node name="spawn_b16_1_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b16_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b16_1_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b16_2_fanuc1" default="b16_2_fanuc1"/>
+  <node name="spawn_b16_2_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b16_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b16_2_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b16_3_fanuc1" default="b16_3_fanuc1"/>
+  <node name="spawn_b16_3_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b16_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b16_3_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b16_4_fanuc1" default="b16_4_fanuc1"/>
+  <node name="spawn_b16_4_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b16_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b16_4_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b16_5_fanuc1" default="b16_5_fanuc1"/>
+  <node name="spawn_b16_5_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b16_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b16_5_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b16_6_fanuc1" default="b16_6_fanuc1"/>
+  <node name="spawn_b16_6_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b16_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b16_6_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+
+  <arg name = "b14_1_fanuc1" default="b14_1_fanuc1"/>
+  <node name="spawn_b14_1_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_1_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b14_2_fanuc1" default="b14_2_fanuc1"/>
+  <node name="spawn_b14_2_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_2_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b14_3_fanuc1" default="b14_3_fanuc1"/>
+  <node name="spawn_b14_3_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_3_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b14_4_fanuc1" default="b14_4_fanuc1"/>
+  <node name="spawn_b14_4_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_4_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b14_5_fanuc1" default="b14_5_fanuc1"/>
+  <node name="spawn_b14_5_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description2
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_5_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b14_6_fanuc1" default="b14_6_fanuc1"/>
+  <node name="spawn_b14_6_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description2
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_6_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b14_7_fanuc1" default="b14_7_fanuc1"/>
+  <node name="spawn_b14_7_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description2
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_7_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b14_8_fanuc1" default="b14_8_fanuc1"/>
+  <node name="spawn_b14_8_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b14_description2
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b14_8_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+
+  <arg name = "b28_1_fanuc1" default="b28_1_fanuc1"/>
+  <node name="spawn_b28_1_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b28_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b28_1_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+  <arg name = "b28_2_fanuc1" default="b28_2_fanuc1"/>
+  <node name="spawn_b28_2_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b28_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b28_2_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+
+  <arg name = "b26_1_fanuc1" default="b26_1_fanuc1"/>
+  <node name="spawn_b26_1_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b26_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b26_1_fanuc1)"
+    respawn="false" output="screen">
+  </node>
+
+  <arg name = "b22_1_fanuc1" default="b22_1_fanuc1"/>
+  <node name="spawn_b22_1_fanuc1" pkg="gazebo_ros" type="spawn_model"
+    args="-param b22_description
+          -urdf 
+          -x 0
+          -y 0
+          -z 0.0016
+          -model $(arg b22_1_fanuc1)"
+    respawn="false" output="screen">
+  </node>
 </launch>

@@ -75,7 +75,7 @@
     </node>
   </group > -->
 
-  <!-- <group ns="/fanuc_gazebo">
+  <group ns="/fanuc_gazebo">
     <arg name="world_pose" default="-x -0.7 -y 0 -z 0 -R 0 -P 0 -Y 0" doc="Pose to spawn the robot at"/>
     <arg name="initial_joint_positions" value="
         -J joint_1 0.3"
@@ -105,5 +105,5 @@
     </include>
     <node pkg="moveit_fanuc1_config" name="move_group_python_interface" type="fanuc_controller.py" output="screen">
     </node>
-  </group> -->
+  </group>
 </launch>

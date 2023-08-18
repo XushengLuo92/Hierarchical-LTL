@@ -58,7 +58,7 @@ def robot_action_service_handler(req:robot_action):
     move_group.set_start_state_to_current_state()
     move_group.set_max_acceleration_scaling_factor(0.7)
     move_group.set_max_velocity_scaling_factor(0.7)
-
+    move_group.set_planner_id('TRRT')
     # move_group.set_pose_target(des)
 
     move_group.set_pose_target(des, end_effector_link)
