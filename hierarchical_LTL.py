@@ -467,18 +467,24 @@ def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_t
 def get_finished_task():
     return -1
             
-def generate_latex_expr(label, task):
+def generate_latex_expr(label, task, case):
     if task == "nav":
         # p0 dock
         # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
         # p7 packing area
         sym2region = {'p0': 'dock', 'p1': 'groc', 'p2': 'heal', 'p3': 'outd', 'p4': 'pet',
                     'p5': 'furn', 'p6': 'elec', 'p7': 'pack'}
-    elif task == "man":
+    elif task == "man" and case == 5:
         # p1 | p2 .
         # p3 _ p4 | p5 _ p6 - p7 | p8 _ p9 ' p10 | p11 _
         sym2region = {'p1': 'P', 'p2': 'P', 'p3': 'I', 'p4': 'I', 'p5': 'I',
                     'p6': 'C', 'p7': 'C', 'p8': 'C', 'p9': 'L', 'p10': 'L', 'p11': 'L'}
+    elif task == "man" and case == 6:
+        # p1 | p2 .
+        # p3 _ p4 | p5 _ p6 - p7 | p8 _ p9 ' p10 | p11 _
+        sym2region = {'p1': 'p1', 'p2': 'p2', 'p3': 'p3', 'p4': 'p4', 'p5': 'p5',
+                    'p6': 'p6', 'p7': 'p7', 'p8': 'p8', 'p9': 'p9', 'p10': 'p10', 'p11': 'p11', 
+                    'p12': 'p12', 'p13': 'p13', 'p14': 'p14', 'p15': 'p15', 'p16': 'p16', 'p17': 'p17', 'p18': 'p18'}    
     # Helper function to format each element as a string
     def format_element(element):
         process_id, values = element[0], [element[1], element[3]]
@@ -525,13 +531,13 @@ def hierarchical_ltl_planner(args):
     if args.dot:
         semantic_reduced_task_network = reduced_task_network.copy()
         for node in semantic_reduced_task_network.nodes():
-            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'], args.task)
+            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'], args.task, args.case)
         for task in primitive_subtasks_with_identifier:
             buchi_graph  = task_hierarchy[task.parent].buchi_graph
             edge = task_hierarchy[task.parent].element2edge[task.element]
             semantic_reduced_task_network.add_edge((task.parent, task.element), ((task.parent, task.element)))
             semantic_reduced_task_network.edges[(task.parent, task.element), ((task.parent, task.element))]['label'] = \
-            generate_latex_expr(buchi_graph.nodes[edge[0]]['label'], args.task) 
+            generate_latex_expr(buchi_graph.nodes[edge[0]]['label'], args.task, args.case) 
         vis_graph(semantic_reduced_task_network, 'label', 'data/task_network', True)
     else:
         vis_graph(reduced_task_network, 'label', 'data/task_network', True)
