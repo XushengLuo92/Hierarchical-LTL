@@ -127,6 +127,27 @@ class Specification():
             level_two['p103'] = '<> (p3_2_1_2 && <> (p7_2_1_2 && <> p0_2_1_2))'
             level_two['p104'] = '<> (p3_3_1_3 && <> (p7_3_1_3 && <> p0_3_1_3))'
             hierarchy.append(level_two)
+        elif case == 9:
+            # task in poster
+            level_one = dict()
+            level_one["p0"] = '<> (p101_1_1_0 && <> p102_1_1_0)'
+            # level_one["p0"] = '(<> p103_1_1_0 || <> p104_1_1_0)'
+            hierarchy.append(level_one)
+            level_two = dict()
+            level_two['p101'] = '<> p5_1_1_1 && <> p1_1_1_1 && <> p2_1_1_1'
+            level_two['p102'] = '<> (p7_1_1_1 && <> p0_1_1_1)'
+            hierarchy.append(level_two)
+        elif case == 10:
+            # task 3 in CoRL 
+            level_one = dict()
+            level_one["p0"] = '<> p101_1_1_0 && (<> p103_1_1_0 || <> p104_1_1_0)'
+            hierarchy.append(level_one)
+            level_two = dict()
+            level_two['p101'] = '<> p2_1_1_1 && <> p1_1_1_1 && <> p6_1_1_1 && <> p4_1_1_1 && <> (p7_1_1_1 && <> p0_1_1_1) && ! p7_1_1_1 U p2_1_1_1 \
+            && ! p7_1_1_1 U p1_1_1_1 && ! p7_1_1_1 U p6_1_1_1 && ! p7_1_1_1 U p4_1_1_1 '
+            level_two['p103'] = '<> (p3_2_1_2 && <> (p7_2_1_2 && <> p0_2_1_2))'
+            level_two['p104'] = '<> (p3_3_1_3 && <> (p7_3_1_3 && <> p0_3_1_3))'
+            hierarchy.append(level_two)
         return hierarchy
     
     def get_manipulation_specification(self, case):
@@ -233,4 +254,13 @@ class Specification():
             level_three['p502'] = '<> p17_1_1_0'
             level_three['p601'] = '<> p18_1_1_0'
             hierarchy.append(level_three)
+        elif case == 7:
+            level_one = dict()
+            level_one["p0"] = "<> (p100_1_1_0 && <> p200_1_1_0)"
+            hierarchy.append(level_one)    
+            
+            level_two = dict()
+            level_two['p100'] = '<> p1_1_1_0 && <> p2_1_1_0 && <> p3_1_1_0'   # level 1
+            level_two['p200'] = '<> (p4_1_1_1 && <> p5_1_1_1)'   # level 1
+            hierarchy.append(level_two)
         return hierarchy
