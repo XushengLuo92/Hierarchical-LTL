@@ -7,9 +7,9 @@ We consider an Order Picking Problem (OOP) in a supermarket, which includes thre
 ![OOP](supermarket.png)
 
 ## Case 1
-* Initially, a robot of type 1 proceeds to the furniture section and awaits untilthe arrival of a type 3 robot to assist with the movement of a large piece of furniture; followingthis, it gathers items from the outdoor and pet sections in no particular sequence.
-* A type 2 robot should initiateits task by gathering items from the health section, and only afterwardsdoes it move to the grocery section, ensuring it doesn't visit the grocery section beforevisiting the health section.
-* A type 3 robot moves to the furniture section to assist the type 1 robot. Afterthe items are delivered to the packing area, all robots eventuallyreturn to the dock. 
+* Initially, a robot of type 1 proceeds to the furniture section and awaits until the arrival of a type 3 robot to assist with the movement of a large piece of furniture; following this, it gathers items from the outdoor and pet sections in no particular sequence.
+* A type 2 robot should initiateits task by gathering items from the health section, and only afterwards does it move to the grocery section, ensuring it doesn't visit the grocery section before visiting the health section.
+* A type 3 robot moves to the furniture section to assist the type 1 robot. Afterthe items are delivered to the packing area, all robots eventually return to the dock. 
 ```bash
 python main.py --task=nav --case=5 --vis --dot
 ```
