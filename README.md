@@ -5,6 +5,7 @@ Past research into robotic planning with temporal logic specifications, notably 
 The code is tesed using Python 3.10.12.
 ### Install ltl2ba
 Download the software `LTL2BA` from this [link](http://www.lsv.fr/~gastin/ltl2ba/index.php), and follow the instructions to generate the exectuable `ltl2ba` and then copy it into the folder `Hierarchical-LTL`, same hierarchy level with `main.py`.
+### Install solver [CPLEX](https://www.ibm.com/docs/en/icos/22.1.1?topic=2211-installing-cplex-optimization-studio)
 # Example
 Demo video can be accessible via this [link](https://youtu.be/YbmYmq1RmhI?si=eI1JoR5qIEuFKwWi).
 ## Navigation Task
