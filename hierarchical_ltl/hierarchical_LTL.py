@@ -1,18 +1,18 @@
-import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+# import os
+# import sys
+# sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 import networkx as nx
-from task import Task
-from buchi_parse import Buchi
+from .task import Task
+from .buchi_parse import Buchi
 from datetime import datetime
-from workspace_supermarket import Workspace
-from specification import Specification
-import weighted_ts
-import milp
-from GMAPP import mapp, compute_path_cost
-from vis_supermarket import plot_workspace
-from vis_supermarket import vis
+from .workspace_supermarket import Workspace
+from .specification import Specification
+from . import weighted_ts
+from . import milp
+from .GMAPP import mapp, compute_path_cost
+from .vis_supermarket import plot_workspace
+from .vis_supermarket import vis
 from termcolor import colored, cprint
 from sympy.logic.boolalg import to_dnf
 from collections import namedtuple

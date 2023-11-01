@@ -1,5 +1,5 @@
 # run: conda env create --file environment.yml
-name: hierarchical_ltl2
+name: hierarchical_ltl
 channels:
   - anaconda
   - defaults

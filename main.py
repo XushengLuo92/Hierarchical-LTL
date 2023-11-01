@@ -1,4 +1,4 @@
-from hierarchical_LTL import hierarchical_ltl_planner
+from hierarchical_ltl import hierarchical_ltl_planner
 
 import argparse
 

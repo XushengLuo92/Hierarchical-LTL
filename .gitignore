@@ -5,3 +5,5 @@ data/*
 src/__pycache__/
 
 !data/.gitkeep 
+hierarchical_ltl.egg-info/
+.DS_Store

@@ -68,7 +68,7 @@ class Specification():
             level_three['p300'] = "<> p1_2_1_1"
             hierarchy.append(level_three)
         elif case == 5:
-            # task 1 in ICRA paper
+            # task 1 in RA-L paper
             level_one = dict()
             level_one["p0"] = '<> p101_1_1_0 && <> p102_1_1_0'
             hierarchy.append(level_one)
@@ -92,7 +92,7 @@ class Specification():
             # level_four['p301'] = '<> (p5_1_1_1 && X (p5_1_1_1 U p5_3_1_3))'
             # hierarchy.append(level_four)
         elif case == 6:
-            # task 2 in ICRA paper
+            # task 2 in RA-L paper
             # p0 dock
             # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
             # p7 packing area
@@ -116,7 +116,7 @@ class Specification():
             level_two['p104'] = '<> (p3_1_1_2 && <> (p7_1_1_2 && <> p0_1_1_2)) && <>(p7_3_1_3 && <> p0_3_1_3)'
             hierarchy.append(level_two)
         elif case == 8:
-            # task 3 in ICRA paper
+            # task 3 in RA-L paper
             level_one = dict()
             level_one["p0"] = '<> (p101_1_1_0 && <> p102_1_1_0) && (<> p103_1_1_0 || <> p104_1_1_0)'
             # level_one["p0"] = '(<> p103_1_1_0 || <> p104_1_1_0)'

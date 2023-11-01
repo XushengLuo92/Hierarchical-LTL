@@ -2,7 +2,7 @@ import networkx as nx
 from gurobipy import *
 import matplotlib.pyplot as plt
 import itertools
-from vis import vis
+from .vis import vis
 import datetime
 import numpy as np
 
