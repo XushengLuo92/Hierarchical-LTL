@@ -1,0 +1,32 @@
+{
+    "bricks": [
+      {
+        "id": "p1",
+        "init_x": 5,
+        "init_y": 10,
+        "init_ori": 0,
+        "target_x": 15,
+        "target_y": 20,
+        "target_ori": 90
+      },
+      {
+        "id": "p2",
+        "init_x": 12,
+        "init_y": 6,
+        "init_ori": 45,
+        "target_x": 18,
+        "target_y": 9,
+        "target_ori": 30
+      },
+      {
+        "id": "p3",
+        "init_x": 3,
+        "init_y": 8,
+        "init_ori": 180,
+        "target_x": 9,
+        "target_y": 14,
+        "target_ori": 0
+      }
+    ]
+  }
+  

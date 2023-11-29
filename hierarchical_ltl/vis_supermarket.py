@@ -14,7 +14,7 @@ class RobotPath:
         self.i_x = np.asarray(x, dtype=float)
         self.color = np.asarray(color, dtype=float)
         self.x = self.i_x.copy()
-        self.elapse_time = -4  # adjust this number to display time recorder from 0s
+        self.elapse_time = -3  # adjust this number to display time recorder from 0s
         self.dt = 1
         self.workspace = workspace
         self.ap = ap
@@ -93,7 +93,7 @@ def plot_workspace_helper(ax, obj, obj_label):
     region = {'p0': 'dock',
               'p1': 'grocery',
               'p2': 'health',
-              'p3': 'outdoors',
+              'p3': 'outdoor',
               'p4': 'pet supplies',
               'p5': 'furniture',
               'p6': 'electronics',
@@ -102,8 +102,8 @@ def plot_workspace_helper(ax, obj, obj_label):
         if 'r' in key:
             continue
         # color = 'gray' if obj_label != 'region' else 'white'
-        color = 'gray' if obj_label != 'region' or (key == 'p0' or key == 'p7') else 'white'
-        alpha = 0.9 if obj_label != 'region' else 0.4
+        color = 'gray' if obj_label != 'region' or (key == 'p0' or key == 'p7') else 'green'
+        alpha = 0.6 if obj_label != 'region' or (key == 'p0' or key == 'p7') else 0.1
         for grid in obj[key]:
             x_ = grid[0]
             y_ = grid[1]
@@ -113,9 +113,9 @@ def plot_workspace_helper(ax, obj, obj_label):
             for point in [(x_, y_), (x_ + 1, y_), (x_ + 1, y_ + 1), (x_, y_ + 1)]:
                 x.append(point[0])
                 y.append(point[1])
-            polygon = Polygon(np.column_stack((x, y)), True)
+            polygon = Polygon(np.column_stack((x, y)), closed=True)
             patches.append(polygon)
-            p = PatchCollection(patches, facecolors=color, edgecolors=color, alpha=alpha)
+            p = PatchCollection(patches, facecolors=color, edgecolors=color, linewidths=0.2, alpha=alpha)
             ax.add_collection(p)
         # ax.text(np.mean(x) - 0.2, np.mean(y) - 0.2, r'${}_{{{}}}$'.format(key[0], key[1:]), fontsize=12)
         if key == 'p0':
@@ -147,7 +147,7 @@ def animate(i, ax, particles, annots, cls_robot_path, time_template, time_text, 
     return [particles]+annots+[time_text]+ap_text
 
 
-def vis(workspace, robot_path, robot_pre_suf_time, ap):
+def vis(task, case, workspace, robot_path, robot_pre_suf_time, ap):
     num_type = len(workspace.type_num.keys())
     colors_type = np.linspace(0.9, 0.1, num_type)
     # color = [0.4, 0.6]
@@ -185,6 +185,6 @@ def vis(workspace, robot_path, robot_pre_suf_time, ap):
                                                   ap_template, ap_text],
                              frames=int(np.ceil(max_frame)), interval=30, blit=True)
     # ani.save('/Users/chrislaw/Box Sync/Research/LTL_MRTA_icra2020/video/phi.mp4', fps=1/cls_robot_path.dt, dpi=400)
-    ani.save('./data/mapp.mp4', fps=2/cls_robot_path.dt, dpi=400)
+    ani.save(f'./data/mapp_{task}_{case}.mp4', fps=2/cls_robot_path.dt, dpi=400)
 
     # plt.show()

@@ -1,8 +1,12 @@
 __pycache__/
 .vscode/
 ltl2ba
-data/
+data/*
 src/__pycache__/
+
+!data/.gitkeep 
+hierarchical_ltl.egg-info/
+.DS_Store
 .vscode/
 devel/*
 logs/*

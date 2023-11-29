@@ -199,18 +199,12 @@ class Workspace(object):
         n_shelf = 6
         regions.append(list(itertools.product(range(start_charging_station_x, start_charging_station_x + charging_station_width_x), range(0, charging_station_length_y)))) 
         for i in range(n_shelf):
-            if i == 4:
-                regions.append(list(itertools.product([charging_station_width_x + first_shelf_to_charging_station_x + 
-                                                        i * (shelf_width_x + inter_shelf_x) - 1], 
-                                                  range(charging_station_length_y + first_shelf_to_charging_station_y,
-                                                        charging_station_length_y + first_shelf_to_charging_station_y + shelf_length_y))))
-            else:
-                regions.append(list(itertools.product([charging_station_width_x + first_shelf_to_charging_station_x + 
-                                                        i * (shelf_width_x + inter_shelf_x) - 1,
-                                                        charging_station_width_x + first_shelf_to_charging_station_x + 
-                                                        i * (shelf_width_x + inter_shelf_x) + shelf_width_x], 
-                                                  range(charging_station_length_y + first_shelf_to_charging_station_y,
-                                                        charging_station_length_y + first_shelf_to_charging_station_y + shelf_length_y))))
+            regions.append(list(itertools.product([charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                    i * (shelf_width_x + inter_shelf_x) - 1,
+                                                    charging_station_width_x + first_shelf_to_charging_station_x + 
+                                                    i * (shelf_width_x + inter_shelf_x) + shelf_width_x], 
+                                                range(charging_station_length_y + first_shelf_to_charging_station_y,
+                                                    charging_station_length_y + first_shelf_to_charging_station_y + shelf_length_y))))
             
             
         regions.append(list(itertools.product(range(charging_station_width_x + first_shelf_to_charging_station_x + 
@@ -222,7 +216,6 @@ class Workspace(object):
         return regions
 
     def allocate_obstacle_dars(self):
-
         obstacles = []
         # ICRA
         shelf_width_x = 2

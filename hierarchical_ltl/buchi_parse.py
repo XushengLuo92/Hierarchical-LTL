@@ -717,16 +717,16 @@ class Buchi(object):
         removed_edge = []
         for node in subgraph.nodes():
             for succ in subgraph.succ[node]:
-                if subgraph.nodes[node]['formula'] == subgraph.nodes[succ]['formula']:
+                if subgraph.nodes[node]['formula'].equals(subgraph.nodes[succ]['formula']):
                     for next_succ in subgraph.succ[succ]:
                         try:
                             # condition (c)
                             if ('accept' not in next_succ or
                                     ('accept' in next_succ and subgraph.nodes[next_succ]['label'] == '1' and
                                          not subgraph.nodes[next_succ]['neg_label'])) and \
-                                            subgraph.edges[(node, next_succ)]['formula'] == \
+                                            subgraph.edges[(node, next_succ)]['formula'].equals(
                                             And(self.buchi_graph.edges[(node, succ)]['formula'],
-                                                self.buchi_graph.edges[(succ, next_succ)]['formula']):
+                                                self.buchi_graph.edges[(succ, next_succ)]['formula'])):
                                 removed_edge.append((node, next_succ))
                         except KeyError:
                             continue

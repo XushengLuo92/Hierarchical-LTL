@@ -1,19 +1,18 @@
-import os
-import sys
-import rospy 
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+# import os
+# import sys
+# sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 import networkx as nx
-from task import Task
-from buchi_parse import Buchi
+from .task import Task
+from .buchi_parse import Buchi
 from datetime import datetime
-from workspace_supermarket import Workspace
-from specification import Specification
-import weighted_ts
-import milp
-from GMAPP import mapp, compute_path_cost
-from vis_supermarket import plot_workspace
-from vis_supermarket import vis
+from .workspace_supermarket import Workspace
+from .specification import Specification
+from . import weighted_ts
+from . import milp
+from .GMAPP import mapp, compute_path_cost
+from .vis_supermarket import plot_workspace
+from .vis_supermarket import vis
 from termcolor import colored, cprint
 from sympy.logic.boolalg import to_dnf
 from collections import namedtuple
@@ -419,6 +418,10 @@ def vis_graph(graph, att, title, latex=False):
     # write dot file to use with graphviz
     # run "dot -Tpng test.dot >test.png"
     nx.nx_agraph.write_dot(graph, title+'.dot')
+    # add the following the generated dot file
+    # rankdir=LR;
+	# node [texmode="math"];
+    # dot2tex --preproc --texmode math ./data/task_network.dot | dot2tex > ./data/task_network.tex
     if not latex:
         # Run a Linux command
         command = "dot -Tpng {0}.dot >{0}.png".format(title)
@@ -440,9 +443,6 @@ def vis_graph(graph, att, title, latex=False):
     # plt.tight_layout()
     # plt.savefig('nx_test.png', bbox_inches='tight')
 
-def send2fanuc(robotname='/hltl_msg/fanuc_action',bringkname='b15_1'):
-    action_msg = rospy.ServiceProxy('/hltl_msg/fanuc_action', lego_pickup)
-    action_msg("23", "pick", bringkname)
 
 def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_time_axis, robot_waypoint_axis, acpt_run):
     print("************* timed plan **************")
@@ -466,112 +466,48 @@ def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_t
     
 def get_finished_task():
     return -1
-
-def task_execution(time_task_element_type_robot_axis, reduced_task_network, type_robots):
-    finished_tasks = []
-    current_exec_tasks = []
-    current_exec_robots = []
-    candidate_tasks = set()
-    
-    task_element2type_robot = {time_task_element_type_robot[1] : time_task_element_type_robot[2] \
-        for time_task_element_type_robot in time_task_element_type_robot_axis if len(time_task_element_type_robot) == 3}
-    task_element2time =  {time_task_element_type_robot[1] : time_task_element_type_robot[0] \
-        for time_task_element_type_robot in time_task_element_type_robot_axis if len(time_task_element_type_robot) == 3}
-    print("task_element2type_robot: ", task_element2type_robot)
-    print("task_element2time: ", task_element2time)
-    executing_task_network = reduced_task_network.copy()
-    
-    invalid_str = "-1"
-    finished_task_str = invalid_str
-    while executing_task_network.nodes():
-        # candidate tasks: 1. no parent in updated task network 2. no parent in executing tasks
-        candidate_tasks = set(node for node in executing_task_network.nodes() \
-            if executing_task_network.in_degree(node) == 0)
-        removed_candidate_tasks = set(task for task in candidate_tasks for exec_task in current_exec_tasks \
-            if (exec_task, task) in executing_task_network.edges())
-        removed_candidate_tasks.update(removed_candidate_tasks)
-        candidate_tasks.difference_update(removed_candidate_tasks)
-        # deal with subtasks that are ignored due to or relation
-        remove_task_element_from_network = set(task for task in candidate_tasks if task not in task_element2type_robot.keys())
-        candidate_tasks.difference_update(remove_task_element_from_network)
-        executing_task_network.remove_nodes_from(remove_task_element_from_network)
-        
-        for type_robot in type_robots:
-            if type_robot in current_exec_robots:
-                continue
-            candidate_tasks_for_robot = [task_element for task_element in candidate_tasks \
-                if task_element2type_robot[task_element] == type_robot]
-            if not candidate_tasks_for_robot:
-                continue
-            # if there are several candiate tasks for a robot, sort according to task plan
-            ordered_candidata_tasks = [task_element2time[task_element] for task_element in candidate_tasks_for_robot]
-            task_index = ordered_candidata_tasks.index(min(ordered_candidata_tasks))
-
-            current_exec_robots.append(type_robot)
-            current_exec_tasks.append(candidate_tasks_for_robot[task_index])
-
-
-        # thread.start_new_thread(send2fanuc,('/hltl_msg/fanuc1_action','b15_1'))
-        # remove current subtasks
-        executing_task_network.remove_nodes_from(current_exec_tasks)
-        print("current_exec_robots: ", current_exec_robots)
-        for task in current_exec_tasks:
-            print("current_exec_tasks: ", task, reduced_task_network.nodes[task]['label'])
-        
-        if finished_task_str == invalid_str:
-            finished_task_str = input("Finished task: ")
-
-            finished_task_split = finished_task_str.split()     
-            finished_task_str = invalid_str
-            # update when some tasks are finished
-            finished_task = (finished_task_split[0], int(finished_task_split[1]))
-            finished_tasks.append(finished_task)
-            print("finished_task: ", finished_task)
-            current_exec_tasks.remove(finished_task)
-            current_exec_robots.remove(task_element2type_robot[finished_task])
-
-def generate_latex_expr(label):
-    # p0 dock
-    # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
-    # p7 packing area
-    sym2region = {'p0': 'dock', 'p1': 'groc', 'p2': 'heal', 'p3': 'outd', 'p4': 'pet',
-                  'p5': 'furn', 'p6': 'elec', 'p7': 'pack'}
+            
+def generate_latex_expr(label, task, case):
+    if task == "nav":
+        # p0 dock
+        # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
+        # p7 packing area
+        sym2region = {'p0': 'dock', 'p1': 'groc', 'p2': 'heal', 'p3': 'outd', 'p4': 'pet',
+                    'p5': 'furn', 'p6': 'elec', 'p7': 'pack'}
+    elif task == "man" and case == 5:
+        # p1 | p2 .
+        # p3 _ p4 | p5 _ p6 - p7 | p8 _ p9 ' p10 | p11 _
+        sym2region = {'p1': 'P', 'p2': 'P', 'p3': 'I', 'p4': 'I', 'p5': 'I',
+                    'p6': 'C', 'p7': 'C', 'p8': 'C', 'p9': 'L', 'p10': 'L', 'p11': 'L'}
+    elif task == "man" and case == 6:
+        # p1 | p2 .
+        # p3 _ p4 | p5 _ p6 - p7 | p8 _ p9 ' p10 | p11 _
+        sym2region = {'p1': 'p1', 'p2': 'p2', 'p3': 'p3', 'p4': 'p4', 'p5': 'p5',
+                    'p6': 'p6', 'p7': 'p7', 'p8': 'p8', 'p9': 'p9', 'p10': 'p10', 'p11': 'p11', 
+                    'p12': 'p12', 'p13': 'p13', 'p14': 'p14', 'p15': 'p15', 'p16': 'p16', 'p17': 'p17', 'p18': 'p18'}    
     # Helper function to format each element as a string
     def format_element(element):
         process_id, values = element[0], [element[1], element[3]]
         values_str = ', '.join(str(val) for val in values)
         return f"\\\\pi_{{\\\\text{{{sym2region[process_id]}}}}}^{{{values_str}}}"
 
-    # Iterate through the list and create formatted strings for each sublist
-    formatted_sublists = []
-    for sublist in label:
-        formatted_elements = [format_element(element) for element in sublist]
-        formatted_sublists.append(" & ".join(formatted_elements))
+    if label != '1':
+        # Iterate through the list and create formatted strings for each sublist
+        formatted_sublists = []
+        for sublist in label:
+            formatted_elements = [format_element(element) for element in sublist]
+            formatted_sublists.append(" & ".join(formatted_elements))
 
-    # Join the formatted sublists with '||' to get the final expression
-    final_expression = " | ".join(formatted_sublists)
+        # Join the formatted sublists with '||' to get the final expression
+        final_expression = " | ".join(formatted_sublists)
+    else:
+        final_expression = f"\\top"
     return final_expression
-    # return '$a$'
 
-
-def create_parser():
-    """ create parser
-
-    Returns:
-        _type_: _description_
-    """
-    parser = argparse.ArgumentParser(description='FM')
-    parser.add_argument('--task', default="man", type=str)
-    parser.add_argument('--case', default=0, type=int)
-    parser.add_argument('--vis', action='store_true', help='Enable visualization')
-    parser.add_argument('--dot', action='store_true', help='Enable dot graph')
-
-    return parser
   
-def main():
+def hierarchical_ltl_planner(args):
     start = datetime.now()
-    parser = create_parser()
-    args = parser.parse_known_args()[0]
+
 
     # ----------------- task -----------------
     task_specification = Specification().get_task_specification(args.task, args.case)
@@ -595,7 +531,13 @@ def main():
     if args.dot:
         semantic_reduced_task_network = reduced_task_network.copy()
         for node in semantic_reduced_task_network.nodes():
-            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'])
+            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'], args.task, args.case)
+        for task in primitive_subtasks_with_identifier:
+            buchi_graph  = task_hierarchy[task.parent].buchi_graph
+            edge = task_hierarchy[task.parent].element2edge[task.element]
+            semantic_reduced_task_network.add_edge((task.parent, task.element), ((task.parent, task.element)))
+            semantic_reduced_task_network.edges[(task.parent, task.element), ((task.parent, task.element))]['label'] = \
+            generate_latex_expr(buchi_graph.nodes[edge[0]]['label'], args.task, args.case) 
         vis_graph(semantic_reduced_task_network, 'label', 'data/task_network', True)
     else:
         vis_graph(reduced_task_network, 'label', 'data/task_network', True)
@@ -640,14 +582,12 @@ def main():
         plt.savefig('./data/workspace.png') 
 
 
-    if reduced_task_network.graph["task"] == "man":
-        task_execution(time_task_element_type_robot_axis, reduced_task_network, workspace.type_robot_location.keys())
-    else:
+    if reduced_task_network.graph["task"] == "nav":
         # --------------------- GMRPP -------------------------
         robot_path = mapp(workspace, acpt_run, robot_waypoint_axis, robot_time_axis, args.vis)
         cost = compute_path_cost(robot_path)
         print('{1}, {0}\n'.format((datetime.now() - start).total_seconds(), cost))
         if args.vis:
-            vis(workspace, robot_path, {robot: [len(path)] * 2 for robot, path in robot_path.items()}, [])
-if __builtins__:
-    main()
+            vis(args.task, args.case, workspace, robot_path, {robot: [len(path)] * 2 for robot, path in robot_path.items()}, [])
+    else:
+        return time_task_element_type_robot_axis, reduced_task_network, workspace.type_robot_location.keys()
