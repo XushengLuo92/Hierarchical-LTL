@@ -20,7 +20,7 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
     # # create initial constraints
     initial_constraints(m, x_vars, t_vars, ts, init_type_robot_node, type_num)
     
-    task_constraints(m, task_vars, composite_subtasks)
+    task_constraints_for_nonleaf_specifications(m, task_vars, c_vars, task_hierarchy, reduced_task_network)
 
     # network and schedule constraints
     network_schedule_constraints(m, ts, x_vars, t_vars, init_type_robot_node, incomparable_task_element, larger_task_element,
@@ -173,7 +173,7 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
 
 
 def create_variables(m, ts, task_network, task_hierarchy, type_num, maximal_element, composite_subtasks):
-    # task variable 
+    # task variable, denoting whether a specification is enabled
     task_vars = {}
     for task in composite_subtasks.keys():
         task_vars.update(m.addVars([task], vtype=GRB.BINARY))
@@ -181,6 +181,7 @@ def create_variables(m, ts, task_network, task_hierarchy, type_num, maximal_elem
 
     # clause variable, (element, 0|1, clause_index)
     c_vars = {}
+    # clause for leaf specifications
     for (task, element) in task_network:
         pruned_subgraph = task_hierarchy[task].buchi_graph
         element2edge = task_hierarchy[task].element2edge
@@ -190,6 +191,21 @@ def create_variables(m, ts, task_network, task_hierarchy, type_num, maximal_elem
             c_vars.update(m.addVars([(task, element)], [0], list(range(len(self_loop_label))), vtype=GRB.BINARY))
         if edge_label != '1':
             c_vars.update(m.addVars([(task, element)], [1], list(range(len(edge_label))), vtype=GRB.BINARY))
+    
+    # clause for non-leaf specifications
+    c_vars = {}
+    for task in composite_subtasks.keys():
+        pruned_subgraph = task_hierarchy[task].buchi_graph
+        element2edge = task_hierarchy[task].element2edge
+        for element in element2edge.keys():
+            self_loop_label = pruned_subgraph.nodes[element2edge[element][0]]['label']
+            edge_label = pruned_subgraph.edges[element2edge[element]]['label']
+            if self_loop_label and self_loop_label != '1':
+                c_vars.update(m.addVars([(task, element)], [0], list(range(len(self_loop_label))), vtype=GRB.BINARY))
+            if edge_label != '1':
+                c_vars.update(m.addVars([(task, element)], [1], list(range(len(edge_label))), vtype=GRB.BINARY))
+
+    m.update()
 
     m.update()
 
@@ -260,24 +276,51 @@ def initial_constraints(m, x_vars, t_vars, ts, init_type_robot_node, type_num):
             m.addConstr(t_vars[(node, k, 1)] == 0)
     m.update()
 
-def task_constraints(m, task_vars, composite_subtasks):
-    for (_, or_subtasks) in composite_subtasks.items():
-        for subtasks in or_subtasks.or_composite_subtasks:
-            # print(subtasks)
-            m.addConstr(quicksum([task_vars[subtask] for subtask in subtasks]) == 1)
-    for task in composite_subtasks.keys():
-        exist_or_relation = False        
-        for (_, or_subtasks) in composite_subtasks.items():
-            for subtasks in or_subtasks.or_composite_subtasks:
-                if task in subtasks:
-                    exist_or_relation = True
-                    break
-            if exist_or_relation:
-                break
-        if not exist_or_relation:
-            # print(task)
-            m.addConstr(task_vars[task] == 1)
-            
+def task_constraints_for_nonleaf_specifications(m, task_vars, c_vars, task_hierarchy, reduced_task_network):
+    # for (_, or_subtasks) in composite_subtasks.items():
+    #     for subtasks in or_subtasks.or_composite_subtasks:
+    #         # print(subtasks)
+    #         # specifications are connected by OR operator constraint (3) in HLTL
+    #         m.addConstr(quicksum([task_vars[subtask] for subtask in subtasks]) == 1)
+    # for task in composite_subtasks.keys():
+    #     exist_or_relation = False        
+    #     for (_, or_subtasks) in composite_subtasks.items():
+    #         for subtasks in or_subtasks.or_composite_subtasks:
+    #             if task in subtasks:
+    #                 exist_or_relation = True
+    #                 break
+    #         if exist_or_relation:
+    #             break
+    #     if not exist_or_relation:
+    #         # print(task)
+    #         m.addConstr(task_vars[task] == 1)
+    # the truth of clauses and litearls depends on the non-leaf specification -- HLTL (3) (4)
+    leaf_specs = set(key[0] for key in reduced_task_network.nodes())
+    # IPython.embed()
+    for task in task_hierarchy.keys():
+        if task in leaf_specs:
+            # continue for leaf specification
+            continue
+        pruned_subgraph = task_hierarchy[task].buchi_graph
+        element2edge = task_hierarchy[task].element2edge
+        for element in element2edge.keys():
+            self_loop_label = pruned_subgraph.nodes[element2edge[element][0]]['label']
+            edge_label = pruned_subgraph.edges[element2edge[element]]['label']
+            if self_loop_label and self_loop_label != '1':
+                component = 0
+                m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(self_loop_label))) == task_vars[task])
+                for c in range(len(self_loop_label)):
+                    mult = sum([l[2] for l in self_loop_label[c]])
+                    m.addConstr(quicksum(task_vars[l[0]] for l in self_loop_label[c]) == mult * c_vars[(task, element, component, c)])
+            if edge_label != '1':
+                component = 1
+                m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(edge_label))) == task_vars[task])
+                for c in range(len(edge_label)):
+                    mult = sum([l[2] for l in edge_label[c]])
+                    m.addConstr(quicksum(task_vars[l[0]] for l in edge_label[c]) == mult * c_vars[(task, element, component, c)])
+    
+    m.addConstr(task_vars['p0'] == 1)
+    
     m.update()
 
 def one_clause_true(m, task_vars, c_vars, task, element, component, label, strict_larger_task_element, incomparable_task_element, buchi):
@@ -291,6 +334,7 @@ def one_clause_true(m, task_vars, c_vars, task, element, component, label, stric
         m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(label))) == 0)
         m.update()
         return
+    # the truth of clause is determined by specification -- eq (4)
     m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(label))) == task_vars[task])
     m.update()
 

@@ -404,8 +404,8 @@ def generate_global_poset_graph(task_hierarchy, primitive_subtasks_with_identifi
         buchi_graph  = task_hierarchy[task.parent].buchi_graph
         edge = task_hierarchy[task.parent].element2edge[task.element]
         label = buchi_graph.edges[edge]['label']
-        task_network.add_node((task.parent, task.element), label=label)
-    
+        neg_label = buchi_graph.edges[edge]['neg_label']
+        task_network.add_node((task.parent, task.element), label=label, neg_label=neg_label)
     for pair in primitive_subtasks_partial_order:
         task_network.add_edge((pair[0].parent, pair[0].element), (pair[1].parent, pair[1].element))
 
@@ -467,7 +467,7 @@ def print_timed_plan(robot_time, robot_waypoint, robot_label, time_axis, robot_t
 def get_finished_task():
     return -1
             
-def generate_latex_expr(label, task, case):
+def generate_latex_expr(label, neg_label, task, case):
     if task == "nav":
         # p0 dock
         # p1 grocery p2 health p3 outdors p4 pet p5 furniture p6 electronics 
@@ -491,17 +491,27 @@ def generate_latex_expr(label, task, case):
         values_str = ', '.join(str(val) for val in values)
         return f"\\\\pi_{{\\\\text{{{sym2region[process_id]}}}}}^{{{values_str}}}"
 
-    if label != '1':
+    if label == '1' and neg_label == [[]] :
+        final_expression = f"\\top"
+        return final_expression
+    elif label != '1':
         # Iterate through the list and create formatted strings for each sublist
         formatted_sublists = []
-        for sublist in label:
-            formatted_elements = [format_element(element) for element in sublist]
+        for idx, label_sublist in enumerate(label):
+            neg_label_sublist = neg_label[idx]
+            formatted_elements = [format_element(element) for element in label_sublist]
+            formatted_elements.extend(["!" + format_element(element) for element in neg_label_sublist])
+            formatted_sublists.append(" & ".join(formatted_elements))
+    else: 
+        # Iterate through the list and create formatted strings for each sublist
+        formatted_sublists = []
+        for idx, neg_label_sublist in enumerate(neg_label):
+            formatted_elements = ["!" + format_element(element) for element in neg_label_sublist]
             formatted_sublists.append(" & ".join(formatted_elements))
 
-        # Join the formatted sublists with '||' to get the final expression
-        final_expression = " | ".join(formatted_sublists)
-    else:
-        final_expression = f"\\top"
+    # Join the formatted sublists with '||' to get the final expression
+    final_expression = " | ".join(formatted_sublists)
+        
     return final_expression
 
   
@@ -530,14 +540,17 @@ def hierarchical_ltl_planner(args):
     reduced_task_network.graph["task"] = args.task
     if args.dot:
         semantic_reduced_task_network = reduced_task_network.copy()
-        for node in semantic_reduced_task_network.nodes():
-            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'], args.task, args.case)
+        for node in semantic_reduced_task_network.nodes():            
+            semantic_reduced_task_network.nodes[node]['label'] = generate_latex_expr(semantic_reduced_task_network.nodes[node]['label'],
+                                                                                     semantic_reduced_task_network.nodes[node]['neg_label'],
+                                                                                     args.task, args.case)
         for task in primitive_subtasks_with_identifier:
             buchi_graph  = task_hierarchy[task.parent].buchi_graph
             edge = task_hierarchy[task.parent].element2edge[task.element]
             semantic_reduced_task_network.add_edge((task.parent, task.element), ((task.parent, task.element)))
             semantic_reduced_task_network.edges[(task.parent, task.element), ((task.parent, task.element))]['label'] = \
-            generate_latex_expr(buchi_graph.nodes[edge[0]]['label'], args.task, args.case) 
+            generate_latex_expr(buchi_graph.nodes[edge[0]]['label'],
+                                buchi_graph.nodes[edge[0]]['neg_label'], args.task, args.case) 
         vis_graph(semantic_reduced_task_network, 'label', 'data/task_network', True)
     else:
         vis_graph(reduced_task_network, 'label', 'data/task_network', True)
