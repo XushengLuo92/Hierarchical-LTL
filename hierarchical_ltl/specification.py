@@ -255,12 +255,20 @@ class Specification():
             level_three['p601'] = '<> p18_1_1_0'
             hierarchy.append(level_three)
         elif case == 7:
+            # ------------------------ task bin packing -------------------------
             level_one = dict()
-            level_one["p0"] = "<> (p100_1_1_0 && <> p200_1_1_0)"
+            level_one["p0"] = "<> p100_1_1_0 && <> p200_1_1_0"
             hierarchy.append(level_one)    
             
             level_two = dict()
-            level_two['p100'] = '<> p1_1_1_0 && <> p2_1_1_0 && <> p3_1_1_0'   # level 1
-            level_two['p200'] = '<> (p4_1_1_1 && <> p5_1_1_1)'   # level 1
+            level_two['p100'] = "<> p101_1_1_0 && <> p102_1_1_0 && !p102_1_1_0 U p101_1_1_0"
+            level_two['p200'] = "<> p201_1_1_0 && <> p202_1_1_0 && !p202_1_1_0 U p201_1_1_0"
             hierarchy.append(level_two)
+            
+            level_three = dict()
+            level_three['p101'] = "<> p1_1_1_0 &&  <> p2_1_1_0"
+            level_three['p102'] = "<> p3_1_1_0 &&  <> p4_1_1_0 &&  <> p5_1_1_0"
+            level_three['p201'] = "<> p6_1_1_0 &&  <> p7_1_1_0"
+            level_three['p202'] = "<> p8_1_1_0 &&  <> p9_1_1_0"
+            hierarchy.append(level_three)
         return hierarchy

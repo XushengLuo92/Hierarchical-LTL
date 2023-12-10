@@ -301,10 +301,12 @@ def construct_graph(task_hierarchy, reduced_task_network, composite_subtasks, wo
         ts.add_node(node, location_type_component_task_element=node_location_type_component_task_element[node])
     if reduced_task_network.graph["task"] == "man":
         for edge in edge_set:
-            if (ts.nodes[edge[0]]['location_type_component_task_element'][3] == ts.nodes[edge[1]]['location_type_component_task_element'][3]):
-                ts.add_edge(edge[0], edge[1], weight=1)
-            else:
-                ts.add_edge(edge[0], edge[1], weight=10)
+            # priotize on finishing one task
+            # if (ts.nodes[edge[0]]['location_type_component_task_element'][3] == ts.nodes[edge[1]]['location_type_component_task_element'][3]):
+            #     ts.add_edge(edge[0], edge[1], weight=1)
+            # else:
+            #     ts.add_edge(edge[0], edge[1], weight=10)
+            ts.add_edge(edge[0], edge[1], weight=1)
     else:
         # navigation
         for edge in edge_set:

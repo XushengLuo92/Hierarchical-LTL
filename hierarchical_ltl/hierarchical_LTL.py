@@ -427,7 +427,7 @@ def vis_graph(graph, att, title, latex=False):
         command = "dot -Tpng {0}.dot >{0}.png".format(title)
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
     else:
-        command = "dot2tex {0}.dot --preproc > {0}.tex".format(title)
+        command = "dot2tex --preproc --texmode math {0}.dot | dot2tex > {0}.tex && pdflatex {0}.tex".format(title)
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
     # same layout using matplotlib with no labels
     # labels = nx.get_node_attributes(graph, att)     
@@ -485,6 +485,8 @@ def generate_latex_expr(label, neg_label, task, case):
         sym2region = {'p1': 'p1', 'p2': 'p2', 'p3': 'p3', 'p4': 'p4', 'p5': 'p5',
                     'p6': 'p6', 'p7': 'p7', 'p8': 'p8', 'p9': 'p9', 'p10': 'p10', 'p11': 'p11', 
                     'p12': 'p12', 'p13': 'p13', 'p14': 'p14', 'p15': 'p15', 'p16': 'p16', 'p17': 'p17', 'p18': 'p18'}    
+    elif task == "man" and case == 7:
+        sym2region = {'p1': 'p1', 'p2': 'p2', 'p3': 'p3', 'p4': 'p4', 'p5': 'p5', 'p6': 'p6', 'p7': 'p7', 'p8': 'p8', 'p9': 'p9'}
     # Helper function to format each element as a string
     def format_element(element):
         process_id, values = element[0], [element[1], element[3]]
