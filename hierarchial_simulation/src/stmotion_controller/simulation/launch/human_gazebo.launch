@@ -1,0 +1,90 @@
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- the include to include other launch files  -->
+  <include
+    file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+    <include file="$(find stmotion_controller)/simulation/launch/lego_setup.launch"/>
+
+  
+  <group ns="/human_gazebo">
+    <!-- tries to load human urdf from moveit into gazebo -->
+    <arg name = "human" default="human"/>
+    <param name="tf_prefix" value="human_tf" />
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find stmotion_controller)/simulation/urdf/human_v3.urdf"/>
+    <node name="spawn_human" pkg="gazebo_ros" type="spawn_model"
+      args="-param robot_description
+            -urdf
+            -x 1.5
+            -y 0
+            -z 1
+            -R 0
+            -P 0
+            -Y 3.14
+            -model $(arg human)"
+      respawn="false" output="screen">
+    </node>
+    
+    <!-- load the human_gazebo model controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" ns="/human_gazebo"
+      output="screen" 
+      args="--namespace=/human_gazebo
+            joint_state_controller
+            spine_0_position_controller
+            spine_1_position_controller
+            spine_2_position_controller
+            left_shoulder_0_position_controller
+            left_shoulder_1_position_controller
+            left_shoulder_2_position_controller
+            left_elbow_0_position_controller
+            left_wrist_0_position_controller
+            left_wrist_1_position_controller
+            left_wrist_2_position_controller
+            neck_0_position_controller
+            neck_1_position_controller
+            neck_2_position_controller
+            right_shoulder_0_position_controller
+            right_shoulder_1_position_controller
+            right_shoulder_2_position_controller
+            right_elbow_0_position_controller
+            right_wrist_0_position_controller
+            right_wrist_1_position_controller
+            right_wrist_2_position_controller
+            left_hip_0_position_controller
+            left_hip_1_position_controller
+            left_hip_2_position_controller
+            left_knee_0_position_controller
+            left_ankle_0_position_controller
+            left_ankle_1_position_controller
+            right_hip_0_position_controller
+            right_hip_1_position_controller
+            right_hip_2_position_controller
+            right_knee_0_position_controller
+            right_ankle_0_position_controller
+            right_ankle_1_position_controller
+            "
+    >
+      <rosparam file="$(find stmotion_controller)/simulation/launch/human_control.yaml" command="load" ns="/human_gazebo"/>
+    </node>
+
+    <!-- convert joint states to TF transforms for human_gazebo model -->
+    <node name = "robot_state_publisher" pkg = "robot_state_publisher" type = "robot_state_publisher"
+      respawn="false" output="screen">
+      <remap from="/joint_states" to="/human_gazebo/joint_states" />
+    </node>
+    
+  </group>
+</launch>

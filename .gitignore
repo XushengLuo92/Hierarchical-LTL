@@ -7,3 +7,11 @@ src/__pycache__/
 !data/.gitkeep 
 hierarchical_ltl.egg-info/
 .DS_Store
+.vscode/
+devel/*
+logs/*
+build/*
+hierarchial_simulation/devel/*
+hierarchial_simulation/logs/*
+hierarchial_simulation/build/*
+.catkin_tools

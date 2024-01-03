@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" name="human_model" >
+  <xacro:property name="prefix" value="human" />
+
+  <xacro:property name="PI" value="3.14159265359" />
+  <xacro:property name="PI_DIV_2" value="1.5707963267948966" />
+  <xacro:property name="PI_DIV_4" value="0.78539816339" />
+  <xacro:property name="TPI_DIV_4" value="2.35619449019" />
+  <xacro:property name="insignificant_mass" value="0.0001" />
+  <xacro:property name="insig_inert_xx" value="0.00000001" />
+  <xacro:property name="insig_inert_yy" value="0.00000001" />
+  <xacro:property name="insig_inert_zz" value="0.00000001" />
+
+  <xacro:property name="upper_arm_length" value="$(arg upper_arm_length)" />
+  <xacro:property name="forearm_length" value="$(arg forearm_length)" />
+  <xacro:property name="hand_length" value="$(arg hand_length)" />
+
+  <xacro:property name="head_radius" value="$(arg head_radius)" />
+
+  <xacro:property name="torso_length" value="$(arg torso_length)" />
+  <xacro:property name="torso_radius" value="$(arg torso_radius)" />
+
+  <xacro:property name="spine_down_length" value="$(arg spine_down_length)" />
+  <xacro:property name="spine_up_length" value="$(arg spine_up_length)" />
+  <xacro:property name="spine_down_radius" value="$(arg spine_down_radius)" />
+  <xacro:property name="spine_up_radius" value="$(arg spine_up_radius)" />
+
+  <xacro:property name="neck_length" value="$(arg neck_length)" />
+  <xacro:property name="neck_radius" value="$(arg neck_radius)" />
+
+  <xacro:property name="thigh_length" value="$(arg thigh_length)" />
+  <xacro:property name="thigh_radius" value="$(arg thigh_radius)" />
+
+  <xacro:property name="shin_length" value="$(arg shin_length)" />
+
+  <xacro:property name="foot_length" value="$(arg foot_length)" />
+
+  <xacro:property name="shoulder_offset_width" value="$(arg shoulder_offset_width)" />
+  <xacro:property name="shoulder_offset_height" value="$(arg shoulder_offset_height)" />
+
+  <xacro:property name="hip_offset_width" value="$(arg hip_offset_width)" />
+  <xacro:property name="hip_offset_height" value="$(arg hip_offset_height)" />
+  
+  <xacro:property name="max_effort" value="1" />
+  <xacro:property name="max_velocity" value="1" />
+</robot>

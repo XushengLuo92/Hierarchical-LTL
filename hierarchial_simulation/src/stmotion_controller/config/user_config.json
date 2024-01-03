@@ -1,0 +1,14 @@
+{
+    "DH_fname":"/config/robot_properties/FANUC_DH.txt",
+    "DH_tool_fname":"/config/robot_properties/FANUC_tool_DH.txt",
+    "DH_tool_assemble_fname":"/config/robot_properties/FANUC_tool_assemble_DH.txt",
+    "DH_tool_disassemble_fname":"/config/robot_properties/FANUC_tool_disassemble_DH.txt",
+    "robot_base_fname":"/config/robot_properties/FANUC_base.txt",
+    "env_setup_fname":"/config/env_setup.json",
+    "task_graph_fname":"/config/assembly_tasks/RI.json",
+    "SSA_Enable":0,
+    "Use_Robot":0,
+    "JPC_travel_time":0.5,
+    "Infinite_tasks":1,
+    "Start_with_assemble":1
+}

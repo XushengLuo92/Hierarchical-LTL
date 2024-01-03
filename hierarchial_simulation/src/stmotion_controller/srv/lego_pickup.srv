@@ -1,0 +1,5 @@
+string reference_frame
+string is_pick
+string pick_lego_name
+---
+bool finished
