@@ -53,13 +53,15 @@ def construct_milp_constraint(ts, type_num, reduced_task_network, task_hierarchy
                 # # no subtasks are completed at the same time -- eq (19a)
                 # m.addConstr(b_element_vars[(element, another_element)] + b_element_vars[(another_element, element)] == 1)
                 # -- eq (19b)
-                m.addConstr(M * (task_vars[task] - 1) + 
-                    M * (b_element_vars[task_element + another_task_element] - 1) <=
-                            t_edge_vars[task_element] - t_edge_vars[another_task_element])
+                m.addConstr(M * (b_element_vars[task_element + another_task_element] - 1) <=
+                            t_edge_vars[task_element] - t_edge_vars[another_task_element] + 
+                            M * (1 - task_vars[task_element[0]]) + 
+                            M * (1 - task_vars[another_task_element[0]]))
 
                 m.addConstr(t_edge_vars[task_element] - t_edge_vars[another_task_element] <=
                             M * b_element_vars[task_element + another_task_element] - epsilon +
-                            M * (1 - task_vars[task_element[0]]))
+                            M * (1 - task_vars[task_element[0]]) + 
+                            M * (1 - task_vars[another_task_element[0]]))
     m.update()
 
     # using same robot (26a) and (26b)
@@ -334,7 +336,7 @@ def one_clause_true(m, task_vars, c_vars, task, element, component, label, stric
         m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(label))) == 0)
         m.update()
         return
-    # the truth of clause is determined by specification -- eq (4)
+    # the truth of clause is determined by specification -- eq (4) in HLTL paper
     m.addConstr(quicksum(c_vars[(task, element, component, c)] for c in range(len(label))) == task_vars[task])
     m.update()
 
@@ -442,12 +444,13 @@ def edge_constraints(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_el
                 for i in task_element_component_clause_literal_node[(task, element, 0, c_self_loop, l_self_loop)]:
                     m.addConstr(quicksum(t_vars[(i, k, 0)] for k in
                                          range(type_num[ts.nodes[i]['location_type_component_task_element'][1]]))
-                                <= t_edge_vars[(task, element)])
+                                <= t_edge_vars[(task, element)] + M * (1 - task_vars[task]))
 
                     m.addConstr(t_edge_vars[(task, element)] <= quicksum(t_vars[(i, k, 1)]
                                                                  for k in range(
                         type_num[ts.nodes[i]['location_type_component_task_element'][1]]))
-                                + 1 + M * (1 - c_vars[(task, element, 0, c_self_loop)]))
+                                + 1 + M * (1 - c_vars[(task, element, 0, c_self_loop)]) 
+                                + M * (1 - task_vars[task]))
     # the vertex label is false, or the initial robot locations satisfy the not true vertex label of initial vertex,
     # the edge label becomes true at 0, --- (14)
     if z == -1 and (not self_loop_label or (self_loop_label != '1' and not buchi.sat_vertex)):
@@ -455,7 +458,8 @@ def edge_constraints(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_el
 
     # precedence timing constraints, between edge and previous edge, with vertex label, covered by -- eq (15)
     for another_task_element in strict_larger_task_element[(task, element)]:
-        m.addConstr(t_edge_vars[another_task_element] + epsilon <= t_edge_vars[(task, element)] + M * (1 - task_vars[task]))
+        m.addConstr(t_edge_vars[another_task_element] + epsilon <= 
+                    t_edge_vars[(task, element)] + M * (1 - task_vars[task]) + M * (1 - task_vars[another_task_element[0]]))
 
     m.update()
 
@@ -532,7 +536,8 @@ def activate_next(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_eleme
     for another_task_element in strict_smaller_task_element + incomparable_task_element[task_element]:
         m.addConstr(t_edge_vars[task_element] + 1 <= t_edge_vars[another_task_element] +
                     M * (1 - b_immediate_element_vars[task_element + another_task_element]) + 
-                    M * (1 - task_vars[task_element[0]]))
+                    M * (1 - task_vars[task_element[0]]) + 
+                    M * (1 - task_vars[another_task_element[0]]))
 
         if reduced_task_network.graph["task"] == "nav":
             # at most one time instant later than the completion of the current subtask -- eq (18)
@@ -547,7 +552,8 @@ def activate_next(m, ts, task_vars, x_vars, t_vars, c_vars, t_edge_vars, b_eleme
                                                 range(type_num[ts.nodes[i]['location_type_component_task_element'][1]]))
                                         <= t_edge_vars[task_element] + 1
                                         + M * (1 - b_immediate_element_vars[task_element + another_task_element]) 
-                                        + M * (1 - task_vars[task_element[0]]))
+                                        + M * (1 - task_vars[task_element[0]]) 
+                                        + M * (1 - task_vars[another_task_element[0]]))
 
     m.update()
 
@@ -571,7 +577,7 @@ def activation_first(m, ts, task_vars, x_vars, t_vars, c_vars, b_element_vars,
                                         M * (quicksum(b_element_vars[(task, element) + another_task_element]
                                                         for another_task_element in maximal_task_element if
                                                         another_task_element != (task, element)) +
-                                                1 - c_vars[(element, 0, c)]) + 
+                                                1 - c_vars[(element, 0, c)]) +
                                         M * (1 - task_vars[task]))
 
     m.update()
@@ -599,12 +605,14 @@ def activation_first(m, ts, task_vars, x_vars, t_vars, c_vars, b_element_vars,
                 m.addConstr(quicksum(x_vars[(p, i, k)] for literal_nodes in clause_nodes for i in literal_nodes
                                      for k in range(type_num[ts.nodes[i]['location_type_component_task_element'][1]])
                                      for p in ts.predecessors(i) if p not in init_type_robot_node.values()) <=
-                            M * (1 - b_maximal_element_vars[(task, element)]))
+                            M * (1 - b_maximal_element_vars[(task, element)]) + 
+                            M * (1 - task_vars[task]))
             # -- eq (25b)
             m.addConstr(quicksum(x_vars[(p, i, k)] for literal_nodes in clause_nodes for i in literal_nodes
                                  for k in range(type_num[ts.nodes[i]['location_type_component_task_element'][1]])
                                  for p in ts.predecessors(i) if p in init_type_robot_node.values()) <=
-                        M * b_maximal_element_vars[(task, element)])
+                        M * b_maximal_element_vars[(task, element)] + 
+                        M * (1 - task_vars[task]))
 
         m.update()
 
