@@ -46,21 +46,6 @@ window.DEMOS = [
     "paper": "https://arxiv.org/html/2308.10393v3#S4.SS1"
   },
   {
-    "id": 4,
-    "title": "Build the ICL! model",
-    "description": "Two arms share the brick-placement tasks for I, C, and L. Each letter follows its own three-step sequence. The exclamation mark is assembled after all three letters are complete.",
-    "obligations": [
-      "Complete I, C, and L before the exclamation mark.",
-      "This is the README\u2019s ICL! example from the earlier paper version; the published paper uses bin packing instead."
-    ],
-    "robots": 2,
-    "team": "2 arms \u00b7 schematic plan",
-    "label": "Scenario 4",
-    "video": "demo/generated/scenario_04.mp4",
-    "poster": "demo/generated/scenario_04.png",
-    "paper": "Hierarchical_LTL.pdf#page=7"
-  },
-  {
     "id": 5,
     "title": "Build the house in layers",
     "description": "Two arms assemble the house through six successive layers. Within each layer, the planner respects the specified placement order and keeps identity-linked brick groups on the same arm.",
@@ -70,7 +55,7 @@ window.DEMOS = [
     ],
     "robots": 2,
     "team": "2 arms \u00b7 schematic plan",
-    "label": "Scenario 5",
+    "label": "Scenario 4",
     "video": "demo/generated/scenario_05.mp4",
     "poster": "demo/generated/scenario_05.png",
     "paper": "https://arxiv.org/html/2308.10393v3#S4.SS2.SSS2"

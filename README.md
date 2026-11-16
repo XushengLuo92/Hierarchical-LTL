@@ -28,7 +28,7 @@ Run the original planner and save a replay:
 python main.py --task=nav --case=5 --seed=42 --export-replay=data/presentation/scenario_01.json
 ```
 
-Run and render all five README examples:
+Run and render all four README examples:
 
 ```bash
 python scripts/run_demo_batch.py
@@ -43,8 +43,7 @@ The scripts save solver logs and paths under `data/presentation`, and publishabl
 | Scenario 1 | `--task=nav --case=5` | `scenario_01` |
 | Scenario 2 | `--task=nav --case=6` | `scenario_02` |
 | Scenario 3 | `--task=nav --case=8` | `scenario_03` |
-| Scenario 4 | `--task=man --case=5 --plan-only` | `scenario_04` |
-| Scenario 5 | `--task=man --case=6 --plan-only` | `scenario_05` |
+| Scenario 4 | `--task=man --case=6 --plan-only` | `scenario_05` |
 
 All examples use seed 42 and `PYTHONHASHSEED=0`. This repository retains its original weighted MILP objective (0.7 routing cost + 0.3 summed subtask completion times); it does not implement the STAP repository’s `--cost=minmax` option. Navigation retains the original GMAPP collision-avoidance planner. No additional parking or scheduling layer is applied.
 
@@ -66,7 +65,7 @@ Two arms share LEGO placement tasks. Their original simulation recording is reta
 
 ## Planner-generated presentation demos
 
-Click a preview to play its MP4. The project page provides an embedded player for all five scenarios.
+Click a preview to play its MP4. The project page provides an embedded player for all four scenarios.
 
 **Scenario 1 — Furniture assistance and delivery**
 
@@ -80,17 +79,13 @@ Click a preview to play its MP4. The project page provides an embedded player fo
 
 [![Scenario 3: Flexible outdoor collection](demo/generated/scenario_03.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_03.mp4)
 
-**Scenario 4 — ICL! assembly plan**
+**Scenario 4 — House assembly plan**
 
-[![Scenario 4: ICL! assembly plan](demo/generated/scenario_04.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_04.mp4)
-
-**Scenario 5 — House assembly plan**
-
-[![Scenario 5: House assembly plan](demo/generated/scenario_05.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_05.mp4)
+[![Scenario 4: House assembly plan](demo/generated/scenario_05.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_05.mp4)
 
 The LTL cards track the assigned robots, active tasks, milestones, and completion. In Scenario 1, Type 1 must stay at furniture until Type 3 arrives; the display releases that restriction at step 27. Type 2’s grocery restriction releases after visiting health. Scenario 3 labels the unused OR branch explicitly.
 
-The independent monitor checks finite-trace leaf formulas with the planner’s robot identities and task activation windows, checks parent completion and precedence, and checks grid motion and collisions. All five saved runs pass. Navigation mission horizons are 95, 116, and 85 steps; assembly schedule horizons are 11 and 20. The videos use 1080p at 30 fps, with two navigation steps per second (0.7 schedule steps per second for assembly) and a final two-second hold.
+The independent monitor checks finite-trace leaf formulas with the planner’s robot identities and task activation windows, checks parent completion and precedence, and checks grid motion and collisions. All four displayed runs pass. Navigation mission horizons are 95, 116, and 85 steps; the house assembly schedule horizon is 20. The videos use 1080p at 30 fps, with two navigation steps per second (0.7 schedule steps per second for assembly) and a final two-second hold.
 
 ## Navigation tasks
 
@@ -108,13 +103,7 @@ Type 1 visits health, grocery, electronics, and pet supplies in any order. Eithe
 
 ## Manipulation tasks
 
-### Scenario 4 — ICL!
-
-![ICL target](imgs/icl!.png)
-
-The two arms share the I, C, and L placement sequences. All three letters must finish before either exclamation-mark placement. This is the README example described in the [earlier paper bundled with the repository, §VI-B](Hierarchical_LTL.pdf#page=7). The published paper replaces this example with bin packing; the demo preserves the repository’s original `man --case=5` specification.
-
-### Scenario 5 — house
+### Scenario 4 — house
 
 ![House target](imgs/house.png)
 

@@ -1,4 +1,4 @@
-"""Run the five README examples with the unmodified planner objective."""
+"""Run the four featured examples with the unmodified planner objective."""
 import argparse
 import os
 from pathlib import Path
@@ -10,7 +10,7 @@ CASES = [('nav', 5), ('nav', 6), ('nav', 8), ('man', 5), ('man', 6)]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--scenarios', nargs='+', type=int, default=list(range(1, 6)))
+    parser.add_argument('--scenarios', nargs='+', type=int, default=[1, 2, 3, 5])
     args = parser.parse_args()
     destination = ROOT / 'data/presentation'
     destination.mkdir(parents=True, exist_ok=True)

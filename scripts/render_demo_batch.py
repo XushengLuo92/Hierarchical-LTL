@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 if __name__=='__main__':
     output=ROOT/'demo/generated'
     output.mkdir(parents=True,exist_ok=True)
-    for scenario in range(1,6):
+    for scenario in (1,2,3,5):
         name=f'scenario_{scenario:02d}'
         data=json.loads((ROOT/'data/presentation'/f'{name}.json').read_text())
         show=Presentation(data)
@@ -30,4 +30,4 @@ if __name__=='__main__':
     fig,ax=plt.subplots(figsize=(16,6.6),facecolor=BG)
     draw_map(ax,data['workspace'])
     fig.savefig(output/'environment.png',facecolor=BG,dpi=120,bbox_inches='tight')
-    print('All five demos and workspace map saved.',flush=True)
+    print('All four featured demos and workspace map saved.',flush=True)
