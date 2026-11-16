@@ -65,23 +65,7 @@ Two arms share LEGO placement tasks. Their original simulation recording is reta
 
 ## Planner-generated presentation demos
 
-Click a preview to play its MP4. The project page provides an embedded player for all four scenarios.
-
-**Scenario 1 — Furniture assistance and delivery**
-
-[![Scenario 1: Furniture assistance and delivery](demo/generated/scenario_01.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_01.mp4)
-
-**Scenario 2 — Three ordered shopping stages**
-
-[![Scenario 2: Three ordered shopping stages](demo/generated/scenario_02.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_02.mp4)
-
-**Scenario 3 — Flexible outdoor collection**
-
-[![Scenario 3: Flexible outdoor collection](demo/generated/scenario_03.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_03.mp4)
-
-**Scenario 4 — House assembly plan**
-
-[![Scenario 4: House assembly plan](demo/generated/scenario_05.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_05.mp4)
+Click the preview below each scenario heading to play its MP4. The project page provides an embedded player for all four scenarios.
 
 The LTL cards track the assigned robots, active tasks, milestones, and completion. In Scenario 1, Type 1 must stay at furniture until Type 3 arrives; the display releases that restriction at step 27. Type 2’s grocery restriction releases after visiting health. Scenario 3 labels the unused OR branch explicitly.
 
@@ -91,19 +75,27 @@ The independent monitor checks finite-trace leaf formulas with the planner’s r
 
 ### Scenario 1 — furniture assistance and delivery
 
+[![Scenario 1: Furniture assistance and delivery](demo/generated/scenario_01.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_01.mp4)
+
 A Type 1 robot visits furniture and stays there until Type 3 arrives to help load a large item. Type 1 then collects outdoor and pet items in either order. Type 2 collects health items before groceries and must avoid grocery until health. Each participating robot delivers its items to packing and returns to the dock. See the [paper’s MRPD example](https://arxiv.org/html/2308.10393v3#S2.SS2).
 
 ### Scenario 2 — three ordered shopping stages
 
+[![Scenario 2: Three ordered shopping stages](demo/generated/scenario_02.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_02.mp4)
+
 One Type 1 robot collects furniture and outdoor items, then health and grocery items, then electronics and pet items. The two visits within each stage can occur in either order. Finally, it delivers to packing and returns to the dock. See [navigation Task 2](https://arxiv.org/html/2308.10393v3#S4.SS1).
 
 ### Scenario 3 — flexible outdoor collection
+
+[![Scenario 3: Flexible outdoor collection](demo/generated/scenario_03.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_03.mp4)
 
 Type 1 visits health, grocery, electronics, and pet supplies in any order. Either Type 2 or Type 3 handles outdoor collection; the planner chooses one of these branches. The assigned robots deliver to packing and return to the dock. See [navigation Task 3](https://arxiv.org/html/2308.10393v3#S4.SS1).
 
 ## Manipulation tasks
 
 ### Scenario 4 — house
+
+[![Scenario 4: House assembly plan](demo/generated/scenario_05.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_05.mp4)
 
 ![House target](imgs/house.png)
 
