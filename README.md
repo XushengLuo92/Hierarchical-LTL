@@ -4,7 +4,7 @@
 
 IEEE Robotics and Automation Letters, 2024
 
-**[Project webpage and videos](https://xushengluo92.github.io/Hierarchical-LTL/)** · [Paper](https://arxiv.org/abs/2308.10393) · [Original demonstration](https://youtu.be/YbmYmq1RmhI)
+**[Project webpage and videos](https://xushengluo92.github.io/Hierarchical-LTL/)** · [Paper](https://arxiv.org/abs/2308.10393) · [Youtube](https://youtu.be/YbmYmq1RmhI)
 
 ## Install
 
@@ -93,7 +93,7 @@ Type 1 visits health, grocery, electronics, and pet supplies in any order. Eithe
 
 ### Scenario 4 — house
 
-[![Scenario 4: LEGO house assembly](demo/generated/arm_simulation.jpg)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/arm_simulation.mp4)
+![Scenario 4: LEGO house assembly animation](demo/generated/arm_simulation.gif)
 
 <img src="imgs/house.png" alt="House target" width="300">
 
