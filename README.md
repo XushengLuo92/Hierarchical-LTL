@@ -6,6 +6,10 @@ IEEE Robotics and Automation Letters, 2024
 
 **[Project webpage and videos](https://xushengluo92.github.io/Hierarchical-LTL/)** · [Paper](https://arxiv.org/abs/2308.10393) · [Youtube](https://youtu.be/YbmYmq1RmhI)
 
+## Overview
+
+Past research into robotic planning with temporal logic specifications, notably Linear Temporal Logic (LTL), was largely based on singular formulas for individual or groups of robots. But with increasing task complexity, LTL formulas unavoidably grow lengthy, complicating interpretation and specification generation, and straining the computational capacities of the planners. In order to maximize the potential of LTL specifications, we capitalized on the intrinsic structure of tasks and introduced a hierarchical structure to LTL specifications. In contrast to the "flat" structure, our hierarchical model has multiple levels of compositional specifications and offers benefits such as greater syntactic brevity, improved interpretability, and more efficient planning. To address tasks under this hierarchical temporal logic structure, we formulated a decomposition-based method. Each specification is first broken down into a range of temporally interrelated  sub-tasks. We further mine the temporal relations among the sub-tasks of different specifications within the hierarchy. Subsequently, a Mixed Integer Linear Program is utilized to generate a spatio-temporal plan for each robot. Our hierarchical LTL specifications were experimentally applied to domains of robotic navigation and manipulation. Results from extensive simulation studies illustrated both the enhanced expressive potential of the hierarchical form and the efficacy of the proposed method.
+
 ## Install
 
 The planner uses Python 3.10.12. Create its separate Conda environment:
@@ -97,11 +101,9 @@ Type 1 visits health, grocery, electronics, and pet supplies in any order. Eithe
 
 <img src="imgs/house.png" alt="House target" width="300">
 
-Build the house in six successive layers, respecting each layer’s placement dependencies and same-arm constraints. In layer 5, p15 and p16 must precede p17. See [the published house-model example](https://arxiv.org/html/2308.10393v3#S4.SS2.SSS2). The video shows the original two-arm LEGO assembly simulation.
+Build the house in six successive layers, respecting each layer’s placement dependencies and same-arm constraints. See [the published house-model example](https://arxiv.org/html/2308.10393v3#S4.SS2.SSS2).  
 
-## Overview
 
-Past research into robotic planning with temporal logic specifications, notably Linear Temporal Logic (LTL), was largely based on singular formulas for individual or groups of robots. But with increasing task complexity, LTL formulas unavoidably grow lengthy, complicating interpretation and specification generation, and straining the computational capacities of the planners. In order to maximize the potential of LTL specifications, we capitalized on the intrinsic structure of tasks and introduced a hierarchical structure to LTL specifications. In contrast to the "flat" structure, our hierarchical model has multiple levels of compositional specifications and offers benefits such as greater syntactic brevity, improved interpretability, and more efficient planning. To address tasks under this hierarchical temporal logic structure, we formulated a decomposition-based method. Each specification is first broken down into a range of temporally interrelated  sub-tasks. We further mine the temporal relations among the sub-tasks of different specifications within the hierarchy. Subsequently, a Mixed Integer Linear Program is utilized to generate a spatio-temporal plan for each robot. Our hierarchical LTL specifications were experimentally applied to domains of robotic navigation and manipulation. Results from extensive simulation studies illustrated both the enhanced expressive potential of the hierarchical form and the efficacy of the proposed method.
 
 ## Citation
 
