@@ -13,7 +13,7 @@ setup(
         'termcolor==2.3.0',
         'pygraphviz==2.0.4',
     ],
-    extras_require={'demo': ['imageio-ffmpeg==0.6.0']},
+    extras_require={'demo': ['imageio-ffmpeg==0.8.1']},
     author='Xusheng Luo',
     author_email='xusheng.luo2@gmail.com',
     description='Cource code for the paper "Robotic Planning under Hierarchical Temporal Logic Specifications"',
