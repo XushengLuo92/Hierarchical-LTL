@@ -1,69 +1,136 @@
-# Hierarchical LTL
-Past research into robotic planning with temporal logic specifications, notably Linear Temporal Logic (LTL), was largely based on singular formulas for individual or groups of robots. But with increasing task complexity, LTL formulas unavoidably grow lengthy, complicating interpretation and specification generation, and straining the computational capacities of the planners. In order to maximize the potential of LTL specifications, we capitalized on the intrinsic structure of tasks and introduced a hierarchical structure to LTL specifications. In contrast to the "flat" structure, our hierarchical model has multiple levels of compositional specifications and offers benefits such as greater syntactic brevity, improved interpretability, and more efficient planning. To address tasks under this hierarchical temporal logic structure, we formulated a decomposition-based method. Each specification is first broken down into a range of temporally interrelated  sub-tasks. We further mine the temporal relations among the sub-tasks of different specifications within the hierarchy. Subsequently, a Mixed Integer Linear Program is utilized to generate a spatio-temporal plan for each robot. Our hierarchical LTL specifications were experimentally applied to domains of robotic navigation and manipulation. Results from extensive simulation studies illustrated both the enhanced expressive potential of the hierarchical form and the efficacy of the proposed method.
+# Decomposition-based Hierarchical Task Allocation and Planning for Multi-Robots under Hierarchical Temporal Logic Specifications
 
-# Install
- The code is tesed using Python 3.10.12.
-### Develop via Conda
- Following the instruction:
+**Xusheng Luo, Shaojun Xu, Ruixuan Liu, and Changliu Liu**
+
+IEEE Robotics and Automation Letters, 2024
+
+**[Project webpage and videos](https://xushengluo92.github.io/Hierarchical-LTL/)** · [Paper](https://arxiv.org/abs/2308.10393) · [Original demonstration](https://youtu.be/YbmYmq1RmhI)
+
+## Install
+
+The planner uses Python 3.10.12. Create its separate Conda environment:
+
 ```bash
-cd /path/to/Hierarchical-LTL
 conda env create -f environment.yml
-```
-### Import as package
-```bash
-cd /path/to/Hierarchical-LTL
+conda activate hierarchical_ltl
 pip install -e .
 ```
-### Install ltl2ba
-Download the software `LTL2BA` from this [link](http://www.lsv.fr/~gastin/ltl2ba/index.php), and follow the instructions to generate the exectuable `ltl2ba` and then copy it into the folder `Hierarchical-LTL`, same hierarchy level with `main.py`.
-### Install solver [Gurobi](https://www.gurobi.com)
-# Example
-Demo video can be accessible via this [link](https://youtu.be/YbmYmq1RmhI?si=eI1JoR5qIEuFKwWi).
-## Navigation Task
-We consider an Order Picking Problem (OOP) in a supermarket, which includes three types of robots, each possessing different capabilities, and there are two robots of each type. 
 
-![OOP](./imgs/supermarket.png)
-### Case 1
-* Initially, a robot of type 1 proceeds to the furniture section and awaits until the arrival of a type 3 robot to assist with the movement of a large piece of furniture; following this, it gathers items from the outdoor and pet sections in no particular sequence.
-* A type 2 robot should initiateits task by gathering items from the health section, and only afterwards does it move to the grocery section, ensuring it doesn't visit the grocery section before visiting the health section.
-* A type 3 robot moves to the furniture section to assist the type 1 robot. Afterthe items are delivered to the packing area, all robots eventually return to the dock. 
+Compile [LTL2BA](http://www.lsv.fr/~gastin/ltl2ba/index.php), and place the executable `ltl2ba` alongside `main.py`. Install a valid full [Gurobi license](https://www.gurobi.com); the navigation models exceed the size-limited license. If necessary, point `GRB_LICENSE_FILE` to your local license file. Do not commit license files.
+
+Graphviz and the LaTeX/dot2tex tools are needed for the original graph-export options. The presentation renderer uses the FFmpeg executable supplied by `imageio-ffmpeg`.
+
+## Usage
+
+Run the original planner and save a replay:
+
 ```bash
-python main.py --task=nav --case=5 --vis --dot
+python main.py --task=nav --case=5 --seed=42 --export-replay=data/presentation/scenario_01.json
 ```
-### Case 2
-* A type 1 robot should initiate its task by gathering items from the furniture and outdoor sections in any order.
-* Following that it gathers items from the health and grocery sections in any order.
-* Subsequently it gathers items from the electronics and pet sections again without any specific sequence.
-* Once delivering all the items to the packing area, finally it returns to the dock.
+
+Run and render all five README examples:
+
 ```bash
-python main.py --task=nav --case=6 --vis --dot
+python scripts/run_demo_batch.py
+python scripts/render_demo_batch.py
+python -m unittest discover -s tests -v
 ```
-### Case 3
-* A type 1 robot gathers items from the health, grocery, electronics and pet sections in any order
-* Either a type 2 robot or a type 3 robot gathers items from the outdoor section
-* After the items are delivered to the packing area, all robots eventually return to the dock.
-```bash
-python main.py --task=nav --case=8 --vis --dot
-```
-## Manipulation Task
-Two manipulation arms are tasked to assemble some LEGO models given hierarchical LTL specifications.
-![OOP](./imgs/arm.png)
-### Case 4
-<!-- ![OOP](./imgs/icl!.png) -->
-```bash
-python main.py --task=man --case=5 --vis --dot
-```
-### Case 5
-![OOP](./imgs/house.png)
-```bash
-python main.py --task=man --case=6 --vis --dot
-```
-# Citation
-```
-@article{luo2023robotic,
-  title={Robotic Planning under Hierarchical Temporal Logic Specifications},
+
+The scripts save solver logs and paths under `data/presentation`, and publishable videos, GIF previews, posters, replay JSON, and validation reports under `demo/generated`.
+
+| Presentation | Planner arguments | Output |
+| --- | --- | --- |
+| Scenario 1 | `--task=nav --case=5` | `scenario_01` |
+| Scenario 2 | `--task=nav --case=6` | `scenario_02` |
+| Scenario 3 | `--task=nav --case=8` | `scenario_03` |
+| Scenario 4 | `--task=man --case=5 --plan-only` | `scenario_04` |
+| Scenario 5 | `--task=man --case=6 --plan-only` | `scenario_05` |
+
+All examples use seed 42 and `PYTHONHASHSEED=0`. This repository retains its original weighted MILP objective (0.7 routing cost + 0.3 summed subtask completion times); it does not implement the STAP repository’s `--cost=minmax` option. Navigation retains the original GMAPP collision-avoidance planner. No additional parking or scheduling layer is applied.
+
+`--plan-only` skips interactive manipulation execution. Without it, the original manipulation task dispatcher waits for completion input. The new assembly videos show the solved high-level schedule, not a new ROS/Gazebo arm simulation.
+
+## Simulation environment
+
+### Navigation workspace
+
+![Warehouse workspace](demo/generated/environment.png)
+
+A 40 × 15 warehouse with grocery, health, outdoor, pet, furniture, and electronics departments, plus a dock and packing area. The team has two robots of each of three types.
+
+### Manipulation workspace
+
+![Two-arm workspace](imgs/arm.png)
+
+Two arms share LEGO placement tasks. Their original simulation recording is retained on the [project page](https://xushengluo92.github.io/Hierarchical-LTL/#simulation).
+
+## Planner-generated presentation demos
+
+Click a preview to play its MP4. The project page provides an embedded player for all five scenarios.
+
+**Scenario 1 — Furniture assistance and delivery**
+
+[![Scenario 1: Furniture assistance and delivery](demo/generated/scenario_01.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_01.mp4)
+
+**Scenario 2 — Three ordered shopping stages**
+
+[![Scenario 2: Three ordered shopping stages](demo/generated/scenario_02.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_02.mp4)
+
+**Scenario 3 — Flexible outdoor collection**
+
+[![Scenario 3: Flexible outdoor collection](demo/generated/scenario_03.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_03.mp4)
+
+**Scenario 4 — ICL! assembly plan**
+
+[![Scenario 4: ICL! assembly plan](demo/generated/scenario_04.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_04.mp4)
+
+**Scenario 5 — House assembly plan**
+
+[![Scenario 5: House assembly plan](demo/generated/scenario_05.gif)](https://xushengluo92.github.io/Hierarchical-LTL/demo/generated/scenario_05.mp4)
+
+The LTL cards track the assigned robots, active tasks, milestones, and completion. In Scenario 1, Type 1 must stay at furniture until Type 3 arrives; the display releases that restriction at step 27. Type 2’s grocery restriction releases after visiting health. Scenario 3 labels the unused OR branch explicitly.
+
+The independent monitor checks finite-trace leaf formulas with the planner’s robot identities and task activation windows, checks parent completion and precedence, and checks grid motion and collisions. All five saved runs pass. Navigation mission horizons are 95, 116, and 85 steps; assembly schedule horizons are 11 and 20. The videos use 1080p at 30 fps, with two navigation steps per second (0.7 schedule steps per second for assembly) and a final two-second hold.
+
+## Navigation tasks
+
+### Scenario 1 — furniture assistance and delivery
+
+A Type 1 robot visits furniture and stays there until Type 3 arrives to help load a large item. Type 1 then collects outdoor and pet items in either order. Type 2 collects health items before groceries and must avoid grocery until health. Each participating robot delivers its items to packing and returns to the dock. See the [paper’s MRPD example](https://arxiv.org/html/2308.10393v3#S2.SS2).
+
+### Scenario 2 — three ordered shopping stages
+
+One Type 1 robot collects furniture and outdoor items, then health and grocery items, then electronics and pet items. The two visits within each stage can occur in either order. Finally, it delivers to packing and returns to the dock. See [navigation Task 2](https://arxiv.org/html/2308.10393v3#S4.SS1).
+
+### Scenario 3 — flexible outdoor collection
+
+Type 1 visits health, grocery, electronics, and pet supplies in any order. Either Type 2 or Type 3 handles outdoor collection; the planner chooses one of these branches. The assigned robots deliver to packing and return to the dock. See [navigation Task 3](https://arxiv.org/html/2308.10393v3#S4.SS1).
+
+## Manipulation tasks
+
+### Scenario 4 — ICL!
+
+![ICL target](imgs/icl!.png)
+
+The two arms share the I, C, and L placement sequences. All three letters must finish before either exclamation-mark placement. This is the README example described in the [earlier paper bundled with the repository, §VI-B](Hierarchical_LTL.pdf#page=7). The published paper replaces this example with bin packing; the demo preserves the repository’s original `man --case=5` specification.
+
+### Scenario 5 — house
+
+![House target](imgs/house.png)
+
+Build the house in six successive layers, respecting each layer’s placement dependencies and same-arm constraints. In layer 5, p15 and p16 must precede p17. See [the published house-model example](https://arxiv.org/html/2308.10393v3#S4.SS2.SSS2). The schematic shows logical layers and assignment, rather than brick geometry or arm trajectories.
+
+## Overview
+
+Past research into robotic planning with temporal logic specifications, notably Linear Temporal Logic (LTL), was largely based on singular formulas for individual or groups of robots. But with increasing task complexity, LTL formulas unavoidably grow lengthy, complicating interpretation and specification generation, and straining the computational capacities of the planners. In order to maximize the potential of LTL specifications, we capitalized on the intrinsic structure of tasks and introduced a hierarchical structure to LTL specifications. In contrast to the "flat" structure, our hierarchical model has multiple levels of compositional specifications and offers benefits such as greater syntactic brevity, improved interpretability, and more efficient planning. To address tasks under this hierarchical temporal logic structure, we formulated a decomposition-based method. Each specification is first broken down into a range of temporally interrelated  sub-tasks. We further mine the temporal relations among the sub-tasks of different specifications within the hierarchy. Subsequently, a Mixed Integer Linear Program is utilized to generate a spatio-temporal plan for each robot. Our hierarchical LTL specifications were experimentally applied to domains of robotic navigation and manipulation. Results from extensive simulation studies illustrated both the enhanced expressive potential of the hierarchical form and the efficacy of the proposed method.
+
+## Citation
+
+```bibtex
+@article{luo2024decomposition,
+  title={Decomposition-based Hierarchical Task Allocation and Planning for Multi-Robots under Hierarchical Temporal Logic Specifications},
   author={Luo, Xusheng and Xu, Shaojun and Liu, Ruixuan and Liu, Changliu},
-  journal={arXiv preprint arXiv:2308.10393},
-  year={2023}
+  journal={IEEE Robotics and Automation Letters},
+  year={2024}
 }
 ```

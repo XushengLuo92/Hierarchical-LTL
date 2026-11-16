@@ -1,0 +1,24 @@
+{
+  "task": "man",
+  "case": 5,
+  "horizon": 11,
+  "hierarchy_satisfied": true,
+  "completion_steps": {
+    "p200": 11,
+    "p300": 9,
+    "p400": 8,
+    "p500": 5,
+    "p100": 9,
+    "p0": 11
+  },
+  "activation_steps": {
+    "p200": 9,
+    "p300": 0,
+    "p400": 0,
+    "p500": 0
+  },
+  "errors": [],
+  "collision_conflicts": [],
+  "valid": true,
+  "scope": "high-level schedule and LTL; no physical arm validation"
+}

@@ -1,0 +1,23 @@
+{
+  "task": "nav",
+  "case": 6,
+  "horizon": 116,
+  "hierarchy_satisfied": true,
+  "completion_steps": {
+    "p101": 28,
+    "p102": 49,
+    "p103": 75,
+    "p104": 116,
+    "p0": 116
+  },
+  "activation_steps": {
+    "p101": 0,
+    "p102": 28,
+    "p103": 49,
+    "p104": 75
+  },
+  "errors": [],
+  "collision_conflicts": [],
+  "valid": true,
+  "scope": "grid motion and LTL"
+}

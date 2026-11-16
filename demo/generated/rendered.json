@@ -1,0 +1,52 @@
+[
+  {
+    "file": "scenario_01.mp4",
+    "duration": 49.53,
+    "size": [
+      1920,
+      1080
+    ],
+    "fps": 30.0,
+    "decoded": true
+  },
+  {
+    "file": "scenario_02.mp4",
+    "duration": 60.03,
+    "size": [
+      1920,
+      1080
+    ],
+    "fps": 30.0,
+    "decoded": true
+  },
+  {
+    "file": "scenario_03.mp4",
+    "duration": 44.53,
+    "size": [
+      1920,
+      1080
+    ],
+    "fps": 30.0,
+    "decoded": true
+  },
+  {
+    "file": "scenario_04.mp4",
+    "duration": 17.77,
+    "size": [
+      1920,
+      1080
+    ],
+    "fps": 30.0,
+    "decoded": true
+  },
+  {
+    "file": "scenario_05.mp4",
+    "duration": 30.63,
+    "size": [
+      1920,
+      1080
+    ],
+    "fps": 30.0,
+    "decoded": true
+  }
+]

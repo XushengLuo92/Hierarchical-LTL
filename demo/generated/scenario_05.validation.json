@@ -1,0 +1,41 @@
+{
+  "task": "man",
+  "case": 6,
+  "horizon": 20,
+  "hierarchy_satisfied": true,
+  "completion_steps": {
+    "p101": 3,
+    "p102": 4,
+    "p201": 7,
+    "p202": 9,
+    "p301": 12,
+    "p302": 13,
+    "p401": 15,
+    "p501": 17,
+    "p502": 18,
+    "p601": 20,
+    "p100": 4,
+    "p200": 9,
+    "p300": 13,
+    "p400": 15,
+    "p500": 18,
+    "p600": 20,
+    "p0": 20
+  },
+  "activation_steps": {
+    "p101": 0,
+    "p102": 0,
+    "p201": 4,
+    "p202": 4,
+    "p301": 9,
+    "p302": 9,
+    "p401": 13,
+    "p501": 15,
+    "p502": 17,
+    "p601": 18
+  },
+  "errors": [],
+  "collision_conflicts": [],
+  "valid": true,
+  "scope": "high-level schedule and LTL; no physical arm validation"
+}

@@ -13,6 +13,9 @@ def create_parser():
     parser.add_argument('--case', default=0, type=int)
     parser.add_argument('--vis', action='store_true', help='Enable visualization')
     parser.add_argument('--dot', action='store_true', help='Enable dot graph')
+    parser.add_argument('--seed', type=int, default=None, help='Seed the initial robot positions')
+    parser.add_argument('--export-replay', type=str, help='Save planner output as JSON')
+    parser.add_argument('--plan-only', action='store_true', help='Skip interactive manipulation execution')
 
     return parser
 
@@ -102,11 +105,16 @@ def task_execution(time_task_element_type_robot_axis, reduced_task_network, type
         current_exec_tasks.pop(task_idx)
         current_exec_robots.pop(task_idx)
 
-if __builtins__:
+if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_known_args()[0]
     
-    if args.task == "man":
+    if args.seed is not None:
+        import random
+        import numpy as np
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+    if args.task == "man" and not args.plan_only:
         time_task_element_type_robot_axis, reduced_task_network, type_robots = hierarchical_ltl_planner(args=args)
         task_execution(time_task_element_type_robot_axis, reduced_task_network, type_robots)
     else:

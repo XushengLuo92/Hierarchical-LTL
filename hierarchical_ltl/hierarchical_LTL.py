@@ -601,8 +601,16 @@ def hierarchical_ltl_planner(args):
         # --------------------- GMRPP -------------------------
         robot_path = mapp(workspace, acpt_run, robot_waypoint_axis, robot_time_axis, args.vis)
         cost = compute_path_cost(robot_path)
+        if getattr(args, 'export_replay', None):
+            from .replay import export_replay
+            export_replay(args, workspace, task_specification, reduced_task_network,
+                          acpt_run, id2robots, robot_path)
         print('{1}, {0}\n'.format((datetime.now() - start).total_seconds(), cost))
         if args.vis:
             vis(args.task, args.case, workspace, robot_path, {robot: [len(path)] * 2 for robot, path in robot_path.items()}, [])
     else:
+        if getattr(args, 'export_replay', None):
+            from .replay import export_replay
+            export_replay(args, workspace, task_specification, reduced_task_network,
+                          acpt_run, id2robots, None)
         return time_task_element_type_robot_axis, reduced_task_network, workspace.type_robot_location.keys()

@@ -1,11 +1,10 @@
 # run: conda env create --file environment.yml
 name: hierarchical_ltl
 channels:
-  - anaconda
-  - defaults
+  - conda-forge
 dependencies:
   - python=3.10.12
   - pip
-  - anaconda::pygraphviz
   - pip:
     - -r requirements.txt
+    - -r requirements-demo.txt
