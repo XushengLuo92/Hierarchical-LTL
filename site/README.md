@@ -6,4 +6,4 @@ The Pages workflow packages only website assets with `scripts/package_site.py`, 
 
 The page deliberately omits planner metadata, download-link rows, and reproduction sections. Installation and execution instructions belong in the repository README.
 
-The house is displayed as Scenario 4 and retains demo ID 5 and its original asset filenames, so existing house links continue to work.
+The house is displayed as Scenario 4 and retains demo ID 5 so existing house links continue to work. Its player uses the original `arm_simulation.mp4` recording and poster.

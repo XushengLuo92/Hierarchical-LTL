@@ -54,10 +54,10 @@ window.DEMOS = [
       "In layer 5, place p15 and p16 before p17."
     ],
     "robots": 2,
-    "team": "2 arms \u00b7 schematic plan",
+    "team": "2 arms \u00b7 assembly simulation",
     "label": "Scenario 4",
-    "video": "demo/generated/scenario_05.mp4",
-    "poster": "demo/generated/scenario_05.png",
+    "video": "demo/generated/arm_simulation.mp4",
+    "poster": "demo/generated/arm_simulation.jpg",
     "paper": "https://arxiv.org/html/2308.10393v3#S4.SS2.SSS2"
   }
 ];
